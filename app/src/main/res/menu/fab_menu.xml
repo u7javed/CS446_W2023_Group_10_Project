@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/fab_add_event"
+        android:title="Add an Event"/>
+
+    <item android:id="@+id/fab_view_events"
+        android:title="View Events"/>
+
+    <item android:id="@+id/fab_generate_plan"
+        android:title="Generate a Plan"/>
+
+    <item android:id="@+id/fab_auto_generate"
+        android:title="Auto-Generate a Plan"/>
+
+    <item android:id="@+id/fab_import_calendar"
+        android:title="Import Calendar"/>
+
+</menu>
