@@ -1,8 +1,8 @@
 class Model {
     private lateinit var views: ArrayList<Any>
     private lateinit var calendar: Calendar
-    private lateinit var planMap: Map<String, Plan>
-    private lateinit var eventMap: Map<String, Event>
+    private lateinit var planMap: MutableMap<String, Plan>
+    private lateinit var eventMap: MutableMap<String, Event>
 
     fun addView(view: View) {
         this.views.add(view)
@@ -30,6 +30,8 @@ class Model {
     fun addEvent(event: Event) {
         // given an event, add it to the calendar
         this.calendar.events.add(event)
+        // given an event, add to eventMap
+        eventMap.put(event.eventId, event)
         this.notifyView()
     }
 
@@ -39,10 +41,13 @@ class Model {
                   endDate: String,
                   notification: Date) {
         event = getEventById(eventId)
-        event.name = newName
+        event.name = name
         event.startDate = startDate
         event.endDate = endDate
         event.notification = notification
+
+        // given an event, update eventMap
+        eventMap.put(event.eventId, event)
         this.notifyView()
     }
 
@@ -63,9 +68,15 @@ class Model {
     fun addPlan(plan: Plan): Void {
         // add plan to calendar
         for (event in plan.events) {
+            // QUESTION: why don't we just call addEvent??
             this.calendar.events.add(event)
+            eventMap.put(event.eventId, event)
         }
         this.calendar.plans.add(plan)
+
+        // given a plan, update planMap
+        planMap.put(plan.planId, plan)
+
         this.notifyView()
     }
 
@@ -81,6 +92,9 @@ class Model {
         plan.endDate = endDate
         plan.events = events
         plan.preferences = preferences
+
+        // given a plan, update planMap
+        planMap.put(plan.planId, plan)
         this.notifyView()
     }
 
