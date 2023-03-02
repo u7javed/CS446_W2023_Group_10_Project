@@ -1,8 +1,8 @@
-import java.util.*
+import java.time.LocalDateTime
 
 data class Event (val eventId: String){
     var name: String? = null
-    var startDate: Date? = null
-    var endDate: Date? = null
-    var notification: Date? = null
+    var startDate: LocalDateTime? = null
+    var endDate: LocalDateTime? = null
+    var notification: LocalDateTime? = null
 }

@@ -1,9 +1,9 @@
-import java.util.*
+import java.time.LocalDateTime
 
 data class Plan (val planId: String) {
     var name: String? = null
-    var startDate: Date? = null
-    var endDate: Date? = null
-    var events: MutableList<Event>? = null
-    var preferences: MutableList<Preference>? = null
+    var startDate: LocalDateTime? = null
+    var endDate: LocalDateTime? = null
+    var events: MutableList<Event> = mutableListOf()
+    var preferences: MutableList<Preference> = mutableListOf()
 }
