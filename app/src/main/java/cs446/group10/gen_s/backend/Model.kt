@@ -1,3 +1,10 @@
+import com.google.gson.Gson
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStreamReader
+
 class Model {
     private lateinit var views: ArrayList<Any>
     private lateinit var calendar: Calendar
@@ -17,13 +24,58 @@ class Model {
 
     fun getCalendarFromStorage(storage: Any): Calendar {
         // TODO: figure out how to get calendar from storage
-        // Also create a plan map if not already done from existing
-        // data.
+
+        // get byte array from internal storage //TODO
+        /*val fileName = "Test"
+
+        var fileInputStream: FileInputStream = openFileInput(fileName)
+        var inputStreamReader = InputStreamReader(fileInputStream)
+        val data = ByteArray(1024)
+        stream.read(data)
+        stream.close()*/
+
+        var data = byteArrayOf()
+        // convert byte array to json string
+        var jsonString = Gson().toJson(String(data))
+        //convert JSON string to data class (calendar)
+        var gson = Gson()
+        this.calendar = gson.fromJson(jsonString, Calendar::class.java)
+
+        // TODO: Also create a plan map if not already done from existing data.
+
+        return this.calendar
     }
 
-    fun pushCalendarToStorage(storage: Any): Void {
+    fun pushCalendarToStorage(storage: Any) {
         // TODO: figure out how to push calendar to storage
         //  everytime a change happens update storage
+
+        //convert data class (calendar) to JSON string
+        var gson = Gson()
+        var jsonString = Gson().toJson(this.calendar) // this might not work bc the calendar object is not just made of primitive attributes
+
+        // saving a json string to internal storage //TODO
+        // - https://developer.android.com/training/data-storage/app-specific#internal-store-stream
+        // - https://www.javatpoint.com/kotlin-android-read-and-write-internal-storage
+        /*
+        val fileName = "Test"
+        val fileOutputStream: FileOutputStream
+        try{
+            val file = File(context.filesDir, fileName)
+        }
+        try{
+
+            fileOutputStream = openFileOutput(fileName, Context.MODE_PRIVATE) //there are errors here -- need to deal with
+            fileOutputStream.write(jsonString.toByteArray())
+        }
+        catch(e: IOException) //TODO - need to implement a try/catch in case there isn't enough space to storage calendar in storage
+        {
+            e.printStackTrace()
+        }*/
+
+
+
+
     }
 
 
