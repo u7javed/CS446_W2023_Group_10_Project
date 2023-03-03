@@ -7,5 +7,6 @@ Particularly, you will find the following
 * `ViewModel`
 * Storage helper classes
 * Algorithm classes
+* Other helper classes
 
 **Note: Update this README as backend is implemented!**
