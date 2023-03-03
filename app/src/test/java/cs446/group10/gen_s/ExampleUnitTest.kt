@@ -33,8 +33,8 @@ class ModelUnitTests {
         //assertEquals("updated view", model.notifyView())
     }
     @Test
-    // addEvent; getEventsById; editEvent; getEventsData
-    fun addEvent_test(){
+    // addEvent; getEventsById; editEvent; getEventsData; removeEvent
+    fun event_test(){
         var event = Event("test")
         event.name = "Test"
         event.startDate = LocalDateTime.parse("2018-12-14T09:55:00")
@@ -54,9 +54,12 @@ class ModelUnitTests {
         assertEquals(event, mod_event)
 
         assertEquals(mutableListOf(event), model.getEventsData())
+
+        model.removeEvent("test")
+        assertEquals(mutableListOf<Event>(), model.getEventsData())
     }
     @Test
-    // addPlan; getPlanById; editPlan; getEventsByPlan
+    // addPlan; getPlanById; editPlan; getEventsByPlan; removePlan
     fun plan_test(){
         var event = Event("test1")
         event.name = "Test"
@@ -92,7 +95,33 @@ class ModelUnitTests {
 
         assertEquals(mutableListOf(event), model.getEventsByPlan("plan1"))
         assertEquals(mutableListOf(plan), model.getPlansData())
+
+        model.removePlan("plan1")
+        assertEquals(mutableListOf<Plan>(), model.getPlansData())
     }
+    /*
+    @Test
+    fun storage_test(){
+        var event = Event("test")
+        event.name = "Test"
+        event.startDate = LocalDateTime.parse("2018-12-14T09:55:00")
+        event.endDate =LocalDateTime.parse("2019-12-14T09:55:00")
+        event.notification = LocalDateTime.parse("2019-10-14T09:55:00")
+
+        var mod_event = Event("test2")
+        mod_event.name = "Test"
+        mod_event.startDate = LocalDateTime.parse("2018-12-14T09:55:00")
+        mod_event.endDate =LocalDateTime.parse("2022-12-14T09:55:00")
+        mod_event.notification = LocalDateTime.parse("2019-10-14T09:55:00")
+
+        model.addEvent(event)
+        model.addEvent(mod_event)
+
+        //model.pushCalendarToStorage()
+        //model.getCalendarFromStorage()
+    }
+
+     */
 }
 
 

@@ -1,12 +1,14 @@
+import android.content.Context
 import com.google.gson.Gson
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStreamReader
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.Date
+
+/*"New" things needed to be added to ViewModel:
+- pushing to storage (we think this has to be tied to an android activity)
+- pulling from storage (^^)
+- creating an event object (given the inputs)
+- creating a plan object (given the inputs)
+
+ */
 
 class Model {
     private var views: MutableList<View> = mutableListOf<View>()
@@ -29,61 +31,7 @@ class Model {
          }
          // TODO: figure out a way to call pushCalendarToStorage
      }
-/*
-     fun getCalendarFromStorage(storage: Any): Calendar {
-         // TODO: figure out how to get calendar from storage
 
-         // get byte array from internal storage //TODO
-         /*val fileName = "Test"
-
-         var fileInputStream: FileInputStream = openFileInput(fileName)
-         var inputStreamReader = InputStreamReader(fileInputStream)
-         val data = ByteArray(1024)
-         stream.read(data)
-         stream.close()*/
-
-         var data = byteArrayOf()
-         // convert byte array to json string
-         var jsonString = Gson().toJson(String(data))
-         //convert JSON string to data class (calendar)
-         var gson = Gson()
-         this.calendar = gson.fromJson(jsonString, Calendar::class.java)
-
-         // TODO: Also create a plan map if not already done from existing data.
-
-         return this.calendar
-     }
-
-     fun pushCalendarToStorage(storage: Any) {
-         // TODO: figure out how to push calendar to storage
-         //  everytime a change happens update storage
-
-         //convert data class (calendar) to JSON string
-         var gson = Gson()
-         var jsonString = Gson().toJson(this.calendar) // this might not work bc the calendar object is not just made of primitive attributes
-
-         // saving a json string to internal storage //TODO
-         // - https://developer.android.com/training/data-storage/app-specific#internal-store-stream
-         // - https://www.javatpoint.com/kotlin-android-read-and-write-internal-storage
-         /*
-         val fileName = "Test"
-         val fileOutputStream: FileOutputStream
-         try{
-             val file = File(context.filesDir, fileName)
-         }
-         try{
-
-             fileOutputStream = openFileOutput(fileName, Context.MODE_PRIVATE) //there are errors here -- need to deal with
-             fileOutputStream.write(jsonString.toByteArray())
-         }
-         catch(e: IOException) //TODO - need to implement a try/catch in case there isn't enough space to storage calendar in storage
-         {
-             e.printStackTrace()
-         }*/
-
-     }
-
-*/
      fun addEvent(event: Event) {
          // given an event, add it to the calendar
         this.calendar.events.add(event)
@@ -107,6 +55,15 @@ class Model {
          if (event != null) {
              eventMap[event.eventId] = event
          }
+         this.notifyView()
+     }
+
+     fun removeEvent(eventId: String){
+         var event = getEventById(eventId)
+         this.calendar.events.remove(event)
+         // given an event, add to eventMap
+         eventMap.remove(event?.eventId, event)
+
          this.notifyView()
      }
 
@@ -159,7 +116,21 @@ class Model {
          }
          this.notifyView()
      }
+     fun removePlan(planId: String){
+         var plan = getPlanById(planId)
+         if (plan != null) {
+             this.calendar.plans.remove(plan)
 
+             for (event in plan!!.events) {
+                 this.removeEvent(event.eventId)
+             }
+
+             planMap.remove(plan?.planId, plan)
+
+             this.notifyView()
+         }
+
+     }
      fun getPlansData(): MutableList<Plan> {
          // return list of plans
          return this.calendar.plans
@@ -176,4 +147,16 @@ class Model {
      fun getEventsByPlan(planId: String): MutableList<Event>? {
          return this.getPlanById(planId)?.events
      }
+
+    //returns calendar object given calendarId
+    fun getCalendar(calendarId : String): Calendar {
+        return this.calendar
+    }
+
+    // returns JSON string of calendar object given calendarId
+    fun getCalendarAsJSON (calendarId: String) : String {
+        return Gson().toJson(this.calendar)
+    }
+
+
 }
