@@ -1,5 +1,6 @@
 import android.content.Context
 import com.google.gson.Gson
+import java.io.FileInputStream
 import java.time.LocalDateTime
 
 /*"New" things needed to be added to ViewModel:
@@ -149,14 +150,34 @@ class Model {
      }
 
     //returns calendar object given calendarId
-    fun getCalendar(calendarId : String): Calendar {
+    fun getCalendar(): Calendar {
         return this.calendar
     }
 
     // returns JSON string of calendar object given calendarId
-    fun getCalendarAsJSON (calendarId: String) : String {
+    fun getCalendarAsJSON () : String {
         return Gson().toJson(this.calendar)
     }
 
+    fun pushToStorage (context :Context, fileName :String){
+        context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
+            it.write(this.getCalendarAsJSON().toByteArray())
+        }
+    }
+
+    fun pullFromStorage (context: Context, fileName: String){
+        val stream: FileInputStream = context.openFileInput(fileName)
+        var data = ByteArray(1024) //--- might need to change... unsure how to know the size?
+        stream.read(data)
+
+        // convert byte array to json string
+        var jsonString = Gson().toJson(String(data))
+        //convert JSON string to data class (calendar)
+        var gson = Gson()
+        this.calendar = gson.fromJson(jsonString, Calendar::class.java)
+        stream.close()
+        // TODO: Also create a plan map if not already done from existing data.
+
+    }
 
 }
