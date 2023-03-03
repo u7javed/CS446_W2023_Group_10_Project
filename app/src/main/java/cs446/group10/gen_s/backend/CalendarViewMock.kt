@@ -1,13 +1,16 @@
-class CalendarViewMock(model: Model) {
+
+class View(var model: Model) {
 
     init {
-        model.addView(this)
+
     }
 
     fun update() {
-        val plans: Any = model.getPlansData()
-        val events: Any = model.getEventsData()
+        //val plans: Any = model.getPlansData()
+        val events: MutableList<Event>? = model.getEventsData()
         // update UI given calendar data (plans, events)
+
     }
 
 }
+
