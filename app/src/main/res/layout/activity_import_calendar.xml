@@ -13,14 +13,20 @@
 
         <Button
             android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="262dp"
+            android:layout_height="49dp"
+            android:backgroundTint="#4472AF"
+            android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:text="Import .ical file"
+            android:text="Import .ical/.ics file"
+            android:textAllCaps="false"
+            app:cornerRadius="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.045" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>
