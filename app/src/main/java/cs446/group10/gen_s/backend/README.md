@@ -2,7 +2,7 @@
 
 ### This folder contains the code for the backend component of the Gen-S App.
 
-Particularly, you will find the 
+Particularly, you will find the following
 * `Model`
 * `ViewModel`
 * Storage helper classes
