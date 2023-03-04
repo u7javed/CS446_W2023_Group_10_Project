@@ -10,7 +10,7 @@ class ViewEventsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_view_events)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "View Events"
+        supportActionBar?.title = "Your Events"
     }
 
     override fun onSupportNavigateUp(): Boolean {
