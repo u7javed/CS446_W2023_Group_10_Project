@@ -1,10 +1,10 @@
 package cs446.group10.gen_s
 
 import Event
-import Model
+import cs446.group10.gen_s.backend.model.Model
 import Plan
 import Preference
-import View
+import cs446.group10.gen_s.backend.model.View
 import org.junit.Test
 
 import org.junit.Assert.*

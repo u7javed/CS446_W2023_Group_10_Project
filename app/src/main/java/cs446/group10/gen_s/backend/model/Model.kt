@@ -1,3 +1,9 @@
+package cs446.group10.gen_s.backend.model
+
+import Calendar
+import Event
+import Plan
+import Preference
 import android.content.Context
 import com.google.gson.Gson
 import java.io.FileInputStream

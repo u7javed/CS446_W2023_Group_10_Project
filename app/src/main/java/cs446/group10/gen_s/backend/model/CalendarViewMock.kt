@@ -1,11 +1,14 @@
+package cs446.group10.gen_s.backend.model
 
-class View(var model: Model) {
+import Event
+
+open class View(var model: Model) {
 
     init {
 
     }
 
-    fun update() {
+    open fun update() {
         //val plans: Any = model.getPlansData()
         val events: MutableList<Event>? = model.getEventsData()
         // update UI given calendar data (plans, events)
