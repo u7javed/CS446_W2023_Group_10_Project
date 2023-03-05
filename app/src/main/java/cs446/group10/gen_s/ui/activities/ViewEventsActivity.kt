@@ -33,13 +33,24 @@ class ViewEventsActivity : AppCompatActivity() {
             // eventLayout
             val eventLayout = LinearLayout(this)
             eventLayout.orientation = LinearLayout.HORIZONTAL
-            eventLayout.setPadding(dpToPixel(16), dpToPixel(6), dpToPixel(16), dpToPixel(6))
+            eventLayout.gravity = Gravity.CENTER_VERTICAL
+            eventLayout.setPadding(
+                dpToPixel(16),
+                dpToPixel(6),
+                dpToPixel(16),
+                dpToPixel(6)
+            )
 
             val eventLayoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            eventLayoutParams.setMargins(dpToPixel(8), dpToPixel(12), dpToPixel(8), 0)
+            eventLayoutParams.setMargins(
+                dpToPixel(8),
+                dpToPixel(12),
+                dpToPixel(8),
+                0
+            )
 
             eventLayout.layoutParams = eventLayoutParams
 
@@ -54,7 +65,7 @@ class ViewEventsActivity : AppCompatActivity() {
 
             // eventName (top left)
             val eventNameTextView = TextView(this)
-            eventNameTextView.text = event.eventNo
+            eventNameTextView.text = event.eventName
             eventNameTextView.textSize = 16f
             eventNameTextView.setTextColor(Color.BLACK)
 
@@ -78,9 +89,10 @@ class ViewEventsActivity : AppCompatActivity() {
             // chevron image (right)
             val chevronImageView = ImageView(this)
             chevronImageView.setImageResource(R.drawable.chevron)
-            val chevronImageViewLayoutParams = LinearLayout.LayoutParams(dpToPixel(24), dpToPixel(24))
-            chevronImageViewLayoutParams.gravity = Gravity.CENTER_VERTICAL
-            chevronImageView.layoutParams = chevronImageViewLayoutParams
+            chevronImageView.layoutParams = LinearLayout.LayoutParams(
+                dpToPixel(24),
+                dpToPixel(24)
+            )
 
             // eventLayout has 2 children (left, right)
             eventLayout.addView(infoLayout)
@@ -99,10 +111,10 @@ class ViewEventsActivity : AppCompatActivity() {
         return true
     }
 
-    class Event(_eventName: String, _date: String, _startTime: String, _endTime: String) {
-        var eventNo : String = _eventName
-        var date : String = _date
-        var startTime : String = _startTime
-        var endTime : String = _endTime
-    }
+    data class Event(
+        val eventName: String,
+        val date: String,
+        val startTime: String,
+        val endTime: String
+    )
 }
