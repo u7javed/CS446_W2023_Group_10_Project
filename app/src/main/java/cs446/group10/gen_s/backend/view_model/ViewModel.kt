@@ -9,18 +9,7 @@ class ViewModel {
 
     }
 
-    // TODO: Update events and preferences to their corresponding list types
-    fun createPlan(name: String, startDate: LocalDate, endDate: LocalDate, events: List<Any>, preferences: List<Any>) {
-        val sanitizedName: String = ViewModelHelper.sanitizePlanName(name)
-
-    }
-
-    private fun isValidDate(startDate: LocalDate, endDate: LocalDate): Boolean {
-        // TODO: Validate a given start and end date for an event
-        return true
-    }
-
-    fun getExistingEvents(startRange: Long, endRange: Long): List<Event> {
+    private fun getExistingEvents(startRange: Long, endRange: Long): List<Event> {
         // TODO: Determine a way to obtain existing events with a start date within the
         // TODO: range of the startRange and endRange
         val mock: List<Event> = listOf(
@@ -175,7 +164,8 @@ class ViewModel {
             return null
         }
         val planId: String = IdManager.generateId()
-        return Plan(planId, planName, newEvents as MutableList<Event>)
+        val sanitizedName: String = ViewModelHelper.sanitizePlanName(planName)
+        return Plan(planId, sanitizedName, newEvents as MutableList<Event>)
     }
 
 }
