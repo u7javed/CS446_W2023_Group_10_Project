@@ -7,7 +7,6 @@ import Preference
 import android.content.Context
 import com.google.gson.Gson
 import java.io.FileInputStream
-import java.time.LocalDateTime
 
 /*"New" things needed to be added to ViewModel:
 - pushing to storage (we think this has to be tied to an android activity)
@@ -49,9 +48,9 @@ class Model {
 
      fun editEvent(eventId: String,
                    name: String,
-                   startDate:LocalDateTime,
-                   endDate: LocalDateTime,
-                   notification: LocalDateTime) {
+                   startDate: Long,
+                   endDate: Long,
+                   notification: Long) {
          var event = getEventById(eventId)
          event?.name = name
          event?.startDate = startDate
@@ -106,16 +105,11 @@ class Model {
 
      fun editPlan(planId: String,
                   name: String,
-                  startDate:LocalDateTime,
-                  endDate: LocalDateTime,
-                  events: MutableList<Event>,
-                  preferences: MutableList<Preference>) {
+                  events: MutableList<Event>) {
          var plan = getPlanById(planId)
          plan?.name = name
-         plan?.startDate = startDate
-         plan?.endDate = endDate
-         plan?.events = events
-         plan?.preferences = preferences
+         plan?.events?.clear()
+         plan?.events?.addAll(events)
 
          // given a plan, update planMap
          if (plan != null) {

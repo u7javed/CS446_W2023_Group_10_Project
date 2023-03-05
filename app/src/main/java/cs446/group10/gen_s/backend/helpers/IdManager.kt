@@ -4,10 +4,11 @@ object IdManager {
      ***/
 
     val globalIDTable: MutableMap<String, Any> = mutableMapOf()
+    var mockIdGenerate: Int = 0
 
     // TODO: Create a robust system for generating IDs
-    fun generateId() {
-        
+    fun generateId(): String {
+        return (mockIdGenerate++).toString()
     }
 
 
