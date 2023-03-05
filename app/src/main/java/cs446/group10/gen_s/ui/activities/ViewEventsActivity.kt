@@ -104,6 +104,7 @@ class ViewEventsActivity : AppCompatActivity() {
 
     private fun dpToPixel(_dp: Int) : Int {
         return (_dp * (resources.displayMetrics.density)).toInt()
+        supportActionBar?.title = "cs446.group10.gen_s.backend.model.View Events"
     }
 
     override fun onSupportNavigateUp(): Boolean {
