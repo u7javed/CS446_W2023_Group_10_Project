@@ -59,11 +59,11 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                     parent: AdapterView<*>,
                     view: View, position: Int, id: Long
                 ) {
-                    Toast.makeText(this@AddEventActivity, "hi", Toast.LENGTH_SHORT).show()
+                    //TO DO: integrate with backend
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    // write code to perform some action
+                    //TO DO: integrate with backend
                 }
             }
         }
@@ -84,7 +84,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                     cal.set(Calendar.MONTH, monthOfYear)
                     cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-                    val myFormat = "dd.MM.yyyy" // mention the format you need
+                    val myFormat = "dd.MM.yyyy"
                     val sdf = SimpleDateFormat(myFormat, Locale.US)
                     if (v == btnStartDatePicker) {
                         startDateText.setText(sdf.format(cal.time))
