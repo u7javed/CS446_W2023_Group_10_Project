@@ -43,10 +43,16 @@
                 android:text="Start Date" />
 
             <Button
+                android:id="@+id/startDateInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Start Date"
-                android:id="@+id/startDateInput"/>
+                android:text="Select Start Date" />
+
+            <TextView
+                android:id="@+id/chosenStartDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start date not selected" />
 
             <TextView
                 android:id="@+id/startTime"
@@ -55,10 +61,16 @@
                 android:text="Start Time" />
 
             <Button
+                android:id="@+id/startTimeInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Start Time"
-                android:id="@+id/startTimeInput"/>
+                android:text="Select Start Time" />
+
+            <TextView
+                android:id="@+id/chosenStartTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start time not selected" />
 
             <TextView
                 android:id="@+id/endDate"
@@ -67,10 +79,16 @@
                 android:text="End Date" />
 
             <Button
+                android:id="@+id/endDateInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select End Date"
-                android:id="@+id/endDateInput"/>
+                android:text="Select End Date" />
+
+            <TextView
+                android:id="@+id/chosenEndDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="End date not selected" />
 
             <TextView
                 android:id="@+id/endTime"
@@ -79,10 +97,16 @@
                 android:text="End Time" />
 
             <Button
+                android:id="@+id/endTimeInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select End Time"
-                android:id="@+id/endTimeInput"/>
+                android:text="Select End Time" />
+
+            <TextView
+                android:id="@+id/chosenEndTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="End time not selected" />
 
             <LinearLayout
                 android:layout_width="match_parent"
