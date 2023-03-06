@@ -29,99 +29,12 @@
             app:layout_constraintBottom_toTopOf="@+id/GenerateButton"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/PlanInfoHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:gravity="center"
-                android:text="Plan Information"
-                android:textColor="@color/primaryTextColor"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/PlanNameLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Plan name" />
-
-            <EditText
-                android:id="@+id/PlanNameTextField"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Study Plan 1"
-                android:inputType="textPersonName"
-                android:singleLine="true" />
-
-            <TextView
-                android:id="@+id/StartDateLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Start date" />
-
-            <EditText
-                android:id="@+id/StartDatePlaceholder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="start date"
-                android:inputType="textPersonName"
-                android:singleLine="true" />
-
-            <TextView
-                android:id="@+id/EndDateLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="End date" />
-
-            <EditText
-                android:id="@+id/EndDatePlaceholder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="end date"
-                android:inputType="textPersonName"
-                android:singleLine="true" />
-
-            <TextView
-                android:id="@+id/EventLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Event" />
-
-            <Spinner
-                android:id="@+id/EventSpinner"
+            <fragment
+                android:name="cs446.group10.gen_s.PlanBasicInfoFragment"
+                android:id="@+id/PlanBasicInfoFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <Switch
-                android:id="@+id/NotificationSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Notification"
-                android:textColor="#717171" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/NotificationTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="5"
-                    android:inputType="number|numberDecimal"
-                    android:singleLine="true" />
-
-                <Spinner
-                    android:id="@+id/NotificationUnit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/TechniqueLabel"
