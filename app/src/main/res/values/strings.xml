@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">Gen-S</string>
+
+    <string-array name="UnitsOfTime">
+        <item>Minute(s)</item>
+        <item>Hour(s)</item>
+        <item>Day(s)</item>
+        <item>Week(s)</item>
+        <item>Month(s)</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
