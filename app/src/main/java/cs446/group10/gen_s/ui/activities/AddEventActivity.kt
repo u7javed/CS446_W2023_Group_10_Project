@@ -42,6 +42,31 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
         btnStartTimePicker.setOnClickListener(this)
         btnEndDatePicker.setOnClickListener(this)
         btnEndTimePicker.setOnClickListener(this)
+
+        val timeUnits = resources.getStringArray(R.array.UnitsOfTime)
+
+        val spinner = findViewById<Spinner>(R.id.notificationSpinner)
+        if (spinner != null) {
+            val adapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_item, timeUnits
+            )
+            spinner.adapter = adapter
+
+            spinner.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View, position: Int, id: Long
+                ) {
+                    Toast.makeText(this@AddEventActivity, "hi", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // write code to perform some action
+                }
+            }
+        }
     }
 
     override fun onClick(v: View?) {
