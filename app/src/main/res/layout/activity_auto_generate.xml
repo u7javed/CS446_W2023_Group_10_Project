@@ -4,16 +4,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     tools:context=".ui.activities.AutoGenerateActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="This is where plans are auto-generated"
-        android:layout_centerInParent="true"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/primaryTextColor"
-        android:gravity="center"/>
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:gravity="center"-->
+<!--        android:text="This is where plans are auto-generated"-->
+<!--        android:textColor="@color/primaryTextColor"-->
+<!--        android:textSize="20dp"-->
+<!--        android:textStyle="bold" />-->
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/GenerateButton"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <fragment
+                android:name="cs446.group10.gen_s.PlanBasicInfoFragment"
+                android:id="@+id/PlanBasicInfoFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+            <TextView
+                android:id="@+id/TechniqueLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Study Technique" />
+
+            <Spinner
+                android:id="@+id/TechniqueSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/GenerateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generate Plan"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>

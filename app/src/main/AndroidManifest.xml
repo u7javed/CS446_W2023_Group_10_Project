@@ -24,6 +24,9 @@
             android:name=".ui.activities.GeneratePlanActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.activities.GeneratedPlanActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.AddEventActivity"
             android:exported="false" />
         <activity
