@@ -5,23 +5,25 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import cs446.group10.gen_s.R
 
-class ViewEventsActivity : AppCompatActivity() {
+class GeneratedPlanActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_events)
+        setContentView(R.layout.activity_generated_plan)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "Your Events"
+        supportActionBar?.title = "Your New Plan"
 
-        val viewEventsLayout = findViewById<LinearLayout>(R.id.view_events)
+        val generatedEventsLayout = findViewById<LinearLayout>(R.id.generated_events)
 
-        val events : ArrayList<Event> = arrayListOf<Event>(
+        val generatedEvents : ArrayList<Event> = arrayListOf(
             Event("Event 1", "Jan 3", "8am", "10am"),
             Event("Event 2", "Jan 4", "11am", "12pm"),
             Event("Event 3", "Jan 5", "1pm", "3pm"),
@@ -29,7 +31,7 @@ class ViewEventsActivity : AppCompatActivity() {
             Event("Event 5", "Jan 7", "7pm", "9pm")
         )
 
-        for (event in events) {
+        for (event in generatedEvents) {
             // eventLayout
             val eventLayout = LinearLayout(this)
             eventLayout.orientation = LinearLayout.HORIZONTAL
@@ -98,12 +100,20 @@ class ViewEventsActivity : AppCompatActivity() {
             eventLayout.addView(infoLayout)
             eventLayout.addView(chevronImageView)
 
-            viewEventsLayout.addView(eventLayout)
+            generatedEventsLayout.addView(eventLayout)
         }
     }
 
     private fun dpToPixel(_dp: Int) : Int {
         return (_dp * (resources.displayMetrics.density)).toInt()
+    }
+
+    fun cancelBtnClickHandler(view: View) {
+        Toast.makeText(this, "Cancel Button Clicked", Toast.LENGTH_SHORT).show()
+    }
+
+    fun confirmBtnClickHandler(view: View) {
+        Toast.makeText(this, "Confirm Button Clicked", Toast.LENGTH_SHORT).show()
     }
 
     override fun onSupportNavigateUp(): Boolean {
