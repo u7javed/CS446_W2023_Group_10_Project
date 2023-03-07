@@ -1,9 +1,11 @@
 import cs446.group10.gen_s.backend.dataClasses.Space
+import cs446.group10.gen_s.backend.model.Model
 import java.time.LocalDate
 
 class ViewModel {
 
-    val openSpaces: MutableList<Space> = mutableListOf()
+    private val openSpaces: MutableList<Space> = mutableListOf()
+    private val model: Model = Model()
 
     init {
 
@@ -83,9 +85,7 @@ class ViewModel {
 
                 if (situation1 || situation2) {
                     // Create an event from space start to space start + preference duration
-                    val eventId: String = IdManager.generateId()
-                    newEvent = Event(
-                        eventId,
+                    newEvent = generateEvent(
                         preference.name,
                         space.start,
                         space.start + preference.duration,
@@ -114,9 +114,7 @@ class ViewModel {
 
                 if (situation3 || situation4) {
                     // The event starts from the preference start and goes until preference start + duration
-                    val eventId: String = IdManager.generateId()
-                    newEvent = Event(
-                        eventId,
+                    newEvent = generateEvent(
                         preference.name,
                         preference.startRange,
                         preference.startRange + preference.duration,
@@ -166,6 +164,16 @@ class ViewModel {
         val planId: String = IdManager.generateId()
         val sanitizedName: String = ViewModelHelper.sanitizePlanName(planName)
         return Plan(planId, sanitizedName, newEvents as MutableList<Event>)
+    }
+
+    private fun generateEvent(name: String, startDate: Long, endDate: Long, notification: Long?): Event {
+        val eventId: String = IdManager.generateId()
+        return Event(eventId, name, startDate, endDate, notification)
+    }
+
+    fun addEventToCalendar(name: String, startDate: Long, endDate: Long, notification: Long?) {
+        val event: Event = generateEvent(name, startDate, endDate, notification)
+        this.model.addEvent(event)
     }
 
 }
