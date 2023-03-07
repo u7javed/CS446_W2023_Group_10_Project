@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputEditText
 import cs446.group10.gen_s.R
-import java.security.KeyStore.TrustedCertificateEntry
 import java.text.SimpleDateFormat
 import java.util.*
 
