@@ -10,7 +10,9 @@ import android.widget.*
 import android.widget.PopupMenu.OnMenuItemClickListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import cs446.group10.gen_s.R
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
 
@@ -28,6 +30,14 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
         }
 
         val calendarView = findViewById<LinearLayout>(R.id.calendar_view)
+
+        val events : ArrayList<Event> = arrayListOf<Event>(
+            Event("Event 1", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
+            Event("Event 2", SimpleDateFormat("dd-MM-yyyy").parse("04-03-2023")),
+            Event("Event 3", SimpleDateFormat("dd-MM-yyyy").parse("05-03-2023")),
+            Event("Event 4", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
+            Event("Event 5", SimpleDateFormat("dd-MM-yyyy").parse("07-03-2023"))
+        )
 
         // Get current month and year
         val calendar = Calendar.getInstance()
@@ -95,6 +105,31 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
             dayNumberTextView.text = currentDay.toString()
             dayNumberTextView.gravity = Gravity.CENTER
             dayCell.addView(dayNumberTextView)
+
+            // Add events to the day cell
+            val eventsForDay = events.filter { event ->
+                val eventCalendar = Calendar.getInstance()
+                eventCalendar.time = event.date!!
+                eventCalendar.get(Calendar.DAY_OF_MONTH) == currentDay &&
+                    eventCalendar.get(Calendar.MONTH) == currentMonth &&
+                    eventCalendar.get(Calendar.YEAR) == currentYear
+                }
+
+            if (eventsForDay.isNotEmpty()) {
+                // Create a new linear layout to hold the events for the day
+                val eventsLayout = LinearLayout(this)
+                eventsLayout.orientation = LinearLayout.VERTICAL
+
+                // Add each event to the linear layout
+                for (event in eventsForDay) {
+                    val eventTextView = TextView(this)
+                    eventTextView.text = event.eventName
+                    eventsLayout.addView(eventTextView)
+                }
+
+                // Add the linear layout to the day cell
+                dayCell.addView(eventsLayout)
+            }
 
             currentRow.addView(dayCell)
 
