@@ -2,6 +2,7 @@ package cs446.group10.gen_s.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import cs446.group10.gen_s.GenerateFragment
 import cs446.group10.gen_s.R
 
 class GeneratePlanActivity : AppCompatActivity() {
@@ -11,6 +12,13 @@ class GeneratePlanActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Generate Plan"
+
+        val generateFragment = GenerateFragment();
+
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.GenerateMainFragment, generateFragment);
+            commit();
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
