@@ -166,6 +166,19 @@ class ViewModel {
         return Plan(planId, sanitizedName, newEvents as MutableList<Event>)
     }
 
+    fun addPlanToCalendar(
+        planName: String,
+        preferences: List<Preference>,
+        startRange: Long,
+        endRange: Long
+    ) {
+        val plan: Plan? = generatePlan(planName, preferences, startRange, endRange)
+        if (plan == null) {
+            // TODO: return an error message or display an error
+        }
+        this.model.addPlan(plan!!)
+    }
+
     private fun generateEvent(name: String, startDate: Long, endDate: Long, notification: Long?): Event {
         val eventId: String = IdManager.generateId()
         return Event(eventId, name, startDate, endDate, notification)
