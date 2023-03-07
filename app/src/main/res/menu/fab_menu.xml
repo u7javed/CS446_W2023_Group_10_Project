@@ -15,5 +15,8 @@
 
     <item android:id="@+id/fab_import_calendar"
         android:title="Import Calendar"/>
+    <item
+        android:id="@+id/fab_view_plans"
+        android:title="View Plans" />
 
 </menu>
