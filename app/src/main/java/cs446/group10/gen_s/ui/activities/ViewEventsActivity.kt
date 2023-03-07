@@ -1,10 +1,13 @@
 package cs446.group10.gen_s.ui.activities
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -87,16 +90,20 @@ class ViewEventsActivity : AppCompatActivity() {
             infoLayout.addView(timeTextView)
 
             // chevron image (right)
-            val chevronImageView = ImageView(this)
-            chevronImageView.setImageResource(R.drawable.chevron)
-            chevronImageView.layoutParams = LinearLayout.LayoutParams(
+            val editImageView = ImageButton(this)
+            editImageView.setImageResource(R.drawable.editicon)
+            editImageView.layoutParams = LinearLayout.LayoutParams(
                 dpToPixel(24),
                 dpToPixel(24)
             )
-
+            editImageView.setOnClickListener(object : View.OnClickListener {
+                override fun onClick(view: View?) {
+                    moveToEditEventPage(event.eventName, event.date, event.startTime, event.endTime)
+                }
+            })
             // eventLayout has 2 children (left, right)
             eventLayout.addView(infoLayout)
-            eventLayout.addView(chevronImageView)
+            eventLayout.addView(editImageView)
 
             viewEventsLayout.addView(eventLayout)
         }
@@ -117,4 +124,15 @@ class ViewEventsActivity : AppCompatActivity() {
         val startTime: String,
         val endTime: String
     )
+
+    private fun moveToEditEventPage(eventName: String, date: String, startTime: String, endTime: String): Boolean {
+        val editEventIntent = Intent(this, EditEventActivity::class.java)
+        editEventIntent.putExtra("eventName", eventName)
+        editEventIntent.putExtra("date", date)
+        editEventIntent.putExtra("startTime", startTime)
+        editEventIntent.putExtra("endTime", endTime)
+        editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(editEventIntent)
+        return true
+    }
 }
