@@ -2,10 +2,12 @@ package cs446.group10.gen_s.ui.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.*
 import android.widget.PopupMenu.OnMenuItemClickListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -22,6 +24,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
+        supportActionBar?.title = "GenS"
 
         // Get access to floating action button
         actionButton = findViewById(R.id.main_action_button)
@@ -33,10 +36,12 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
 
         val events : ArrayList<Event> = arrayListOf<Event>(
             Event("Event 1", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
-            Event("Event 2", SimpleDateFormat("dd-MM-yyyy").parse("04-03-2023")),
-            Event("Event 3", SimpleDateFormat("dd-MM-yyyy").parse("05-03-2023")),
-            Event("Event 4", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
-            Event("Event 5", SimpleDateFormat("dd-MM-yyyy").parse("07-03-2023"))
+            Event("Event 2", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
+            Event("Event 3", SimpleDateFormat("dd-MM-yyyy").parse("04-03-2023")),
+            Event("Event 4", SimpleDateFormat("dd-MM-yyyy").parse("05-03-2023")),
+            Event("Event 5", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
+            Event("Event 6", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
+            Event("Event 7", SimpleDateFormat("dd-MM-yyyy").parse("07-03-2023"))
         )
 
         // Get current month and year
@@ -56,19 +61,47 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
 
         // Create header row for the calendar
         val headerRow = TableRow(this)
+        headerRow.weightSum = 7f
         val headerParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
             TableRow.LayoutParams.WRAP_CONTENT
         )
         headerRow.layoutParams = headerParams
 
+        val cellParams = TableRow.LayoutParams(
+            0,
+            dpToPixel(80),
+            1f
+        )
+        cellParams.setMargins(
+            dpToPixel(3),
+            dpToPixel(3),
+            dpToPixel(3),
+            dpToPixel(3)
+        )
+
         // Add day labels to header row
-        val daysOfWeek = arrayOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+        val daysOfWeek = arrayOf("SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT")
         for (dayOfWeek in daysOfWeek) {
             val dayLabel = TextView(this)
             dayLabel.text = dayOfWeek
             dayLabel.gravity = Gravity.CENTER
-            dayLabel.setPadding(8, 8, 8, 8)
+            dayLabel.textSize = 12f
+            dayLabel.setTextColor((Color.parseColor("#FF000000")))
+
+            val dayLabelParams = TableRow.LayoutParams(
+                0,
+                TableRow.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+            dayLabelParams.setMargins(
+                dpToPixel(3),
+                dpToPixel(16),
+                dpToPixel(3),
+                dpToPixel(16)
+            )
+            dayLabel.layoutParams = dayLabelParams
+
             headerRow.addView(dayLabel)
         }
 
@@ -77,6 +110,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
 
         // Create a new row for each week in the month
         var currentRow = TableRow(this)
+        currentRow.weightSum = 7f
         val rowParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
             TableRow.LayoutParams.WRAP_CONTENT
@@ -88,8 +122,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
         for (i in 1..emptyDays) {
             val emptyCell = TextView(this)
             emptyCell.text = ""
-            emptyCell.gravity = Gravity.CENTER
-            emptyCell.setPadding(8, 8, 8, 8)
+            emptyCell.layoutParams = cellParams
             currentRow.addView(emptyCell)
         }
 
@@ -97,13 +130,15 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
         var currentDay = 1
         while (currentDay <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
             val dayCell = LinearLayout(this)
-            dayCell.gravity = Gravity.CENTER
             dayCell.orientation = LinearLayout.VERTICAL
-            dayCell.setPadding(8, 8, 8, 8)
+            dayCell.layoutParams = cellParams
 
             val dayNumberTextView = TextView(this)
             dayNumberTextView.text = currentDay.toString()
             dayNumberTextView.gravity = Gravity.CENTER
+            dayNumberTextView.textSize = 18f
+            dayNumberTextView.setTextColor((Color.parseColor("#FF000000")))
+
             dayCell.addView(dayNumberTextView)
 
             // Add events to the day cell
@@ -124,6 +159,18 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
                 for (event in eventsForDay) {
                     val eventTextView = TextView(this)
                     eventTextView.text = event.eventName
+                    eventTextView.gravity = Gravity.CENTER
+                    eventTextView.textSize = 9f
+                    eventTextView.setTextColor((Color.parseColor("#FFFFFFFF")))
+                    eventTextView.setBackgroundColor((Color.parseColor("#FF6169AE")))
+
+                    val eventTextViewParams = ViewGroup.MarginLayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    eventTextViewParams.setMargins(0, 0, 0, dpToPixel(2))
+                    eventTextView.layoutParams = eventTextViewParams
+
                     eventsLayout.addView(eventTextView)
                 }
 
@@ -137,9 +184,20 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
             currentDay++
             calendar.add(Calendar.DAY_OF_MONTH, 1)
 
+            if (currentDay > calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+                // Add empty cells for days after the last day of the month
+                val tailingEmptyDays = 7 - (calendar.get(Calendar.DAY_OF_WEEK) - 1)
+                for (i in 1..tailingEmptyDays) {
+                    val emptyCell = TextView(this)
+                    emptyCell.text = ""
+                    emptyCell.layoutParams = cellParams
+                    currentRow.addView(emptyCell)
+                }
+                tableLayout.addView(currentRow)
+            }
+
             // If reached the end of the week, add the current row to the table layout
-            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ||
-                currentDay > calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 tableLayout.addView(currentRow)
                 currentRow = TableRow(this)
                 currentRow.layoutParams = rowParams
@@ -148,6 +206,10 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
 
         // Add table layout to calendar view
         calendarView.addView(tableLayout)
+    }
+
+    private fun dpToPixel(_dp: Int) : Int {
+        return (_dp * (resources.displayMetrics.density)).toInt()
     }
 
     /** This function creates a pop up menu from the FAB button **/
