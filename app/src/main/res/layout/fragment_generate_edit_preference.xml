@@ -5,10 +5,129 @@
     android:layout_height="match_parent"
     tools:context=".GenerateEditPreferenceFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+<!--    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:text="@string/hello_blank_fragment" />-->
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/PreferenceDetailHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="Preference"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/PreferenceNameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Preference name" />
+
+        <EditText
+            android:id="@+id/PreferenceNameTextField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Preference 1"
+            android:inputType="textPersonName"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/StartDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start date" />
+
+        <EditText
+            android:id="@+id/StartDatePlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="start date"
+            android:inputType="textPersonName"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/EndDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="End date" />
+
+        <EditText
+            android:id="@+id/EndDatePlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="end date"
+            android:inputType="textPersonName"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/StartTimeLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start time" />
+
+        <EditText
+            android:id="@+id/StartTimePlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="start time"
+            android:inputType="textPersonName"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/EndTimeLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="End time" />
+
+        <EditText
+            android:id="@+id/EndTimePlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="end time"
+            android:inputType="textPersonName"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/DurationLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Duration" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/NotificationTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="5"
+                android:inputType="number|numberDecimal"
+                android:singleLine="true" />
+
+            <Spinner
+                android:id="@+id/NotificationUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
 
 </FrameLayout>
