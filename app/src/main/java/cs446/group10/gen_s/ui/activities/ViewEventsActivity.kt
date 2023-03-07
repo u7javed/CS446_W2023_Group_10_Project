@@ -87,16 +87,16 @@ class ViewEventsActivity : AppCompatActivity() {
             infoLayout.addView(timeTextView)
 
             // chevron image (right)
-            val chevronImageView = ImageView(this)
-            chevronImageView.setImageResource(R.drawable.chevron)
-            chevronImageView.layoutParams = LinearLayout.LayoutParams(
+            val editImageView = ImageView(this)
+            editImageView.setImageResource(R.drawable.editicon)
+            editImageView.layoutParams = LinearLayout.LayoutParams(
                 dpToPixel(24),
                 dpToPixel(24)
             )
 
             // eventLayout has 2 children (left, right)
             eventLayout.addView(infoLayout)
-            eventLayout.addView(chevronImageView)
+            eventLayout.addView(editImageView)
 
             viewEventsLayout.addView(eventLayout)
         }
