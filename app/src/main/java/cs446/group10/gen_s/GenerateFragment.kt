@@ -15,7 +15,9 @@ class GenerateFragment : Fragment(R.layout.fragment_generate) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val generateEditPreferenceFragment = GenerateEditPreferenceFragment();
+        val generateEditPreferenceFragment = GenerateEditPreferenceFragment(
+            PlanPreferenceInitialVal(true, null)
+        );
 
         val addPreferenceBtn = view.findViewById<ImageButton>(R.id.addPreferenceBtn);
         addPreferenceBtn.setOnClickListener {
