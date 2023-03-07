@@ -1,6 +1,6 @@
 package cs446.group10.gen_s.ui.activities
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import cs446.group10.gen_s.R
 
 class ViewPlansActivity : AppCompatActivity() {
@@ -75,7 +76,7 @@ class ViewPlansActivity : AppCompatActivity() {
 
             // numberOfEvents (bottom left)
             val eventsTextView = TextView(this)
-            eventsTextView.text = "${plan.events.size + 1} event(s)"
+            eventsTextView.text = "${plan.events.size} event(s)"
             eventsTextView.textSize = 12f
             eventsTextView.setTextColor(Color.parseColor("#DD000000"))
 
@@ -84,18 +85,19 @@ class ViewPlansActivity : AppCompatActivity() {
             infoLayout.addView(dateTextView)
             infoLayout.addView(eventsTextView)
 
-            // chevron image (right)
+            //TO DO: Fix spacing
+            // edit image (right)
             val editImageView = ImageButton(this)
             editImageView.setImageResource(R.drawable.editicon)
             editImageView.layoutParams = LinearLayout.LayoutParams(
                 dpToPixel(24),
                 dpToPixel(24)
             )
-            /*editImageView.setOnClickListener(object : View.OnClickListener {
+            editImageView.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(view: View?) {
-                    moveToEditPlanPage(plan.eventName, plan.startDate, plan.endDate, plan.events)
+                    moveToEditPlanPage(plan.planName, plan.startdate, plan.enddate, plan.events)
                 }
-            })*/
+            })
             // eventLayout has 2 children (left, right)
             planLayout.addView(infoLayout)
             planLayout.addView(editImageView)
@@ -114,4 +116,16 @@ class ViewPlansActivity : AppCompatActivity() {
         val enddate: String,
         val events: ArrayList<ViewEventsActivity.Event>
     )
+
+    private fun moveToEditPlanPage(planName: String, startDate: String, endDate: String, events: ArrayList<ViewEventsActivity.Event>): Boolean {
+        val editPlanIntent = Intent(this, EditPlanActivity::class.java)
+        val eventsAsString: String = Gson().toJson(events)
+        editPlanIntent.putExtra("planName", planName)
+        editPlanIntent.putExtra("startDate", startDate)
+        editPlanIntent.putExtra("endDate", endDate)
+        editPlanIntent.putExtra("events", eventsAsString)
+        editPlanIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(editPlanIntent)
+        return true
+    }
 }
