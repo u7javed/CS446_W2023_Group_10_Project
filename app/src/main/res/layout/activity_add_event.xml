@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     tools:context=".ui.activities.AddEventActivity">
 
     <LinearLayout
@@ -109,19 +110,19 @@
                 android:text="End time not selected" />
 
             <Switch
-                android:id="@+id/switch1"
-                android:layout_width="wrap_content"
+                android:id="@+id/notificationSwitchEvent"
+                android:layout_width="match_parent"
                 android:layout_height="49dp"
                 android:layout_weight="1"
                 android:text="Notifications?" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/editTextNumberSigned"
+                    android:id="@+id/notificationValue"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_weight="1"
@@ -135,6 +136,42 @@
                     android:layout_alignBottom="@id/notificationSpinner" />
 
             </LinearLayout>
+
+            <Switch
+                android:id="@+id/associatedPlanSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Associated Plan?" />
+
+            <Spinner
+                android:id="@+id/studyPlanSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignBottom="@id/studyPlanSpinner" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="20dp">
+
+                <Button
+                    android:id="@+id/cancelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:text="@android:string/cancel" />
+
+                <Button
+                    android:id="@+id/confirmButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:text="Confirm" />
+            </LinearLayout>
+
 
         </LinearLayout>
 

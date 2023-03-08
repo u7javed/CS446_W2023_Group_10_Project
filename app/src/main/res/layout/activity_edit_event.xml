@@ -124,7 +124,7 @@
                 android:text="End time not selected" />
 
             <Switch
-                android:id="@+id/switch1"
+                android:id="@+id/notificationSwitchEvent"
                 android:layout_width="wrap_content"
                 android:layout_height="49dp"
                 android:layout_weight="1"
@@ -136,7 +136,7 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/editTextNumberSigned"
+                    android:id="@+id/notificationValue"
                     android:layout_width="wrap_content"
                     android:layout_height="48dp"
                     android:layout_weight="1"
