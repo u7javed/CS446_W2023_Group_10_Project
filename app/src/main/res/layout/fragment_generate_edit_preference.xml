@@ -49,14 +49,28 @@
             android:layout_height="wrap_content"
             android:text="Start date" />
 
-        <EditText
-            android:id="@+id/StartDatePlaceholder"
+<!--        <EditText-->
+<!--            android:id="@+id/StartDatePlaceholder"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:ems="10"-->
+<!--            android:hint="start date"-->
+<!--            android:inputType="textPersonName"-->
+<!--            android:singleLine="true" />-->
+        <Button
+            android:id="@+id/selectStartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Start Date" />
+        <FrameLayout
+            android:id="@+id/StartDatePickerFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/chosenStartDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="start date"
-            android:inputType="textPersonName"
-            android:singleLine="true" />
+            android:text="Start date not selected" />
 
         <TextView
             android:id="@+id/EndDateLabel"

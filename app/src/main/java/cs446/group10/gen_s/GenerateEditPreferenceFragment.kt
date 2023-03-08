@@ -2,7 +2,10 @@ package cs446.group10.gen_s
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.android.material.button.MaterialButton
 import java.util.*
 
 data class PlanPreferenceDetail(
@@ -38,6 +41,24 @@ class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferen
             // will be removed later
             // used to test passing parameters from one fragment (GenerateFragment) to another fragment (GenerateEditPreferenceFragment)
             preferenceName.setText("New Plan");
+        }
+
+        val startDateCalendarFragment = DatePickerFragment();
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            replace(R.id.StartDatePickerFragment, startDateCalendarFragment);
+            commit();
+        }
+
+        fun setStartDate(dateVal: DateVal) {
+            val chosenStartDate = view.findViewById<TextView>(R.id.chosenStartDate);
+            chosenStartDate.text = DatePickerFragment.convertDateToString(dateVal);
+        }
+
+        val selectStartDateButton = view.findViewById<MaterialButton>(R.id.selectStartDate);
+        selectStartDateButton.setOnClickListener {
+            startDateCalendarFragment.showDatePicker(
+                DatePickerInitialVal(::setStartDate, null)
+            );
         }
     }
 }
