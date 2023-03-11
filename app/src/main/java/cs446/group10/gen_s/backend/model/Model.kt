@@ -7,7 +7,7 @@ import android.content.Context
 import com.google.gson.Gson
 import java.io.FileInputStream
 
-/*"New" things needed to be added to ViewModel:
+/*"New" things needed to be added to cs446.group10.gen_s.backend.view_model.ViewModel:
 - pushing to storage (we think this has to be tied to an android activity)
 - pulling from storage (^^)
 - creating an event object (given the inputs)
@@ -29,7 +29,7 @@ class Model {
         return this.views.size
     }
 
-     fun notifyView() {
+     private fun notifyView() {
 
          for (view in this.views) {
              view.update()

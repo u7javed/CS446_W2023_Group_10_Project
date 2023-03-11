@@ -1,12 +1,20 @@
+package cs446.group10.gen_s.backend.view_model
+
+import IdManager
+import ViewModelHelper
 import cs446.group10.gen_s.backend.model.Model
 import androidx.lifecycle.ViewModel
 import cs446.group10.gen_s.backend.dataClasses.*
+import cs446.group10.gen_s.backend.model.IView
 
-class ViewModel : ViewModel() {
+object ViewModel {
 
     private val _openSpaces: MutableList<Space> = mutableListOf()
     private val _model: Model = Model()
-    private val _calendar: Calendar = _model.getCalendar()
+
+    fun registerView(view: IView) {
+        _model.addView(view)
+    }
 
     private fun getExistingEvents(startRange: Long, endRange: Long): List<Event> {
         // TODO: Determine a way to obtain existing events with a start date within the
@@ -173,7 +181,7 @@ class ViewModel : ViewModel() {
         if (plan == null) {
             // TODO: return an error message or display an error
         }
-        this._model.addPlan(plan!!)
+        _model.addPlan(plan!!)
     }
 
     private fun generateEvent(name: String, startDate: Long, endDate: Long, notification: Long?): Event {
@@ -181,9 +189,12 @@ class ViewModel : ViewModel() {
         return Event(eventId, name, startDate, endDate, notification)
     }
 
-    fun addEventToCalendar(name: String, startDate: Long, endDate: Long, notification: Long?) {
+    fun addEventToCalendar(name: String, startDate: Long, endDate: Long, notification: Long?): Boolean {
         val event: Event = generateEvent(name, startDate, endDate, notification)
-        this._model.addEvent(event)
+        print("Adding event: $event : ")
+        _model.addEvent(event)
+        // TODO: check that event does not conflict with another event
+        return true
     }
 
     fun getAllEvents(): List<Event> {

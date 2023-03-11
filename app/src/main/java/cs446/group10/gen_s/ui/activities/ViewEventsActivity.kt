@@ -1,7 +1,7 @@
 package cs446.group10.gen_s.ui.activities
 
 import cs446.group10.gen_s.backend.dataClasses.Event
-import ViewModel
+import cs446.group10.gen_s.backend.view_model.ViewModel
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
@@ -14,12 +14,14 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import cs446.group10.gen_s.R
 import cs446.group10.gen_s.backend.model.IView
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class ViewEventsActivity : AppCompatActivity(), IView {
 
-    private val _viewModel: ViewModel by lazy {
-        ViewModelProvider(this)[ViewModel::class.java]
-    }
+    private val _viewModel = ViewModel
+    private val _dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
     private lateinit var _viewEventsLayout: LinearLayout
 
     @SuppressLint("SetTextI18n")
@@ -29,6 +31,9 @@ class ViewEventsActivity : AppCompatActivity(), IView {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Your Events"
+
+        // Register this view to the model
+        _viewModel.registerView(this)
 
         _viewEventsLayout = findViewById(R.id.view_events)
 
@@ -76,15 +81,19 @@ class ViewEventsActivity : AppCompatActivity(), IView {
             eventNameTextView.textSize = 16f
             eventNameTextView.setTextColor(Color.BLACK)
 
-            // date (middle left)
+            // Notification date (middle left)
             val dateTextView = TextView(this)
-            dateTextView.text = "${event.startDate}"
+            dateTextView.text = "Notification: "
             dateTextView.textSize = 12f
             dateTextView.setTextColor(Color.parseColor("#DD000000"))
 
             // time (bottom left)
+            val startDateStr: String = (LocalDateTime.ofEpochSecond(
+                event.startDate, 0, ZoneOffset.UTC).format(_dateTimeFormatter))
+            val endDateStr: String = (LocalDateTime.ofEpochSecond(
+                event.endDate, 0, ZoneOffset.UTC).format(_dateTimeFormatter))
             val timeTextView = TextView(this)
-            timeTextView.text = "${event.startDate} - ${event.endDate}"
+            timeTextView.text = "$startDateStr - $endDateStr"
             timeTextView.textSize = 12f
             timeTextView.setTextColor(Color.parseColor("#DD000000"))
 
