@@ -5,11 +5,14 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.PopupMenu.OnMenuItemClickListener
+import androidx.core.view.contains
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import cs446.group10.gen_s.R
 import java.text.SimpleDateFormat
@@ -20,7 +23,27 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
 
     private lateinit var actionButton: FloatingActionButton
 
+    private val calendar = Calendar.getInstance()
+    private var currentMonth = calendar.get(Calendar.MONTH)
+    private var currentYear = calendar.get(Calendar.YEAR)
+
     @SuppressLint("SimpleDateFormat")
+    private val events : ArrayList<Event> = arrayListOf(
+        Event("Event 1", SimpleDateFormat("dd-MM-yyyy").parse("06-02-2023")),
+        Event("Event 2", SimpleDateFormat("dd-MM-yyyy").parse("06-02-2023")),
+        Event("Event 3", SimpleDateFormat("dd-MM-yyyy").parse("07-02-2023")),
+        Event("Event 4", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
+        Event("Event 5", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
+        Event("Event 6", SimpleDateFormat("dd-MM-yyyy").parse("04-03-2023")),
+        Event("Event 7", SimpleDateFormat("dd-MM-yyyy").parse("05-03-2023")),
+        Event("Event 8", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
+        Event("Event 9", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
+        Event("Event 10", SimpleDateFormat("dd-MM-yyyy").parse("07-03-2023")),
+        Event("Event 11", SimpleDateFormat("dd-MM-yyyy").parse("06-04-2023")),
+        Event("Event 12", SimpleDateFormat("dd-MM-yyyy").parse("06-04-2023")),
+        Event("Event 13", SimpleDateFormat("dd-MM-yyyy").parse("07-04-2023")),
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
@@ -32,38 +55,46 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
             showFabPopup()
         }
 
-        val events : ArrayList<Event> = arrayListOf(
-            Event("Event 1", SimpleDateFormat("dd-MM-yyyy").parse("06-02-2023")),
-            Event("Event 2", SimpleDateFormat("dd-MM-yyyy").parse("06-02-2023")),
-            Event("Event 3", SimpleDateFormat("dd-MM-yyyy").parse("07-02-2023")),
-            Event("Event 4", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
-            Event("Event 5", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
-            Event("Event 6", SimpleDateFormat("dd-MM-yyyy").parse("04-03-2023")),
-            Event("Event 7", SimpleDateFormat("dd-MM-yyyy").parse("05-03-2023")),
-            Event("Event 8", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
-            Event("Event 9", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
-            Event("Event 10", SimpleDateFormat("dd-MM-yyyy").parse("07-03-2023")),
-            Event("Event 11", SimpleDateFormat("dd-MM-yyyy").parse("06-04-2023")),
-            Event("Event 12", SimpleDateFormat("dd-MM-yyyy").parse("06-04-2023")),
-            Event("Event 13", SimpleDateFormat("dd-MM-yyyy").parse("07-04-2023")),
-        )
+        renderCalender()
+    }
 
-        val calendar = Calendar.getInstance()
-        val currentMonth = calendar.get(Calendar.MONTH)
-        val currentYear = calendar.get(Calendar.YEAR)
+    fun onNextMonthHandler(view: View) {
+        if (currentMonth == 11) {
+            currentMonth = 0
+            currentYear++
+        } else {
+            currentMonth++
+        }
 
-        renderCalender(events, currentMonth, currentYear, calendar)
+        renderCalender()
+    }
+
+    fun onPreviousMonthHandler(view: View) {
+        if (currentMonth == 0) {
+            currentMonth = 11
+            currentYear--
+        } else {
+            currentMonth--
+        }
+
+        renderCalender()
     }
 
     @SuppressLint("SetTextI18n")
-    private fun renderCalender(events: ArrayList<Event>, currentMonth: Int, currentYear: Int, calendar: Calendar) {
+    private fun renderCalender() {
         val yearMonthTextView = findViewById<TextView>(R.id.calendar_year_month)
         val tableLayout = findViewById<LinearLayout>(R.id.calendar_table)
 
-        yearMonthTextView.text = "$currentYear ${calendar.getDisplayName(
-            Calendar.MONTH, 
-            Calendar.LONG, 
-            Locale.getDefault())}"
+        // Remove all views in tableLayout
+        tableLayout.removeAllViews()
+
+        tableLayout.layoutParams = TableLayout.LayoutParams(
+            TableLayout.LayoutParams.MATCH_PARENT,
+            TableLayout.LayoutParams.WRAP_CONTENT,
+        )
+
+        val months = arrayOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+        yearMonthTextView.text = "${months[currentMonth]} $currentYear"
 
         // Set calendar to first day of the month
         calendar.set(currentYear, currentMonth, 1)
@@ -196,13 +227,16 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
             if (currentDay > calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
                 // Add empty cells for days after the last day of the month
                 val tailingEmptyDays = 7 - (calendar.get(Calendar.DAY_OF_WEEK) - 1)
-                for (i in 1..tailingEmptyDays) {
-                    val emptyCell = TextView(this)
-                    emptyCell.text = ""
-                    emptyCell.layoutParams = cellParams
-                    currentRow.addView(emptyCell)
+
+                if (tailingEmptyDays < 7) {
+                    for (i in 1..tailingEmptyDays) {
+                        val emptyCell = TextView(this)
+                        emptyCell.text = ""
+                        emptyCell.layoutParams = cellParams
+                        currentRow.addView(emptyCell)
+                    }
+                    tableLayout.addView(currentRow)
                 }
-                tableLayout.addView(currentRow)
             }
 
             // If reached the end of the week, add the current row to the table layout
