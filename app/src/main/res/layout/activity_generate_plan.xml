@@ -4,16 +4,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     tools:context=".ui.activities.GeneratePlanActivity">
 
-    <TextView
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="vertical">-->
+
+<!--        &lt;!&ndash;    <fragment&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:name="cs446.group10.gen_s.PlanBasicInfoFragment"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:id="@+id/PlanBasicInfoFragment"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--        &lt;!&ndash;        android:layout_height="wrap_content" />&ndash;&gt;-->
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/PreferencesHeader"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center"-->
+<!--                android:text="Preferences"-->
+<!--                android:textColor="@color/primaryTextColor"-->
+<!--                android:textSize="20dp"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/imageButton"-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="20dp"-->
+<!--                android:background="#00FFFFFF"-->
+<!--                android:scaleType="centerInside"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:srcCompat="@drawable/plus" />-->
+
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/Preferences"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
+<!--    </LinearLayout>-->
+
+<!--    <Button-->
+<!--        android:id="@+id/GenerateButton"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Generate Plan"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent" />-->
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+    <FrameLayout
+        android:id="@+id/GenerateMainFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="This is where users can generate a plan"
-        android:layout_centerInParent="true"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/primaryTextColor"
-        android:gravity="center"/>
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

@@ -45,15 +45,17 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
 
         val timeUnits = resources.getStringArray(R.array.UnitsOfTime)
 
-        val spinner = findViewById<Spinner>(R.id.notificationSpinner)
-        if (spinner != null) {
+        val notificationInput = findViewById<EditText>(R.id.notificationValue)
+        val notificationSpinner = findViewById<Spinner>(R.id.notificationSpinner)
+
+        if (notificationSpinner != null) {
             val adapter = ArrayAdapter(
                 this,
                 android.R.layout.simple_spinner_item, timeUnits
             )
-            spinner.adapter = adapter
+            notificationSpinner.adapter = adapter
 
-            spinner.onItemSelectedListener = object :
+            notificationSpinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>,
@@ -67,6 +69,55 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
+
+        var notificationSwitch = findViewById<Switch>(R.id.notificationSwitchEvent)
+        notificationSwitch.isChecked = true
+        notificationSwitch?.setOnCheckedChangeListener({ _ , isChecked ->
+            if (!isChecked) {
+                notificationSpinner.visibility = View.GONE
+                notificationInput.visibility = View.GONE
+            } else {
+                notificationSpinner.visibility = View.VISIBLE
+                notificationInput.visibility = View.VISIBLE
+            }
+        })
+
+        //TO-DO: connect to backend
+        val currentPlans = resources.getStringArray(R.array.TempPlans)
+        val studyPlanSpinner = findViewById<Spinner>(R.id.studyPlanSpinner)
+
+        if (studyPlanSpinner != null) {
+            val adapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_item, currentPlans
+            )
+            studyPlanSpinner.adapter = adapter
+
+            studyPlanSpinner.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View, position: Int, id: Long
+                ) {
+                    //TO DO: integrate with backend
+
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    //TO DO: integrate with backend
+                }
+            }
+        }
+
+        var associatedPlanSwitch = findViewById<Switch>(R.id.associatedPlanSwitch)
+        associatedPlanSwitch.isChecked = true
+        associatedPlanSwitch?.setOnCheckedChangeListener({ _ , isChecked ->
+            if (!isChecked) {
+                studyPlanSpinner.visibility = View.GONE
+            } else {
+                studyPlanSpinner.visibility = View.VISIBLE
+            }
+        })
     }
 
     override fun onClick(v: View?) {
@@ -97,7 +148,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                 day
             )
             dpd.show()
-        } else {
+        } else if (v == btnStartTimePicker || v == btnEndTimePicker) {
                 val dH: Int
                 val dMin: Int
                 val c = Calendar.getInstance()

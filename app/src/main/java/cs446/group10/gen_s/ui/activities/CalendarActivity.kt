@@ -268,6 +268,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
             R.id.fab_generate_plan -> moveToGeneratePlanScreen()
             R.id.fab_view_events -> moveToViewEventsScreen()
             R.id.fab_import_calendar -> moveToImportCalendarScreen()
+            R.id.fab_view_plans -> moveToViewPlansScreen()
             else -> false
         }
     }
@@ -299,6 +300,12 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
     private fun moveToImportCalendarScreen(): Boolean {
         val importCalendarIntent = Intent(this, ImportCalendarActivity::class.java)
         startActivity(importCalendarIntent)
+        return true
+    }
+    
+    private fun moveToViewPlansScreen(): Boolean {
+        val viewPlansIntent = Intent(this, ViewPlansActivity::class.java)
+        startActivity(viewPlansIntent)
         return true
     }
 
