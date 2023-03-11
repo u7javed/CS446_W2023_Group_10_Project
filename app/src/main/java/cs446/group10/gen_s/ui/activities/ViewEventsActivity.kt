@@ -29,8 +29,6 @@ class ViewEventsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Your Events"
 
-        // Subscribe this activity to
-
         val viewEventsLayout = findViewById<LinearLayout>(R.id.view_events)
 
         val events : ArrayList<Event> = arrayListOf<Event>(

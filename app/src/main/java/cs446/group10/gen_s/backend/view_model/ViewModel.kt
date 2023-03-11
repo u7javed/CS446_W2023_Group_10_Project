@@ -186,4 +186,8 @@ class ViewModel : ViewModel() {
         this._model.addEvent(event)
     }
 
+    fun getAllEvents(): List<Event> {
+        return _model.getEventsData() ?: return listOf()
+    }
+
 }

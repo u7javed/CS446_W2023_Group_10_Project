@@ -5,6 +5,7 @@ import cs446.group10.gen_s.backend.model.Model
 import Plan
 import Preference
 import cs446.group10.gen_s.backend.model.IView
+import cs446.group10.gen_s.backend.model.ViewMock
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -28,7 +29,7 @@ class ModelUnitTests {
     var model = Model()
     @Test
     fun addView_test(){
-        var test_view = IView(model)
+        var test_view = ViewMock(model)
         model.addView(test_view)
         assertEquals(1, model.getViewLength())
         //assertEquals("updated view", model.notifyView())
