@@ -1,12 +1,19 @@
 package cs446.group10.gen_s.ui.activities
 
+import ViewModel
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import cs446.group10.gen_s.R
+import cs446.group10.gen_s.backend.dataClasses.Event
 
 class EditEventActivity : AppCompatActivity() {
+
+    private val _viewModel: ViewModel by lazy {
+        ViewModelProvider(this)[ViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,16 +26,16 @@ class EditEventActivity : AppCompatActivity() {
 
         val extras = intent.extras
         if (extras != null) {
-            var eventNameVal = extras.getString("eventName")
-            var startDateVal = extras.getString("date")
-            var endDateVal = extras.getString("date")
-            var startTimeVal = extras.getString("startTime")
-            var endTimeVal = extras.getString("endTime")
-            eventName.hint = eventNameVal
-            startDate.text = startDateVal
-            endDate.text = endDateVal
-            startTime.text = startTimeVal
-            endTime.text = endTimeVal
+            val eventId: String = extras.getString("eventId")!!
+            val event: Event? = _viewModel.getEventById(eventId)
+            if (event != null) {
+                eventName.hint = event.name
+                startDate.text = event.startDate.toString()
+                endDate.text = event.endDate.toString()
+                // TODO: Update based on the start date and end date information
+                startTime.text = "Something hrs"
+                endTime.text = "Something scd"
+            }
         }
     }
 

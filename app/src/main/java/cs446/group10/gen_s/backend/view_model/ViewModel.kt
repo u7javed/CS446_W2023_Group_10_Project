@@ -190,4 +190,8 @@ class ViewModel : ViewModel() {
         return _model.getEventsData() ?: return listOf()
     }
 
+    fun getEventById(eventId: String): Event? {
+        return _model.getEventById(eventId)
+    }
+
 }

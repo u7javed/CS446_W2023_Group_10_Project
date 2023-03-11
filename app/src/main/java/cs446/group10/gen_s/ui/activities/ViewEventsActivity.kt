@@ -13,8 +13,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import cs446.group10.gen_s.R
+import cs446.group10.gen_s.backend.model.IView
 
-class ViewEventsActivity : AppCompatActivity() {
+class ViewEventsActivity : AppCompatActivity(), IView {
 
     private val _viewModel: ViewModel by lazy {
         ViewModelProvider(this)[ViewModel::class.java]
@@ -99,11 +100,9 @@ class ViewEventsActivity : AppCompatActivity() {
                 dpToPixel(24),
                 dpToPixel(24)
             )
-//            editImageView.setOnClickListener(object : View.OnClickListener {
-//                override fun onClick(view: View?) {
-//                    moveToEditEventPage(event.eventName, event.date, event.startTime, event.endTime)
-//                }
-//            })
+            editImageView.setOnClickListener {
+                moveToEditEventPage(eventId = event.eventId)
+            }
             // eventLayout has 2 children (left, right)
             eventLayout.addView(infoLayout)
             eventLayout.addView(editImageView)
@@ -121,14 +120,16 @@ class ViewEventsActivity : AppCompatActivity() {
         return true
     }
 
-    private fun moveToEditEventPage(eventName: String, date: String, startTime: String, endTime: String): Boolean {
+    private fun moveToEditEventPage(eventId: String): Boolean {
         val editEventIntent = Intent(this, EditEventActivity::class.java)
-        editEventIntent.putExtra("eventName", eventName)
-        editEventIntent.putExtra("date", date)
-        editEventIntent.putExtra("startTime", startTime)
-        editEventIntent.putExtra("endTime", endTime)
+        editEventIntent.putExtra("eventId", eventId)
         editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(editEventIntent)
         return true
+    }
+
+    override fun update() {
+        val events: List<Event> = _viewModel.getAllEvents()
+        createEventsList(events)
     }
 }
