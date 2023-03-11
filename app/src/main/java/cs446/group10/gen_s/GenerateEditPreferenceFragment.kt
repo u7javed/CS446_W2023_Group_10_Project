@@ -40,7 +40,7 @@ class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferen
         if (newPreference) {
             // will be removed later
             // used to test passing parameters from one fragment (GenerateFragment) to another fragment (GenerateEditPreferenceFragment)
-            preferenceName.setText("New Plan");
+            preferenceName.setText("New cs446.group10.gen_s.backend.dataClasses.Plan");
         }
 
         val startDateCalendarFragment = DatePickerFragment();

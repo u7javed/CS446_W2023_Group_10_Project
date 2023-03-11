@@ -1,6 +1,6 @@
-import cs446.group10.gen_s.backend.dataClasses.Space
 import cs446.group10.gen_s.backend.model.Model
 import androidx.lifecycle.ViewModel
+import cs446.group10.gen_s.backend.dataClasses.*
 
 class ViewModel : ViewModel() {
 

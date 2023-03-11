@@ -27,7 +27,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_add_event)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "Add an Event"
+        supportActionBar?.title = "Add an cs446.group10.gen_s.backend.dataClasses.Event"
 
         btnStartDatePicker = findViewById<Button>(R.id.startDateInput)
         btnStartTimePicker = findViewById<Button>(R.id.startTimeInput)

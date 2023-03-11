@@ -1,6 +1,6 @@
 package cs446.group10.gen_s.backend.model
 
-import Event
+import cs446.group10.gen_s.backend.dataClasses.Event
 
 class ViewMock(var model: Model) : IView {
 

@@ -1,5 +1,6 @@
 package cs446.group10.gen_s.ui.activities
 
+import cs446.group10.gen_s.backend.dataClasses.Event
 import ViewModel
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -7,9 +8,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
@@ -17,9 +16,10 @@ import cs446.group10.gen_s.R
 
 class ViewEventsActivity : AppCompatActivity() {
 
-    private val viewModel: ViewModel by lazy {
+    private val _viewModel: ViewModel by lazy {
         ViewModelProvider(this)[ViewModel::class.java]
     }
+    private lateinit var _viewEventsLayout: LinearLayout
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,17 +29,13 @@ class ViewEventsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Your Events"
 
-        val viewEventsLayout = findViewById<LinearLayout>(R.id.view_events)
+        _viewEventsLayout = findViewById(R.id.view_events)
 
-        val events : ArrayList<Event> = arrayListOf<Event>(
-            Event("Event 1", "Jan 3", "8am", "10am"),
-            Event("Event 2", "Jan 4", "11am", "12pm"),
-            Event("Event 3", "Jan 5", "1pm", "3pm"),
-            Event("Event 4", "Jan 6", "4pm", "6pm"),
-            Event("Event 5", "Jan 7", "7pm", "9pm")
-        )
+        createEventsList(_viewModel.getAllEvents())
+    }
 
-        for (event in events) {
+    private fun createEventsList(events: List<Event>) {
+        events.forEach { event ->
             // eventLayout
             val eventLayout = LinearLayout(this)
             eventLayout.orientation = LinearLayout.HORIZONTAL
@@ -75,19 +71,19 @@ class ViewEventsActivity : AppCompatActivity() {
 
             // eventName (top left)
             val eventNameTextView = TextView(this)
-            eventNameTextView.text = event.eventName
+            eventNameTextView.text = event.name
             eventNameTextView.textSize = 16f
             eventNameTextView.setTextColor(Color.BLACK)
 
             // date (middle left)
             val dateTextView = TextView(this)
-            dateTextView.text = event.date
+            dateTextView.text = "${event.startDate}"
             dateTextView.textSize = 12f
             dateTextView.setTextColor(Color.parseColor("#DD000000"))
 
             // time (bottom left)
             val timeTextView = TextView(this)
-            timeTextView.text = "${event.startTime} - ${event.endTime}"
+            timeTextView.text = "${event.startDate} - ${event.endDate}"
             timeTextView.textSize = 12f
             timeTextView.setTextColor(Color.parseColor("#DD000000"))
 
@@ -103,16 +99,16 @@ class ViewEventsActivity : AppCompatActivity() {
                 dpToPixel(24),
                 dpToPixel(24)
             )
-            editImageView.setOnClickListener(object : View.OnClickListener {
-                override fun onClick(view: View?) {
-                    moveToEditEventPage(event.eventName, event.date, event.startTime, event.endTime)
-                }
-            })
+//            editImageView.setOnClickListener(object : View.OnClickListener {
+//                override fun onClick(view: View?) {
+//                    moveToEditEventPage(event.eventName, event.date, event.startTime, event.endTime)
+//                }
+//            })
             // eventLayout has 2 children (left, right)
             eventLayout.addView(infoLayout)
             eventLayout.addView(editImageView)
 
-            viewEventsLayout.addView(eventLayout)
+            _viewEventsLayout.addView(eventLayout)
         }
     }
 
@@ -124,13 +120,6 @@ class ViewEventsActivity : AppCompatActivity() {
         finish()
         return true
     }
-
-    data class Event(
-        val eventName: String,
-        val date: String,
-        val startTime: String,
-        val endTime: String
-    )
 
     private fun moveToEditEventPage(eventName: String, date: String, startTime: String, endTime: String): Boolean {
         val editEventIntent = Intent(this, EditEventActivity::class.java)
