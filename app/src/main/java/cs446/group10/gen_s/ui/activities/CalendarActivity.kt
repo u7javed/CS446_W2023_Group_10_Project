@@ -15,7 +15,6 @@ import android.widget.PopupMenu.OnMenuItemClickListener
 import androidx.core.view.contains
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import cs446.group10.gen_s.R
-<<<<<<< HEAD
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -44,14 +43,6 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
         Event("Event 12", SimpleDateFormat("dd-MM-yyyy").parse("06-04-2023")),
         Event("Event 13", SimpleDateFormat("dd-MM-yyyy").parse("07-04-2023")),
     )
-=======
-import cs446.group10.gen_s.backend.model.Model
-
-class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
-
-    private lateinit var actionButton: FloatingActionButton;
-    private val viewModel: Model = Model()
->>>>>>> 9ba72b4 (Events can now be added and viewed)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
