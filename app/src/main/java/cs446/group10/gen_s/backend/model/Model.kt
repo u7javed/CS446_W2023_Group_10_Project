@@ -1,14 +1,13 @@
 package cs446.group10.gen_s.backend.model
 
-import Calendar
-import Event
-import Plan
-import Preference
+import cs446.group10.gen_s.backend.dataClasses.Calendar
+import cs446.group10.gen_s.backend.dataClasses.Event
+import cs446.group10.gen_s.backend.dataClasses.Plan
 import android.content.Context
 import com.google.gson.Gson
 import java.io.FileInputStream
 
-/*"New" things needed to be added to ViewModel:
+/*"New" things needed to be added to cs446.group10.gen_s.backend.view_model.ViewModel:
 - pushing to storage (we think this has to be tied to an android activity)
 - pulling from storage (^^)
 - creating an event object (given the inputs)
@@ -17,12 +16,12 @@ import java.io.FileInputStream
  */
 
 class Model {
-    private var views: MutableList<View> = mutableListOf<View>()
+    private var views: MutableList<IView> = mutableListOf<IView>()
     private var calendar: Calendar = Calendar("og")
     private var planMap: MutableMap<String, Plan> = mutableMapOf<String, Plan>()
     private var eventMap: MutableMap<String, Event> = mutableMapOf<String, Event>()
 
-    fun addView(view: View) {
+    fun addView(view: IView) {
         this.views.add(view)
 
     }
@@ -30,7 +29,7 @@ class Model {
         return this.views.size
     }
 
-     fun notifyView() {
+     private fun notifyView() {
 
          for (view in this.views) {
              view.update()

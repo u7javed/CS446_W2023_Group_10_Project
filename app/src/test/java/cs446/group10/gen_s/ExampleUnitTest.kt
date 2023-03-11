@@ -1,10 +1,10 @@
 package cs446.group10.gen_s
 
-import Event
+import cs446.group10.gen_s.backend.dataClasses.Event
 import cs446.group10.gen_s.backend.model.Model
-import Plan
-import Preference
-import cs446.group10.gen_s.backend.model.View
+import cs446.group10.gen_s.backend.dataClasses.Plan
+import cs446.group10.gen_s.backend.dataClasses.Preference
+import cs446.group10.gen_s.backend.model.ViewMock
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -28,7 +28,7 @@ class ModelUnitTests {
     var model = Model()
     @Test
     fun addView_test(){
-        var test_view = View(model)
+        var test_view = ViewMock(model)
         model.addView(test_view)
         assertEquals(1, model.getViewLength())
         //assertEquals("updated view", model.notifyView())
@@ -98,7 +98,7 @@ class ModelUnitTests {
 
         var plan = Plan(
             "plan1",
-            "Plan Test",
+            "cs446.group10.gen_s.backend.dataClasses.Plan Test",
             mutableListOf(event, mod_event)
         )
 
@@ -109,7 +109,7 @@ class ModelUnitTests {
         plan.events.add(event)
         model.editPlan(
             "plan1",
-            "Plan Test",
+            "cs446.group10.gen_s.backend.dataClasses.Plan Test",
             mutableListOf(event))
         assertEquals(plan, model.getPlanById("plan1"))
 
@@ -122,13 +122,13 @@ class ModelUnitTests {
     /*
     @Test
     fun storage_test(){
-        var event = Event("test")
+        var event = cs446.group10.gen_s.backend.dataClasses.Event("test")
         event.name = "Test"
         event.startDate = LocalDateTime.parse("2018-12-14T09:55:00")
         event.endDate =LocalDateTime.parse("2019-12-14T09:55:00")
         event.notification = LocalDateTime.parse("2019-10-14T09:55:00")
 
-        var mod_event = Event("test2")
+        var mod_event = cs446.group10.gen_s.backend.dataClasses.Event("test2")
         mod_event.name = "Test"
         mod_event.startDate = LocalDateTime.parse("2018-12-14T09:55:00")
         mod_event.endDate =LocalDateTime.parse("2022-12-14T09:55:00")

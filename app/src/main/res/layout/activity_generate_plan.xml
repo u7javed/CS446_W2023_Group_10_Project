@@ -61,7 +61,7 @@
 <!--        android:id="@+id/GenerateButton"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->
-<!--        android:text="Generate Plan"-->
+<!--        android:text="Generate cs446.group10.gen_s.backend.dataClasses.Plan"-->
 <!--        app:layout_constraintBottom_toBottomOf="parent" />-->
 <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
     <FrameLayout

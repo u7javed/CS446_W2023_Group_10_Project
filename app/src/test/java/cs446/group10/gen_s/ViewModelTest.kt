@@ -1,3 +1,6 @@
+import cs446.group10.gen_s.backend.dataClasses.Event
+import cs446.group10.gen_s.backend.dataClasses.Plan
+import cs446.group10.gen_s.backend.dataClasses.Preference
 import org.junit.Test
 import org.junit.Assert.*
 

@@ -1,14 +1,14 @@
 package cs446.group10.gen_s.backend.model
 
-import Event
+import cs446.group10.gen_s.backend.dataClasses.Event
 
-open class View(var model: Model) {
+class ViewMock(var model: Model) : IView {
 
     init {
 
     }
 
-    open fun update() {
+    override fun update() {
         //val plans: Any = model.getPlansData()
         val events: MutableList<Event>? = model.getEventsData()
         // update UI given calendar data (plans, events)
