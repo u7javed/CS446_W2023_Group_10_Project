@@ -2,7 +2,7 @@ package cs446.group10.gen_s.backend.model
 
 import Event
 
-class EventViewMock(model: Model) : View(model) {
+class EventViewMock(private val model: Model) : IView {
 
     init {
         model.addView(this)

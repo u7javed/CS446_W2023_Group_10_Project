@@ -4,7 +4,7 @@ import Event
 import cs446.group10.gen_s.backend.model.Model
 import Plan
 import Preference
-import cs446.group10.gen_s.backend.model.View
+import cs446.group10.gen_s.backend.model.IView
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -28,7 +28,7 @@ class ModelUnitTests {
     var model = Model()
     @Test
     fun addView_test(){
-        var test_view = View(model)
+        var test_view = IView(model)
         model.addView(test_view)
         assertEquals(1, model.getViewLength())
         //assertEquals("updated view", model.notifyView())

@@ -3,7 +3,6 @@ package cs446.group10.gen_s.backend.model
 import Calendar
 import Event
 import Plan
-import Preference
 import android.content.Context
 import com.google.gson.Gson
 import java.io.FileInputStream
@@ -17,12 +16,12 @@ import java.io.FileInputStream
  */
 
 class Model {
-    private var views: MutableList<View> = mutableListOf<View>()
+    private var views: MutableList<IView> = mutableListOf<IView>()
     private var calendar: Calendar = Calendar("og")
     private var planMap: MutableMap<String, Plan> = mutableMapOf<String, Plan>()
     private var eventMap: MutableMap<String, Event> = mutableMapOf<String, Event>()
 
-    fun addView(view: View) {
+    fun addView(view: IView) {
         this.views.add(view)
 
     }

@@ -1,5 +1,6 @@
 package cs446.group10.gen_s.ui.activities
 
+import ViewModel
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
@@ -11,9 +12,15 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import cs446.group10.gen_s.R
 
 class ViewEventsActivity : AppCompatActivity() {
+
+    private val viewModel: ViewModel by lazy {
+        ViewModelProvider(this)[ViewModel::class.java]
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +28,8 @@ class ViewEventsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Your Events"
+
+        // Subscribe this activity to
 
         val viewEventsLayout = findViewById<LinearLayout>(R.id.view_events)
 

@@ -1,15 +1,12 @@
 import cs446.group10.gen_s.backend.dataClasses.Space
 import cs446.group10.gen_s.backend.model.Model
-import java.time.LocalDate
+import androidx.lifecycle.ViewModel
 
-class ViewModel {
+class ViewModel : ViewModel() {
 
-    private val openSpaces: MutableList<Space> = mutableListOf()
-    private val model: Model = Model()
-
-    init {
-
-    }
+    private val _openSpaces: MutableList<Space> = mutableListOf()
+    private val _model: Model = Model()
+    private val _calendar: Calendar = _model.getCalendar()
 
     private fun getExistingEvents(startRange: Long, endRange: Long): List<Event> {
         // TODO: Determine a way to obtain existing events with a start date within the
@@ -28,14 +25,14 @@ class ViewModel {
      * algorithm, is in decreasing order of interval size
      */
     private fun repositionSpaces(index: Int) {
-        if (index >= openSpaces.size) return
+        if (index >= _openSpaces.size) return
         while (index > 0) {
             // If the space at index is in the correct position, stop
-            if (openSpaces[index].duration >= openSpaces[index - 1].duration)
+            if (_openSpaces[index].duration >= _openSpaces[index - 1].duration)
                 break
-            val temp: Space = openSpaces[index]
-            openSpaces[index] = openSpaces[index - 1]
-            openSpaces[index - 1] = temp
+            val temp: Space = _openSpaces[index]
+            _openSpaces[index] = _openSpaces[index - 1]
+            _openSpaces[index - 1] = temp
         }
     }
 
@@ -43,27 +40,27 @@ class ViewModel {
         val existingEvents: List<Event> = getExistingEvents(startRange, endRange)
 
         // Get the list of open spaces
-        openSpaces.clear()
+        _openSpaces.clear()
         if (existingEvents.isNotEmpty()) {
             if (existingEvents[0].startDate - startRange > 0)
-                openSpaces.add(Space(startRange, existingEvents[0].startDate))
+                _openSpaces.add(Space(startRange, existingEvents[0].startDate))
 
             // Go through each of the existing events and find open spaces between them
             for (i in 1 until existingEvents.size) {
                 if (existingEvents[i].startDate - existingEvents[i - 1].endDate > 0)
-                    openSpaces.add(Space(existingEvents[i - 1].endDate, existingEvents[i].startDate))
+                    _openSpaces.add(Space(existingEvents[i - 1].endDate, existingEvents[i].startDate))
             }
 
             // Check if the end of the last existing event and the end of the preference range contain an open space
             if (endRange - existingEvents.last().endDate > 0)
-                openSpaces.add(Space(existingEvents.last().endDate, endRange))
+                _openSpaces.add(Space(existingEvents.last().endDate, endRange))
         } else {
             // If there are no existing events within the time range, then the entire time range is an open space
-            openSpaces.add(Space(startRange, endRange))
+            _openSpaces.add(Space(startRange, endRange))
         }
 
         // Sort the open spaces by smallest interval of open space to largest
-        openSpaces.sortBy { it.duration }
+        _openSpaces.sortBy { it.duration }
 
         // Sort the preferences by largest duration to smallest
         preferences.sortedByDescending { it.duration }
@@ -71,8 +68,8 @@ class ViewModel {
         val newEvents: MutableList<Event> = mutableListOf()
         preferences.forEach { preference ->
             var newEvent: Event? = null
-            for (index in 0 until openSpaces.size) {
-                val space: Space = openSpaces[index]
+            for (index in 0 until _openSpaces.size) {
+                val space: Space = _openSpaces[index]
                 // Situation 1: If the space starts after preference start and space ends before preference ends, then
                 // check if the space is large enough
                 val situation1 = (space.start >= preference.startRange &&
@@ -94,10 +91,10 @@ class ViewModel {
 
                     // If the entire open space is used, then delete the open space
                     if (newEvent.endDate >= space.end)
-                        openSpaces.removeAt(index)
+                        _openSpaces.removeAt(index)
                     // If there is still space available, shrink it to fit with the new space and reposition item
                     else {
-                        openSpaces[index] = Space(newEvent.endDate, space.end)
+                        _openSpaces[index] = Space(newEvent.endDate, space.end)
                         repositionSpaces(index)
                     }
                     break
@@ -125,21 +122,21 @@ class ViewModel {
                     // newEvent.end to space.end may be a second new space.
                     var numSpaces = 0
                     if (newEvent.startDate - space.start > 0) {
-                        openSpaces[index] = Space(space.start, newEvent.startDate)
+                        _openSpaces[index] = Space(space.start, newEvent.startDate)
                         repositionSpaces(index)
                         numSpaces++
                     }
                     if (space.end - newEvent.endDate > 0) {
                         if (numSpaces == 0) // The previous space was not found
-                            openSpaces[index] = Space(newEvent.endDate, space.end)
+                            _openSpaces[index] = Space(newEvent.endDate, space.end)
                         else
-                            openSpaces.add(index, Space(newEvent.endDate, space.end))
+                            _openSpaces.add(index, Space(newEvent.endDate, space.end))
                         repositionSpaces(index)
                         numSpaces++
                     }
                     // If no new spaces exist, then delete the existing space that was used to create the event
                     if (numSpaces == 0)
-                        openSpaces.removeAt(index)
+                        _openSpaces.removeAt(index)
                     break
                 }
             }
@@ -176,7 +173,7 @@ class ViewModel {
         if (plan == null) {
             // TODO: return an error message or display an error
         }
-        this.model.addPlan(plan!!)
+        this._model.addPlan(plan!!)
     }
 
     private fun generateEvent(name: String, startDate: Long, endDate: Long, notification: Long?): Event {
@@ -186,7 +183,7 @@ class ViewModel {
 
     fun addEventToCalendar(name: String, startDate: Long, endDate: Long, notification: Long?) {
         val event: Event = generateEvent(name, startDate, endDate, notification)
-        this.model.addEvent(event)
+        this._model.addEvent(event)
     }
 
 }
