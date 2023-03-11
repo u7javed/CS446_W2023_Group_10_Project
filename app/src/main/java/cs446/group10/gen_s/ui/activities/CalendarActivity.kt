@@ -18,7 +18,7 @@ import kotlin.collections.ArrayList
 
 class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
 
-    private lateinit var actionButton: FloatingActionButton;
+    private lateinit var actionButton: FloatingActionButton
 
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,32 +32,41 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
             showFabPopup()
         }
 
-        val calendarView = findViewById<LinearLayout>(R.id.calendar_view)
-
-        val events : ArrayList<Event> = arrayListOf<Event>(
-            Event("Event 1", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
-            Event("Event 2", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
-            Event("Event 3", SimpleDateFormat("dd-MM-yyyy").parse("04-03-2023")),
-            Event("Event 4", SimpleDateFormat("dd-MM-yyyy").parse("05-03-2023")),
-            Event("Event 5", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
-            Event("Event 6", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
-            Event("Event 7", SimpleDateFormat("dd-MM-yyyy").parse("07-03-2023"))
+        val events : ArrayList<Event> = arrayListOf(
+            Event("Event 1", SimpleDateFormat("dd-MM-yyyy").parse("06-02-2023")),
+            Event("Event 2", SimpleDateFormat("dd-MM-yyyy").parse("06-02-2023")),
+            Event("Event 3", SimpleDateFormat("dd-MM-yyyy").parse("07-02-2023")),
+            Event("Event 4", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
+            Event("Event 5", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
+            Event("Event 6", SimpleDateFormat("dd-MM-yyyy").parse("04-03-2023")),
+            Event("Event 7", SimpleDateFormat("dd-MM-yyyy").parse("05-03-2023")),
+            Event("Event 8", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
+            Event("Event 9", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
+            Event("Event 10", SimpleDateFormat("dd-MM-yyyy").parse("07-03-2023")),
+            Event("Event 11", SimpleDateFormat("dd-MM-yyyy").parse("06-04-2023")),
+            Event("Event 12", SimpleDateFormat("dd-MM-yyyy").parse("06-04-2023")),
+            Event("Event 13", SimpleDateFormat("dd-MM-yyyy").parse("07-04-2023")),
         )
 
-        // Get current month and year
         val calendar = Calendar.getInstance()
         val currentMonth = calendar.get(Calendar.MONTH)
         val currentYear = calendar.get(Calendar.YEAR)
 
+        renderCalender(events, currentMonth, currentYear, calendar)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun renderCalender(events: ArrayList<Event>, currentMonth: Int, currentYear: Int, calendar: Calendar) {
+        val yearMonthTextView = findViewById<TextView>(R.id.calendar_year_month)
+        val tableLayout = findViewById<LinearLayout>(R.id.calendar_table)
+
+        yearMonthTextView.text = "$currentYear ${calendar.getDisplayName(
+            Calendar.MONTH, 
+            Calendar.LONG, 
+            Locale.getDefault())}"
+
         // Set calendar to first day of the month
         calendar.set(currentYear, currentMonth, 1)
-
-        // Create a new table layout to hold the calendar
-        val tableLayout = TableLayout(this)
-        tableLayout.layoutParams = TableLayout.LayoutParams(
-            TableLayout.LayoutParams.MATCH_PARENT,
-            TableLayout.LayoutParams.WRAP_CONTENT
-        )
 
         // Create header row for the calendar
         val headerRow = TableRow(this)
@@ -146,9 +155,9 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
                 val eventCalendar = Calendar.getInstance()
                 eventCalendar.time = event.date!!
                 eventCalendar.get(Calendar.DAY_OF_MONTH) == currentDay &&
-                    eventCalendar.get(Calendar.MONTH) == currentMonth &&
-                    eventCalendar.get(Calendar.YEAR) == currentYear
-                }
+                        eventCalendar.get(Calendar.MONTH) == currentMonth &&
+                        eventCalendar.get(Calendar.YEAR) == currentYear
+            }
 
             if (eventsForDay.isNotEmpty()) {
                 // Create a new linear layout to hold the events for the day
@@ -203,9 +212,6 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener {
                 currentRow.layoutParams = rowParams
             }
         }
-
-        // Add table layout to calendar view
-        calendarView.addView(tableLayout)
     }
 
     private fun dpToPixel(_dp: Int) : Int {

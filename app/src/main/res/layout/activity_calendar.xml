@@ -7,7 +7,6 @@
     tools:context=".ui.activities.CalendarActivity">
 
     <LinearLayout
-        android:id="@+id/calendar_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -32,6 +31,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/border_bottom_gray">
             <ImageView
+                android:id="@+id/calendar_previous"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/chevron_dark"
@@ -39,20 +39,27 @@
                 android:rotation="180"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/calendar_year_month"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="2023 March"
                 android:textSize="20sp"
                 android:textColor="#828282"
                 android:layout_weight="1"
                 android:gravity="center"/>
             
             <ImageView
+                android:id="@+id/calendar_next"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/chevron_dark"
                 android:layout_gravity="center_vertical" />
         </LinearLayout>
+
+        <TableLayout
+            android:id="@+id/calendar_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TableLayout>
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
