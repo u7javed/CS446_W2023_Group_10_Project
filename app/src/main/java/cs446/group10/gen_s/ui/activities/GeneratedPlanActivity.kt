@@ -19,16 +19,16 @@ class GeneratedPlanActivity : AppCompatActivity() {
         setContentView(R.layout.activity_generated_plan)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "Your New Plan"
+        supportActionBar?.title = "Your New cs446.group10.gen_s.backend.dataClasses.Plan"
 
         val generatedEventsLayout = findViewById<LinearLayout>(R.id.generated_events)
 
         val generatedEvents : ArrayList<Event> = arrayListOf(
-            Event("Event 1", "Jan 3", "8am", "10am"),
-            Event("Event 2", "Jan 4", "11am", "12pm"),
-            Event("Event 3", "Jan 5", "1pm", "3pm"),
-            Event("Event 4", "Jan 6", "4pm", "6pm"),
-            Event("Event 5", "Jan 7", "7pm", "9pm")
+            Event("cs446.group10.gen_s.backend.dataClasses.Event 1", "Jan 3", "8am", "10am"),
+            Event("cs446.group10.gen_s.backend.dataClasses.Event 2", "Jan 4", "11am", "12pm"),
+            Event("cs446.group10.gen_s.backend.dataClasses.Event 3", "Jan 5", "1pm", "3pm"),
+            Event("cs446.group10.gen_s.backend.dataClasses.Event 4", "Jan 6", "4pm", "6pm"),
+            Event("cs446.group10.gen_s.backend.dataClasses.Event 5", "Jan 7", "7pm", "9pm")
         )
 
         for (event in generatedEvents) {

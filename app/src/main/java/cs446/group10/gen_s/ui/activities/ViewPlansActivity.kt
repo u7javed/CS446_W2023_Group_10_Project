@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import cs446.group10.gen_s.R
+import cs446.group10.gen_s.backend.dataClasses.Event
 
 class ViewPlansActivity : AppCompatActivity() {
 
@@ -24,8 +25,8 @@ class ViewPlansActivity : AppCompatActivity() {
         val viewPlansLayout = findViewById<LinearLayout>(R.id.view_plans)
 
         val plans : ArrayList<ViewPlansActivity.Plan> = arrayListOf<ViewPlansActivity.Plan>(
-            ViewPlansActivity.Plan("Plan 1", "Jan 3", "Jan 12", arrayListOf<ViewEventsActivity.Event>(ViewEventsActivity.Event("Event 2", "Jan 4", "11am", "12pm"))),
-            ViewPlansActivity.Plan("Event 2", "Jan 4", "Jan 5", arrayListOf<ViewEventsActivity.Event>())
+            ViewPlansActivity.Plan("cs446.group10.gen_s.backend.dataClasses.Plan 1", "Jan 3", "Jan 12", arrayListOf<Event>(Event("cs446.group10.gen_s.backend.dataClasses.Event 2", "Jan 4", 10000000, 10000060))),
+            ViewPlansActivity.Plan("cs446.group10.gen_s.backend.dataClasses.Event 2", "Jan 4", "Jan 5", arrayListOf<Event>())
         )
 
         for (plan in plans) {
@@ -114,10 +115,10 @@ class ViewPlansActivity : AppCompatActivity() {
         val planName: String,
         val startdate: String,
         val enddate: String,
-        val events: ArrayList<ViewEventsActivity.Event>
+        val events: ArrayList<Event>
     )
 
-    private fun moveToEditPlanPage(planName: String, startDate: String, endDate: String, events: ArrayList<ViewEventsActivity.Event>): Boolean {
+    private fun moveToEditPlanPage(planName: String, startDate: String, endDate: String, events: ArrayList<Event>): Boolean {
         val editPlanIntent = Intent(this, EditPlanActivity::class.java)
         val eventsAsString: String = Gson().toJson(events)
         editPlanIntent.putExtra("planName", planName)

@@ -10,7 +10,7 @@ class AutoGenerateActivity : AppCompatActivity() {
         setContentView(R.layout.activity_auto_generate)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "Auto-Generate a Plan"
+        supportActionBar?.title = "Auto-Generate a cs446.group10.gen_s.backend.dataClasses.Plan"
     }
 
     override fun onSupportNavigateUp(): Boolean {

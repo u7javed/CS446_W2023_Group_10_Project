@@ -10,7 +10,7 @@ class ImportCalendarActivity : AppCompatActivity() {
         setContentView(R.layout.activity_import_calendar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "Import Calendar"
+        supportActionBar?.title = "Import cs446.group10.gen_s.backend.dataClasses.Calendar"
     }
 
     override fun onSupportNavigateUp(): Boolean {

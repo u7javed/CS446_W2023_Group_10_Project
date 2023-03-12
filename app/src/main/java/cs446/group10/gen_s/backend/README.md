@@ -4,7 +4,7 @@
 
 Particularly, you will find the following
 * `Model`
-* `ViewModel`
+* `cs446.group10.gen_s.backend.view_model.ViewModel`
 * Storage helper classes
 * Algorithm classes
 * Other helper classes

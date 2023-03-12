@@ -1,15 +1,13 @@
 package cs446.group10.gen_s.backend.model
 
-import Calendar
-import Event
-import Plan
-import Preference
+import cs446.group10.gen_s.backend.dataClasses.Calendar
+import cs446.group10.gen_s.backend.dataClasses.Event
+import cs446.group10.gen_s.backend.dataClasses.Plan
 import android.content.Context
 import com.google.gson.Gson
 import java.io.FileInputStream
-import java.time.LocalDateTime
 
-/*"New" things needed to be added to ViewModel:
+/*"New" things needed to be added to cs446.group10.gen_s.backend.view_model.ViewModel:
 - pushing to storage (we think this has to be tied to an android activity)
 - pulling from storage (^^)
 - creating an event object (given the inputs)
@@ -18,12 +16,12 @@ import java.time.LocalDateTime
  */
 
 class Model {
-    private var views: MutableList<View> = mutableListOf<View>()
+    private var views: MutableList<IView> = mutableListOf<IView>()
     private var calendar: Calendar = Calendar("og")
     private var planMap: MutableMap<String, Plan> = mutableMapOf<String, Plan>()
     private var eventMap: MutableMap<String, Event> = mutableMapOf<String, Event>()
 
-    fun addView(view: View) {
+    fun addView(view: IView) {
         this.views.add(view)
 
     }
@@ -31,7 +29,7 @@ class Model {
         return this.views.size
     }
 
-     fun notifyView() {
+     private fun notifyView() {
 
          for (view in this.views) {
              view.update()
@@ -39,19 +37,28 @@ class Model {
          // TODO: figure out a way to call pushCalendarToStorage
      }
 
-     fun addEvent(event: Event) {
+     fun addEvent(event: Event): Boolean {
+         // Check if the event conflicts with an existing event
+         calendar.events.forEach { curEvent: Event ->
+             if ((event.startDate <= curEvent.startDate && event.endDate > curEvent.startDate) ||
+                 (event.startDate < curEvent.endDate && event.endDate >= curEvent.endDate) ||
+                 (event.startDate <= curEvent.startDate && event.endDate >= curEvent.endDate) ||
+                 (event.startDate > curEvent.startDate && event.endDate < curEvent.endDate))
+                 return false
+         }
          // given an event, add it to the calendar
-        this.calendar.events.add(event)
+         calendar.events.add(event)
          // given an event, add to eventMap
          eventMap[event.eventId] = event
          this.notifyView()
+         return true
      }
 
      fun editEvent(eventId: String,
                    name: String,
-                   startDate:LocalDateTime,
-                   endDate: LocalDateTime,
-                   notification: LocalDateTime) {
+                   startDate: Long,
+                   endDate: Long,
+                   notification: Long) {
          var event = getEventById(eventId)
          event?.name = name
          event?.startDate = startDate
@@ -106,16 +113,11 @@ class Model {
 
      fun editPlan(planId: String,
                   name: String,
-                  startDate:LocalDateTime,
-                  endDate: LocalDateTime,
-                  events: MutableList<Event>,
-                  preferences: MutableList<Preference>) {
+                  events: MutableList<Event>) {
          var plan = getPlanById(planId)
          plan?.name = name
-         plan?.startDate = startDate
-         plan?.endDate = endDate
-         plan?.events = events
-         plan?.preferences = preferences
+         plan?.events?.clear()
+         plan?.events?.addAll(events)
 
          // given a plan, update planMap
          if (plan != null) {
