@@ -170,10 +170,10 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                     val myFormat = "dd.MM.yyyy"
                     val sdf = SimpleDateFormat(myFormat, Locale.US)
                     if (v == btnStartDatePicker) {
-                        _startDate = LocalDate.of(year, month+1, dayOfMonth)
+                        _startDate = LocalDate.of(year, monthOfYear+1, dayOfMonth)
                         startDateText.text = sdf.format(cal.time)
                     } else {
-                        _endDate = LocalDate.of(year, month+1, dayOfMonth)
+                        _endDate = LocalDate.of(year, monthOfYear+1, dayOfMonth)
                         endDateText.text = sdf.format(cal.time)
                     }
                 },
