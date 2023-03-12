@@ -5,5 +5,7 @@ data class Event(
     var name: String,
     var startDate: Long,
     var endDate: Long,
-    var notification: Long? = null
+    var notification: Long? = null,
+    var planId: String? = null,
+    var color: String = "#4472AF"
 )
