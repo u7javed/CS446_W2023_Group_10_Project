@@ -11,9 +11,11 @@ import android.view.Gravity
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cs446.group10.gen_s.R
 import cs446.group10.gen_s.backend.model.IView
+import cs446.group10.gen_s.ui.adapters.EventListViewAdapter
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -23,6 +25,9 @@ class ViewEventsActivity : AppCompatActivity(), IView {
     private val _viewModel = ViewModel
     private val _dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
     private lateinit var _viewEventsLayout: LinearLayout
+    private lateinit var _recyclerView: RecyclerView
+    private lateinit var _recyclerAdapter: EventListViewAdapter
+    private lateinit var _events: List<Event>
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,113 +37,38 @@ class ViewEventsActivity : AppCompatActivity(), IView {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Your Events"
 
+        // Update events
+        _events = _viewModel.getAllEventsSorted()
+
         // Register this view to the model
         _viewModel.registerView(this)
 
         _viewEventsLayout = findViewById(R.id.view_events)
+        initRecyclerView()
 
-        createEventsList(_viewModel.getAllEvents())
+//        createEventsList(_viewModel.getAllEvents())
     }
 
-    private fun createEventsList(events: List<Event>) {
-        events.forEach { event ->
-            // eventLayout
-            val eventLayout = LinearLayout(this)
-            eventLayout.orientation = LinearLayout.HORIZONTAL
-            eventLayout.gravity = Gravity.CENTER_VERTICAL
-            eventLayout.setPadding(
-                dpToPixel(16),
-                dpToPixel(6),
-                dpToPixel(16),
-                dpToPixel(6)
-            )
-
-            val eventLayoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            eventLayoutParams.setMargins(
-                dpToPixel(8),
-                dpToPixel(12),
-                dpToPixel(8),
-                0
-            )
-
-            eventLayout.layoutParams = eventLayoutParams
-
-            // infoLayout (left)
-            val infoLayout = LinearLayout(this)
-            infoLayout.orientation = LinearLayout.VERTICAL
-            infoLayout.layoutParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1f
-            )
-
-            // eventName (top left)
-            val eventNameTextView = TextView(this)
-            eventNameTextView.text = event.name
-            eventNameTextView.textSize = 16f
-            eventNameTextView.setTextColor(Color.BLACK)
-
-            // Notification date (middle left)
-            val dateTextView = TextView(this)
-            dateTextView.text = "Notification: "
-            dateTextView.textSize = 12f
-            dateTextView.setTextColor(Color.parseColor("#DD000000"))
-
-            // time (bottom left)
-            val startDateStr: String = (LocalDateTime.ofEpochSecond(
-                event.startDate, 0, ZoneOffset.UTC).format(_dateTimeFormatter))
-            val endDateStr: String = (LocalDateTime.ofEpochSecond(
-                event.endDate, 0, ZoneOffset.UTC).format(_dateTimeFormatter))
-            val timeTextView = TextView(this)
-            timeTextView.text = "$startDateStr - $endDateStr"
-            timeTextView.textSize = 12f
-            timeTextView.setTextColor(Color.parseColor("#DD000000"))
-
-            // infoLayout (left) has 3 children
-            infoLayout.addView(eventNameTextView)
-            infoLayout.addView(dateTextView)
-            infoLayout.addView(timeTextView)
-
-            // chevron image (right)
-            val editImageView = ImageButton(this)
-            editImageView.setImageResource(R.drawable.editicon)
-            editImageView.layoutParams = LinearLayout.LayoutParams(
-                dpToPixel(24),
-                dpToPixel(24)
-            )
-            editImageView.setOnClickListener {
-                moveToEditEventPage(eventId = event.eventId)
-            }
-            // eventLayout has 2 children (left, right)
-            eventLayout.addView(infoLayout)
-            eventLayout.addView(editImageView)
-
-            _viewEventsLayout.addView(eventLayout)
-        }
+    private fun initRecyclerView() {
+        _recyclerView = findViewById(R.id.eventsListView)
+        _recyclerAdapter = EventListViewAdapter(
+            _events,
+            onClickListener = ::moveToEditEventScreen
+        )
+        _recyclerView.layoutManager = LinearLayoutManager(this)
+        _recyclerView.adapter = _recyclerAdapter
+        _recyclerView.setHasFixedSize(false)
     }
 
-    private fun dpToPixel(_dp: Int) : Int {
-        return (_dp * (resources.displayMetrics.density)).toInt()
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
-    }
-
-    private fun moveToEditEventPage(eventId: String): Boolean {
+    private fun moveToEditEventScreen(eventId: String) {
+        println("Event ID: $eventId")
         val editEventIntent = Intent(this, EditEventActivity::class.java)
         editEventIntent.putExtra("eventId", eventId)
-        editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(editEventIntent)
-        return true
     }
 
     override fun update() {
-        val events: List<Event> = _viewModel.getAllEvents()
-        createEventsList(events)
+        _events = _viewModel.getAllEventsSorted()
     }
 }

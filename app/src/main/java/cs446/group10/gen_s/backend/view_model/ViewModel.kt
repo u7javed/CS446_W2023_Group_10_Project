@@ -248,6 +248,12 @@ object ViewModel {
         return _model.getEventsData() ?: return listOf()
     }
 
+    fun getAllEventsSorted(): List<Event> {
+        val events: List<Event> = _model.getEventsData() ?: listOf()
+        events.sortedBy { it.startDate }
+        return events
+    }
+
     fun getEventById(eventId: String): Event? {
         return _model.getEventById(eventId)
     }
