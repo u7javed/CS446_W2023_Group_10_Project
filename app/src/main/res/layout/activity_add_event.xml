@@ -7,20 +7,9 @@
     android:padding="20dp"
     tools:context=".ui.activities.AddEventActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/addEventTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:text="Event Information"
-            android:textColor="@android:color/primary_text_light"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,178 +17,195 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/eventName"
+                android:id="@+id/addEventTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Event Name"
-                android:textSize="16sp"
+                android:paddingBottom="10dp"
+                android:text="Event Information"
+                android:textColor="@android:color/primary_text_light"
+                android:textSize="20sp"
                 android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/eventNameInput"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:ems="10"
-                android:hint="Name"
-                android:inputType="textPersonName" />
-
-            <TextView
-                android:id="@+id/startDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Start Date"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/startDateInput"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Start Date" />
-
-            <TextView
-                android:id="@+id/chosenStartDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:text="Start date not selected"
-                android:textColor="@android:color/tertiary_text_light" />
-
-            <TextView
-                android:id="@+id/startTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Start Time"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/startTimeInput"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select Start Time" />
-
-            <TextView
-                android:id="@+id/chosenStartTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:text="Start time not selected"
-                android:textColor="@android:color/tertiary_text_light" />
-
-            <TextView
-                android:id="@+id/endDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="End Date"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/endDateInput"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select End Date" />
-
-            <TextView
-                android:id="@+id/chosenEndDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:text="End date not selected"
-                android:textColor="@android:color/tertiary_text_light" />
-
-            <TextView
-                android:id="@+id/endTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="End Time"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/endTimeInput"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select End Time" />
-
-            <TextView
-                android:id="@+id/chosenEndTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:text="End time not selected"
-                android:textColor="@android:color/tertiary_text_light" />
-
-            <Switch
-                android:id="@+id/notificationSwitchEvent"
-                android:layout_width="match_parent"
-                android:layout_height="49dp"
-                android:layout_weight="1"
-                android:text="Notifications?"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/notificationValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="numberSigned" />
-
-                <Spinner
-                    android:id="@+id/notificationSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_alignBottom="@id/notificationSpinner" />
-
-            </LinearLayout>
-
-            <Switch
-                android:id="@+id/associatedPlanSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:text="Associated Plan?"
-                android:textSize="16sp" />
-
-            <Spinner
-                android:id="@+id/studyPlanSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_alignBottom="@id/studyPlanSpinner" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingTop="20dp">
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/eventName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Event Name"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/eventNameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:ems="10"
+                    android:hint="Name"
+                    android:inputType="textPersonName" />
+
+                <TextView
+                    android:id="@+id/startDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start Date"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <Button
-                    android:id="@+id/cancelButton"
+                    android:id="@+id/startDateInput"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="1"
-                    android:text="@android:string/cancel" />
+                    android:text="Select Start Date" />
+
+                <TextView
+                    android:id="@+id/chosenStartDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:text="Start date not selected"
+                    android:textColor="@android:color/tertiary_text_light" />
+
+                <TextView
+                    android:id="@+id/startTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start Time"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <Button
-                    android:id="@+id/confirmEventButton"
+                    android:id="@+id/startTimeInput"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:text="Select Start Time" />
+
+                <TextView
+                    android:id="@+id/chosenStartTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:text="Start time not selected"
+                    android:textColor="@android:color/tertiary_text_light" />
+
+                <TextView
+                    android:id="@+id/endDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="End Date"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/endDateInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select End Date" />
+
+                <TextView
+                    android:id="@+id/chosenEndDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:text="End date not selected"
+                    android:textColor="@android:color/tertiary_text_light" />
+
+                <TextView
+                    android:id="@+id/endTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="End Time"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/endTimeInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select End Time" />
+
+                <TextView
+                    android:id="@+id/chosenEndTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:text="End time not selected"
+                    android:textColor="@android:color/tertiary_text_light" />
+
+                <Switch
+                    android:id="@+id/notificationSwitchEvent"
+                    android:layout_width="match_parent"
+                    android:layout_height="49dp"
                     android:layout_weight="1"
-                    android:text="Confirm" />
+                    android:text="Notifications?"
+                    android:textColor="@android:color/secondary_text_light"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/notificationValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="numberSigned" />
+
+                    <Spinner
+                        android:id="@+id/notificationSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_alignBottom="@id/notificationSpinner" />
+
+                </LinearLayout>
+
+                <Switch
+                    android:id="@+id/associatedPlanSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="Associated Plan?"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/studyPlanSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_alignBottom="@id/studyPlanSpinner" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingTop="20dp">
+
+                    <Button
+                        android:id="@+id/cancelButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:text="@android:string/cancel" />
+
+                    <Button
+                        android:id="@+id/confirmEventButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:text="Confirm" />
+                </LinearLayout>
+
+
             </LinearLayout>
-
 
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>
