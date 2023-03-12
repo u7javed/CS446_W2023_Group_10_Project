@@ -97,8 +97,6 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
     @SuppressLint("SetTextI18n")
     private fun renderCalender() {
-        println("Events: ${events.size}")
-        println("Month: $currentMonth")
         val yearMonthTextView = findViewById<TextView>(R.id.calendar_year_month)
         val tableLayout = findViewById<LinearLayout>(R.id.calendar_table)
 
@@ -200,13 +198,10 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
             // Add events to the day cell
             val eventsForDay = events.filter { event ->
-                val eventCalendar = Calendar.getInstance()
-                val date = Date.from((LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC))
-                    .atZone(ZoneId.systemDefault()).toInstant())
-                eventCalendar.time = date
-                eventCalendar.get(Calendar.DAY_OF_MONTH) == currentDay &&
-                        eventCalendar.get(Calendar.MONTH) == currentMonth &&
-                        eventCalendar.get(Calendar.YEAR) == currentYear
+                val datetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+                datetime.year == currentYear &&
+                        datetime.month.value == currentMonth &&
+                        datetime.dayOfMonth == currentDay
             }
 
             if (eventsForDay.isNotEmpty()) {
