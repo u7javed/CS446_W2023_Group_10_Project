@@ -5,7 +5,10 @@ import cs446.group10.gen_s.backend.dataClasses.Event
 import cs446.group10.gen_s.backend.dataClasses.Plan
 import android.content.Context
 import com.google.gson.Gson
+import java.io.BufferedReader
 import java.io.FileInputStream
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 
 /*"New" things needed to be added to cs446.group10.gen_s.backend.view_model.ViewModel:
 - pushing to storage (we think this has to be tied to an android activity)
@@ -17,9 +20,15 @@ import java.io.FileInputStream
 
 class Model {
     private var views: MutableList<IView> = mutableListOf<IView>()
+    private lateinit var context: Context
     private var calendar: Calendar = Calendar("og")
     private var planMap: MutableMap<String, Plan> = mutableMapOf<String, Plan>()
     private var eventMap: MutableMap<String, Event> = mutableMapOf<String, Event>()
+    private val FILENAME = "stored_calendar_data.json"
+
+    fun setContext(context: Context) {
+        this.context = context
+    }
 
     fun addView(view: IView) {
         this.views.add(view)
@@ -34,7 +43,7 @@ class Model {
          for (view in this.views) {
              view.update()
          }
-         // TODO: figure out a way to call pushCalendarToStorage
+         pushToStorage(context)
      }
 
      fun addEvent(event: Event): Boolean {
@@ -101,11 +110,11 @@ class Model {
              for (event in plan.events!!) {
                  // QUESTION: why don't we just call addEvent??
                  this.calendar.events.add(event)
-                 eventMap.put(event.eventId, event)
+                 eventMap[event.eventId] = event
              }
              this.calendar.plans.add(plan)
              // given a plan, update planMap
-             planMap.put(plan.planId, plan)
+             planMap[plan.planId] = plan
 
              this.notifyView()
          }
@@ -124,6 +133,7 @@ class Model {
              planMap[plan.planId] = plan
          }
          this.notifyView()
+
      }
      fun removePlan(planId: String){
          var plan = getPlanById(planId)
@@ -148,7 +158,7 @@ class Model {
      fun getPlanById(planId: String): Plan? {
          // get plan from planId
          if (planId in planMap) {
-             return planMap.get(planId)
+             return planMap[planId]
          }
          return null
      }
@@ -163,29 +173,60 @@ class Model {
     }
 
     // returns JSON string of calendar object given calendarId
-    fun getCalendarAsJSON () : String {
+    private fun getCalendarAsJSON () : String {
         return Gson().toJson(this.calendar)
     }
 
-    fun pushToStorage (context :Context, fileName :String){
-        context.openFileOutput(fileName, Context.MODE_PRIVATE).use {
-            it.write(this.getCalendarAsJSON().toByteArray())
+    private fun pushToStorage(context: Context){
+        try {
+            val streamWriter = OutputStreamWriter(context.openFileOutput(FILENAME, Context.MODE_PRIVATE))
+            streamWriter.write(this.getCalendarAsJSON())
+            streamWriter.close()
+        } catch (e: Exception) {
+            println(e)
         }
     }
 
-    fun pullFromStorage (context: Context, fileName: String){
-        val stream: FileInputStream = context.openFileInput(fileName)
-        var data = ByteArray(1024) //--- might need to change... unsure how to know the size?
-        stream.read(data)
+    private fun pullFromStorage (context: Context){
+        var result = ""
+        try {
+            val stream: FileInputStream = context.openFileInput(FILENAME)
+            val streamReader = InputStreamReader(stream)
+            val bufferedReader = BufferedReader(streamReader)
+            val strBuilder = StringBuilder()
+            var retrievedStr = bufferedReader.readLine()
+            while (retrievedStr != null) {
+                strBuilder.append(retrievedStr)
+                retrievedStr = bufferedReader.readLine()
+            }
+            streamReader.close()
+            result = strBuilder.toString()
+            val gson = Gson()
+            this.calendar = gson.fromJson(result, Calendar::class.java)
+        } catch (e: Exception) {
+            println("Pull from storage failed! $e")
+        }
 
-        // convert byte array to json string
-        var jsonString = Gson().toJson(String(data))
-        //convert JSON string to data class (calendar)
-        var gson = Gson()
-        this.calendar = gson.fromJson(jsonString, Calendar::class.java)
-        stream.close()
-        // TODO: Also create a plan map if not already done from existing data.
+    }
 
+    fun loadCalendarFromStorage(context: Context) {
+        pullFromStorage(context)
+        // Update event map
+        calendar.events.forEach { event ->
+            eventMap[event.eventId] = event
+        }
+        // Update plan map
+        calendar.plans.forEach {plan ->
+            planMap[plan.planId] = plan
+        }
+
+    }
+
+    fun deleteCalendar() {
+        this.calendar = Calendar("og")
+        eventMap.clear()
+        planMap.clear()
+        this.notifyView()
     }
 
 }
