@@ -218,10 +218,10 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
                 { _, hour, minute ->
                     if (v == btnStartTimePicker) {
                         _startTime = LocalTime.of(hour, minute)
-                        startTime.text = "${hour}h:,${minute}m"
+                        startTime.text = "${hour}h:${minute}m"
                     } else {
                         _endTime = LocalTime.of(hour, minute)
-                        endTime.text = "${hour}h:,${minute}m"
+                        endTime.text = "${hour}h:${minute}m"
                     }
                 }, dH, dMin, false
             )

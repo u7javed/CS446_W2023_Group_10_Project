@@ -193,10 +193,10 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                     { _, hour, minute ->
                         if (v == btnStartTimePicker) {
                             _startTime = LocalTime.of(hour, minute)
-                            startTimeText.text = "${hour}h:,${minute}m"
+                            startTimeText.text = "${hour}h:${minute}m"
                         } else {
                             _endTime = LocalTime.of(hour, minute)
-                            endTimeText.text = "${hour}h:,${minute}m"
+                            endTimeText.text = "${hour}h:${minute}m"
                         }
                     }, dH, dMin, false
                 )
