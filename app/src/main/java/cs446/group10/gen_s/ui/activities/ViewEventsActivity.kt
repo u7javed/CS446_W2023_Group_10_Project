@@ -73,4 +73,9 @@ class ViewEventsActivity : AppCompatActivity(), IView {
         _events = _viewModel.getAllEventsSorted()
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
 }
