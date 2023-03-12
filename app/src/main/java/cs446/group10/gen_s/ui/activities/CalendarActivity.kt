@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.PopupMenu.OnMenuItemClickListener
-import androidx.core.view.contains
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import cs446.group10.gen_s.R
 import cs446.group10.gen_s.backend.dataClasses.Event
@@ -57,7 +56,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
         supportActionBar?.title = "GenS"
 
         // Obtain data for model in storage
-        viewModel.init()
+        viewModel.init(this)
 
         // register this activity to the model
         viewModel.registerView(this)
@@ -200,6 +199,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             // Add events to the day cell
             val eventsForDay = events.filter { event ->
                 val datetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+                println("EventId: ${event.name}, Month: ${datetime.month.name} = ${datetime.month.value}")
                 datetime.year == currentYear &&
                         datetime.month.value - 1 == currentMonth &&
                         datetime.dayOfMonth == currentDay
