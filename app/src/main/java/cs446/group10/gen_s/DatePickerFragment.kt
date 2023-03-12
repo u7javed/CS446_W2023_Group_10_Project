@@ -94,10 +94,9 @@ class DatePickerFragment : Fragment(R.layout.fragment_date_picker) {
     }
 
     companion object {
-        fun convertDateToString(dateVal: DateVal): String? {
+        fun convertDateToString(dateVal: DateVal): String {
             val myFormat = "dd.MM.yyyy"
             val sdf = SimpleDateFormat(myFormat, Locale.US)
-
 
             var cal = Calendar.getInstance()
             cal.set(Calendar.YEAR, dateVal.year)
