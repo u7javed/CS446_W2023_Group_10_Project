@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cs446.group10.gen_s.R
@@ -71,4 +72,5 @@ class ViewEventsActivity : AppCompatActivity(), IView {
     override fun update() {
         _events = _viewModel.getAllEventsSorted()
     }
+
 }
