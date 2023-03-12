@@ -25,7 +25,7 @@
                 android:text="Event Information" />
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/deleteEventButton"
                 android:layout_width="48dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
@@ -34,7 +34,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
@@ -125,20 +125,22 @@
 
             <Switch
                 android:id="@+id/notificationSwitchEvent"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="49dp"
                 android:layout_weight="1"
-                android:text="Notifications?" />
+                android:text="Notifications?"
+                android:textColor="@android:color/secondary_text_light"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/notificationValue"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="numberSigned" />
@@ -151,28 +153,41 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+            <Switch
+                android:id="@+id/associatedPlanSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Associated Plan?"
+                android:textSize="16sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/cancelButton"
+            <Spinner
+                android:id="@+id/studyPlanSpinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:text="@android:string/cancel" />
+                android:layout_height="48dp"
+                android:layout_alignBottom="@id/studyPlanSpinner" />
 
-            <Button
-                android:id="@+id/confirmButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:text="Confirm" />
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/cancelButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:text="@android:string/cancel" />
+
+                <Button
+                    android:id="@+id/confirmEventButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:text="Confirm" />
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
