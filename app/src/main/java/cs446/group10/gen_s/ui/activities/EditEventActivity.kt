@@ -24,7 +24,7 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var btnStartTimePicker: Button;
     private lateinit var btnEndDatePicker: Button;
     private lateinit var btnEndTimePicker: Button;
-    private lateinit var deleteEvent: Button;
+    private lateinit var deleteEvent: ImageButton;
     private lateinit var confirmEditEvent: Button;
 
     private lateinit var startDate: TextView;
@@ -54,7 +54,7 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             finish()
         }
 
-        deleteEvent = findViewById<Button>(R.id.deleteEventButton)
+        deleteEvent = findViewById<ImageButton>(R.id.deleteEventButton)
         deleteEvent.setOnClickListener {
             //TO-DO: set up delete functionality
         }
