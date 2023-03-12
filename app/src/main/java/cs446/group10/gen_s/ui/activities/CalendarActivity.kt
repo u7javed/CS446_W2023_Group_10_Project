@@ -18,12 +18,9 @@ import cs446.group10.gen_s.R
 import cs446.group10.gen_s.backend.dataClasses.Event
 import cs446.group10.gen_s.backend.model.IView
 import cs446.group10.gen_s.backend.view_model.ViewModel
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.*
-import kotlin.collections.ArrayList
 
 class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
@@ -37,6 +34,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
     private lateinit var events: List<Event>
 
 //    @SuppressLint("SimpleDateFormat")
+
 //    private val events : ArrayList<Event> = arrayListOf(
 //        Event("Event 1", SimpleDateFormat("dd-MM-yyyy").parse("06-02-2023")),
 //        Event("Event 2", SimpleDateFormat("dd-MM-yyyy").parse("06-02-2023")),
@@ -57,6 +55,9 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
         supportActionBar?.title = "GenS"
+
+        // Obtain data for model in storage
+        viewModel.init()
 
         // register this activity to the model
         viewModel.registerView(this)
@@ -200,7 +201,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             val eventsForDay = events.filter { event ->
                 val datetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
                 datetime.year == currentYear &&
-                        datetime.month.value == currentMonth &&
+                        datetime.month.value - 1 == currentMonth &&
                         datetime.dayOfMonth == currentDay
             }
 
