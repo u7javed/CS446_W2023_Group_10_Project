@@ -6,14 +6,64 @@ import cs446.group10.gen_s.backend.model.Model
 import androidx.lifecycle.ViewModel
 import cs446.group10.gen_s.backend.dataClasses.*
 import cs446.group10.gen_s.backend.model.IView
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 object ViewModel {
 
     private val _openSpaces: MutableList<Space> = mutableListOf()
     private val _model: Model = Model()
+    private val _dateToEpochFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
     fun registerView(view: IView) {
         _model.addView(view)
+    }
+
+    fun init() {
+        // TODO: temporary values to add before storage persistence.
+        _model.addEvent(generateEvent("Event 1",
+            dateTimeToEpoch("2023-02-06 04:00"),
+            dateTimeToEpoch("2023-02-06 05:00"), null))
+        _model.addEvent(generateEvent("Event 2",
+            dateTimeToEpoch("2023-02-06 12:00"),
+            dateTimeToEpoch("2023-02-06 14:00"), null))
+        _model.addEvent(generateEvent("Event 3",
+            dateTimeToEpoch("2023-02-07 10:00"),
+            dateTimeToEpoch("2023-02-07 12:30"), null))
+        _model.addEvent(generateEvent("Event 4",
+            dateTimeToEpoch("2023-03-03 07:00"),
+            dateTimeToEpoch("2023-03-03 12:41"), null))
+        _model.addEvent(generateEvent("Event 5",
+            dateTimeToEpoch("2023-03-03 13:00"),
+            dateTimeToEpoch("2023-03-03 15:00"), null))
+        _model.addEvent(generateEvent("Event 6",
+            dateTimeToEpoch("2023-03-04 10:00"),
+            dateTimeToEpoch("2023-03-04 10:30"), null))
+        _model.addEvent(generateEvent("Event 7",
+            dateTimeToEpoch("2023-03-05 14:00"),
+            dateTimeToEpoch("2023-03-05 16:00"), null))
+        _model.addEvent(generateEvent("Event 8",
+            dateTimeToEpoch("2023-03-06 10:00"),
+            dateTimeToEpoch("2023-03-06 18:00"), null))
+        _model.addEvent(generateEvent("Event 9",
+            dateTimeToEpoch("2023-03-06 19:00"),
+            dateTimeToEpoch("2023-03-06 20:00"), null))
+        _model.addEvent(generateEvent("Event 10",
+            dateTimeToEpoch("2023-03-07 10:00"),
+            dateTimeToEpoch("2023-03-07 12:00"), null))
+        _model.addEvent(generateEvent("Event 11",
+            dateTimeToEpoch("2023-03-07 12:30"),
+            dateTimeToEpoch("2023-03-07 16:00"), null))
+        _model.addEvent(generateEvent("Event 12",
+            dateTimeToEpoch("2023-03-07 16:00"),
+            dateTimeToEpoch("2023-03-07 17:00"), null))
+        _model.addEvent(generateEvent("Event 13",
+            dateTimeToEpoch("2023-04-05 08:00"),
+            dateTimeToEpoch("2023-04-05 08:15"), null))
+        _model.addEvent(generateEvent("Event 14",
+            dateTimeToEpoch("2023-04-05 12:00"),
+            dateTimeToEpoch("2023-04-05 13:15"), null))
     }
 
     private fun getExistingEvents(startRange: Long, endRange: Long): List<Event> {
@@ -200,6 +250,11 @@ object ViewModel {
 
     fun getEventById(eventId: String): Event? {
         return _model.getEventById(eventId)
+    }
+
+    private fun dateTimeToEpoch(dateTimeStr: String): Long {
+        val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeStr, _dateToEpochFormatter)
+        return dateTime.toEpochSecond(ZoneOffset.UTC)
     }
 
 }
