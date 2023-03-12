@@ -1,5 +1,6 @@
 package cs446.group10.gen_s.ui.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,6 +72,7 @@ class EventListViewAdapter(
         val startTimeStr = timeFormatter.format(startDate.toLocalTime()).toString()
         val endTimeStr = timeFormatter.format(endDate.toLocalTime()).toString()
         holder.times.text = "${startTimeStr}\n - \n${endTimeStr}"
+        holder.primaryItem.setBackgroundColor(Color.parseColor(event.color))
 
         var notificationStr = "None"
         if (event.notification != null) {
