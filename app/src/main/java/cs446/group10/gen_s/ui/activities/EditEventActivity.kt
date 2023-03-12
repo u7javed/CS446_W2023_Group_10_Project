@@ -31,6 +31,7 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var endDate: TextView;
     private lateinit var startTime: TextView;
     private lateinit var endTime: TextView;
+    private lateinit var _eventId: String
 
     private lateinit var _eventNameText: EditText
     private var _startDate: LocalDate? = null
@@ -59,9 +60,13 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             //TO-DO: set up delete functionality
         }
 
-        confirmEditEvent = findViewById<Button>(R.id.confirmEventButton)
+        confirmEditEvent = findViewById<Button>(R.id.confirmEventUpdateButton)
         confirmEditEvent.setOnClickListener {
-            //TO-DO: set up confirm edits
+            val res: Boolean = updateEvent()
+            if (res)
+                finish()
+            else
+                errorToast()
         }
 
         btnStartDatePicker = findViewById<Button>(R.id.startDateInput)
@@ -74,6 +79,8 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
         startTime = findViewById<TextView>(R.id.chosenStartTime)
         endTime = findViewById<TextView>(R.id.chosenEndTime)
 
+        _eventNameText = findViewById(R.id.eventNameInput)
+
         btnStartDatePicker.setOnClickListener(this)
         btnStartTimePicker.setOnClickListener(this)
         btnEndDatePicker.setOnClickListener(this)
@@ -82,6 +89,7 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
         val extras = intent.extras
         if (extras != null) {
             val eventId: String = extras.getString("eventId")!!
+            _eventId = eventId
             val event: Event? = _viewModel.getEventById(eventId)
             if (event != null) {
                 // Get event information
@@ -195,11 +203,11 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
                     val myFormat = "dd.MM.yyyy"
                     val sdf = SimpleDateFormat(myFormat, Locale.US)
                     if (v == btnStartDatePicker) {
-                        _startDate = LocalDate.of(year, month, dayOfMonth)
-                        startDate.setText(sdf.format(cal.time))
+                        _startDate = LocalDate.of(year, monthOfYear+1, dayOfMonth)
+                        startDate.text = sdf.format(cal.time)
                     } else {
-                        _endDate = LocalDate.of(year, month, dayOfMonth)
-                        endDate.setText(sdf.format(cal.time))
+                        _endDate = LocalDate.of(year, monthOfYear+1, dayOfMonth)
+                        endDate.text = sdf.format(cal.time)
                     }
                 },
                 year,
@@ -227,6 +235,31 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             )
             tpd.show()
         }
+    }
+
+    private fun updateEvent(): Boolean {
+        if (_eventNameText.text.toString().isEmpty() || _startDate == null || _endDate == null ||
+            _startTime == null || _endTime == null
+        ) {
+            return false
+        }
+        val eventName: String = _eventNameText.text.toString()
+        val startDate: Long =
+            LocalDateTime.of(_startDate!!, _startTime!!).toEpochSecond(ZoneOffset.UTC)
+        val endDate: Long = LocalDateTime.of(_endDate!!, _endTime!!).toEpochSecond(ZoneOffset.UTC)
+        if (startDate >= endDate) {
+            return false
+        }
+        // TODO: Deal with notification
+        return _viewModel.updateEventInCalendar(_eventId, eventName, startDate, endDate, null)
+    }
+
+    private fun errorToast() {
+        Toast.makeText(
+            this,
+            "Error! Make sure there are no conflicting events and the " +
+                    "start and end dates/times are valid.",
+            Toast.LENGTH_SHORT).show()
     }
 
 }

@@ -81,6 +81,26 @@ class Model {
          this.notifyView()
      }
 
+    fun updateEvent(eventId: String, event: Event): Boolean {
+        // Check if the event conflicts with an existing event
+        if (eventId !in eventMap)
+            return false
+        calendar.events.forEach { curEvent: Event ->
+            if ((curEvent.eventId != eventId) &&
+                ((event.startDate <= curEvent.startDate && event.endDate > curEvent.startDate) ||
+                (event.startDate < curEvent.endDate && event.endDate >= curEvent.endDate) ||
+                (event.startDate <= curEvent.startDate && event.endDate >= curEvent.endDate) ||
+                (event.startDate > curEvent.startDate && event.endDate < curEvent.endDate)))
+                    return false
+        }
+        eventMap[eventId]!!.name = event.name
+        eventMap[eventId]!!.startDate = event.startDate
+        eventMap[eventId]!!.endDate = event.endDate
+        eventMap[eventId]!!.notification = event.notification
+        this.notifyView()
+        return true
+    }
+
      fun removeEvent(eventId: String){
          var event = getEventById(eventId)
          this.calendar.events.remove(event)
