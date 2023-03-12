@@ -37,11 +37,18 @@ class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferen
 
         val preferenceName = view.findViewById<EditText>(R.id.PreferenceNameTextField);
 
+        var startDate: DateVal? = null;
+        var endDate: DateVal? = null;
+
         if (newPreference) {
             // will be removed later
             // used to test passing parameters from one fragment (GenerateFragment) to another fragment (GenerateEditPreferenceFragment)
-            preferenceName.setText("New cs446.group10.gen_s.backend.dataClasses.Plan");
+            preferenceName.setText("New Preference");
+        } else {
+            // set variables
         }
+
+        // start date
 
         val startDateCalendarFragment = DatePickerFragment();
         activity?.supportFragmentManager?.beginTransaction()?.apply {
@@ -51,13 +58,35 @@ class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferen
 
         fun setStartDate(dateVal: DateVal) {
             val chosenStartDate = view.findViewById<TextView>(R.id.chosenStartDate);
+            startDate = dateVal;
             chosenStartDate.text = DatePickerFragment.convertDateToString(dateVal);
         }
 
         val selectStartDateButton = view.findViewById<MaterialButton>(R.id.selectStartDate);
         selectStartDateButton.setOnClickListener {
             startDateCalendarFragment.showDatePicker(
-                DatePickerInitialVal(::setStartDate, null)
+                DatePickerInitialVal(::setStartDate, startDate)
+            );
+        }
+
+        // end date
+
+        val endDateCalendarFragment = DatePickerFragment();
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            replace(R.id.EndDatePickerFragment, endDateCalendarFragment);
+            commit();
+        }
+
+        fun setEndDate(dateVal: DateVal) {
+            val chosenEndDate = view.findViewById<TextView>(R.id.chosenEndDate);
+            endDate = dateVal;
+            chosenEndDate.text = DatePickerFragment.convertDateToString(dateVal);
+        }
+
+        val selectEndDateButton = view.findViewById<MaterialButton>(R.id.selectEndDate);
+        selectEndDateButton.setOnClickListener {
+            endDateCalendarFragment.showDatePicker(
+                DatePickerInitialVal(::setEndDate, endDate)
             );
         }
     }
