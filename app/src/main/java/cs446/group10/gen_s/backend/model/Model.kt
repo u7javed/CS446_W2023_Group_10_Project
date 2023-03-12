@@ -81,6 +81,22 @@ class Model {
          this.notifyView()
      }
 
+    fun deleteEvent(eventId: String): Boolean {
+        if (eventId !in eventMap) {
+            println("Event deletion failed! Event Id not found in calendar.")
+            return false
+        }
+        return try {
+            this.calendar.events.remove(eventMap[eventId])
+            eventMap.remove(eventId)
+            this.notifyView()
+            true
+        } catch (e: Exception) {
+            println("Event deletion failed! $e")
+            false
+        }
+    }
+
     fun updateEvent(eventId: String, event: Event): Boolean {
         // Check if the event conflicts with an existing event
         if (eventId !in eventMap)

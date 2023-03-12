@@ -66,6 +66,7 @@ class ViewEventsActivity : AppCompatActivity(), IView {
 
     override fun update() {
         _events = _viewModel.getAllEvents()
+        _recyclerAdapter.notifyDataSetChanged()
     }
 
     override fun onSupportNavigateUp(): Boolean {

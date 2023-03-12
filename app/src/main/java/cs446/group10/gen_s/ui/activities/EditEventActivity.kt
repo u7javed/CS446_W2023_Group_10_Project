@@ -55,20 +55,6 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             finish()
         }
 
-        deleteEvent = findViewById<ImageButton>(R.id.deleteEventButton)
-        deleteEvent.setOnClickListener {
-            //TO-DO: set up delete functionality
-        }
-
-        confirmEditEvent = findViewById<Button>(R.id.confirmEventUpdateButton)
-        confirmEditEvent.setOnClickListener {
-            val res: Boolean = updateEvent()
-            if (res)
-                finish()
-            else
-                errorToast()
-        }
-
         btnStartDatePicker = findViewById<Button>(R.id.startDateInput)
         btnStartTimePicker = findViewById<Button>(R.id.startTimeInput)
         btnEndDatePicker = findViewById<Button>(R.id.endDateInput)
@@ -107,6 +93,24 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
                 startTime.text = startTimeStr
                 endTime.text = endTimeStr
             }
+        }
+
+        deleteEvent = findViewById<ImageButton>(R.id.deleteEventButton)
+        deleteEvent.setOnClickListener {
+            val res: Boolean = deleteEvent(_eventId)
+            if (res)
+                finish()
+            else
+                couldNotDeleteToast()
+        }
+
+        confirmEditEvent = findViewById<Button>(R.id.confirmEventUpdateButton)
+        confirmEditEvent.setOnClickListener {
+            val res: Boolean = updateEvent()
+            if (res)
+                finish()
+            else
+                errorToast()
         }
 
         val timeUnits = resources.getStringArray(R.array.UnitsOfTime)
@@ -254,11 +258,22 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
         return _viewModel.updateEventInCalendar(_eventId, eventName, startDate, endDate, null)
     }
 
+    private fun deleteEvent(eventId: String): Boolean {
+        return _viewModel.deleteEventInCalendar(eventId)
+    }
+
     private fun errorToast() {
         Toast.makeText(
             this,
             "Error! Make sure there are no conflicting events and the " +
                     "start and end dates/times are valid.",
+            Toast.LENGTH_SHORT).show()
+    }
+
+    private fun couldNotDeleteToast() {
+        Toast.makeText(
+            this,
+            "Failed to delete Event $_eventId",
             Toast.LENGTH_SHORT).show()
     }
 
