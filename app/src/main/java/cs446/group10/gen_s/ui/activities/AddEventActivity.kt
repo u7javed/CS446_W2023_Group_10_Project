@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import cs446.group10.gen_s.R
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -67,6 +66,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
             val res: Boolean = createEvent()
             if (res)
                 finish()
+            else
+                errorToast()
         }
 
         btnStartDatePicker.setOnClickListener(this)
@@ -205,20 +206,19 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun createEvent(): Boolean {
         if (_eventNameText.text.toString().isEmpty() || _startDate == null || _endDate == null ||
-                _startTime == null || _endTime == null) {
-            errorToast()
+            _startTime == null || _endTime == null
+        ) {
             return false
         }
         val eventName: String = _eventNameText.text.toString()
-        val startDate: Long = LocalDateTime.of(_startDate!!, _startTime!!).toEpochSecond(ZoneOffset.UTC)
+        val startDate: Long =
+            LocalDateTime.of(_startDate!!, _startTime!!).toEpochSecond(ZoneOffset.UTC)
         val endDate: Long = LocalDateTime.of(_endDate!!, _endTime!!).toEpochSecond(ZoneOffset.UTC)
         if (startDate >= endDate) {
-            errorToast()
             return false
         }
         // TODO: Deal with notification
-        val res: Boolean = _viewModel.addEventToCalendar(eventName, startDate, endDate, null)
-        return true
+        return _viewModel.addEventToCalendar(eventName, startDate, endDate, null)
     }
 
     private fun errorToast() {

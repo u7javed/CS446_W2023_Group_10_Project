@@ -191,10 +191,7 @@ object ViewModel {
 
     fun addEventToCalendar(name: String, startDate: Long, endDate: Long, notification: Long?): Boolean {
         val event: Event = generateEvent(name, startDate, endDate, notification)
-        print("Adding event: $event : ")
-        _model.addEvent(event)
-        // TODO: check that event does not conflict with another event
-        return true
+        return _model.addEvent(event)
     }
 
     fun getAllEvents(): List<Event> {

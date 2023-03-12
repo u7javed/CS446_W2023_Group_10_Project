@@ -37,12 +37,21 @@ class Model {
          // TODO: figure out a way to call pushCalendarToStorage
      }
 
-     fun addEvent(event: Event) {
+     fun addEvent(event: Event): Boolean {
+         // Check if the event conflicts with an existing event
+         calendar.events.forEach { curEvent: Event ->
+             if ((event.startDate <= curEvent.startDate && event.endDate > curEvent.startDate) ||
+                 (event.startDate < curEvent.endDate && event.endDate >= curEvent.endDate) ||
+                 (event.startDate <= curEvent.startDate && event.endDate >= curEvent.endDate) ||
+                 (event.startDate > curEvent.startDate && event.endDate < curEvent.endDate))
+                 return false
+         }
          // given an event, add it to the calendar
-        this.calendar.events.add(event)
+         calendar.events.add(event)
          // given an event, add to eventMap
          eventMap[event.eventId] = event
          this.notifyView()
+         return true
      }
 
      fun editEvent(eventId: String,

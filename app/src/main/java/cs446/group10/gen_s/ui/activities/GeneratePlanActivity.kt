@@ -11,7 +11,7 @@ class GeneratePlanActivity : AppCompatActivity() {
         setContentView(R.layout.activity_generate_plan)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "Generate cs446.group10.gen_s.backend.dataClasses.Plan"
+        supportActionBar?.title = "Generate Plan"
 
         val generateFragment = GenerateFragment();
 
