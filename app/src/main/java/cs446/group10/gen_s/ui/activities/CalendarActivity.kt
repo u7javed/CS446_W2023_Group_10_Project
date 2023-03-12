@@ -1,6 +1,7 @@
 package cs446.group10.gen_s.ui.activities
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.PopupMenu.OnMenuItemClickListener
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import cs446.group10.gen_s.R
 import cs446.group10.gen_s.backend.dataClasses.Event
@@ -284,6 +286,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             R.id.fab_view_events -> moveToViewEventsScreen()
             R.id.fab_import_calendar -> moveToImportCalendarScreen()
             R.id.fab_view_plans -> moveToViewPlansScreen()
+            R.id.fab_delete_calendar -> attemptDeleteCalendar()
             else -> false
         }
     }
@@ -321,6 +324,22 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
     private fun moveToViewPlansScreen(): Boolean {
         val viewPlansIntent = Intent(this, ViewPlansActivity::class.java)
         startActivity(viewPlansIntent)
+        return true
+    }
+
+    private fun attemptDeleteCalendar(): Boolean {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Confirm Calendar Deletion")
+        builder.setMessage("Are you sure you want to delete the current Calendar? This action cannot be reversed.")
+        builder.setPositiveButton("Delete") { dialog, _ ->
+            viewModel.deleteCalendar()
+            dialog.cancel()
+        }
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.cancel()
+        }
+        val alert = builder.create()
+        alert.show()
         return true
     }
 

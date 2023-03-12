@@ -222,4 +222,11 @@ class Model {
 
     }
 
+    fun deleteCalendar() {
+        this.calendar = Calendar("og")
+        eventMap.clear()
+        planMap.clear()
+        this.notifyView()
+    }
+
 }

@@ -254,6 +254,10 @@ object ViewModel {
         return _model.getEventById(eventId)
     }
 
+    fun deleteCalendar() {
+        _model.deleteCalendar()
+    }
+
     private fun dateTimeToEpoch(dateTimeStr: String): Long {
         val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeStr, _dateToEpochFormatter)
         return dateTime.toEpochSecond(ZoneOffset.UTC)
