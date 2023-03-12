@@ -61,7 +61,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         // Add an event listener to confirm to create an activity in the model
-        val confirmButton = findViewById<Button>(R.id.confirmButton)
+        val confirmButton = findViewById<Button>(R.id.confirmEventButton)
         confirmButton.setOnClickListener {
             val res: Boolean = createEvent()
             if (res)
