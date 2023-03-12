@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
 import cs446.group10.gen_s.R
 import cs446.group10.gen_s.backend.dataClasses.Event
@@ -14,12 +15,12 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class EventListViewAdapter(
-    private val dataSet: List<Event>,
+    private var dataSet: List<Event>,
     private val onClickListener: (eventId: String) -> Unit
 ) :
     RecyclerView.Adapter<EventListViewAdapter.ViewHolder>() {
 
-    val months = listOf("Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec")
+    val months = listOf("Holder", "Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec")
     val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -84,6 +85,7 @@ class EventListViewAdapter(
             onClickListener(event.eventId)
         }
     }
+
 
     override fun getItemCount() = dataSet.size
 
