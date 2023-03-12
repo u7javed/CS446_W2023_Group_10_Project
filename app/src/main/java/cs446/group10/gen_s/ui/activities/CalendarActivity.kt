@@ -201,7 +201,6 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             // Add events to the day cell
             val eventsForDay = events.filter { event ->
                 val datetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
-                println("EventId: ${event.name}, Month: ${datetime.month.name} = ${datetime.month.value}")
                 datetime.year == currentYear &&
                         datetime.month.value - 1 == currentMonth &&
                         datetime.dayOfMonth == currentDay

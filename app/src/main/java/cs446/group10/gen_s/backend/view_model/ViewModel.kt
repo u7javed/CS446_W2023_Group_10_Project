@@ -258,6 +258,15 @@ object ViewModel {
         _model.deleteCalendar()
     }
 
+    fun updateEventInCalendar(eventId: String, name: String, startDate: Long, endDate: Long, notification: Long?): Boolean {
+        val updatedEvent = Event("holder", name, startDate, endDate, notification)
+        return _model.updateEvent(eventId, updatedEvent)
+    }
+
+    fun deleteEventInCalendar(eventId: String): Boolean {
+        return _model.deleteEvent(eventId)
+    }
+
     private fun dateTimeToEpoch(dateTimeStr: String): Long {
         val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeStr, _dateToEpochFormatter)
         return dateTime.toEpochSecond(ZoneOffset.UTC)
