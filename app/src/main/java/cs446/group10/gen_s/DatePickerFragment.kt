@@ -27,8 +27,8 @@ data class DatePickerInitialVal(
  *
  * Then add the following to the onViewCreated function of the corresponding kt file
  *  val datePicker = DatePickerFragment();
-        activity?.supportFragmentManager?.beginTransaction()?.apply {
-        replace(R.id.fragmentPlaceholder, startDateCalendarFragment);
+ *  activity?.supportFragmentManager?.beginTransaction()?.apply {
+        replace(R.id.fragmentPlaceholder, datePicker);
         commit();
     }
  * The above lines replace what's inside the FrameLayout with the DatePicker
