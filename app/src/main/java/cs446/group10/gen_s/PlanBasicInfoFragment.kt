@@ -1,9 +1,11 @@
 package cs446.group10.gen_s
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
+
 
 /**
  * A simple [Fragment] subclass.
@@ -14,6 +16,7 @@ class PlanBasicInfoFragment : Fragment(R.layout.fragment_plan_basic_info) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         var startDate: DateVal? = null;
         var endDate: DateVal? = null;
+        var notificationOn: Boolean = false;
 
         // start date
 
@@ -55,6 +58,30 @@ class PlanBasicInfoFragment : Fragment(R.layout.fragment_plan_basic_info) {
             endDateCalendarFragment.showDatePicker(
                 DatePickerInitialVal(::setEndDate, endDate)
             );
+        }
+
+        // notification
+        val notificationSwitch = view.findViewById<Switch>(R.id.NotificationSwitch);
+        notificationSwitch.isChecked = notificationOn;
+
+        val notificationDetails = view.findViewById<LinearLayout>(R.id.NotificationDetails);
+            notificationDetails.visibility = if (notificationOn) View.VISIBLE else View.GONE;
+
+        notificationSwitch.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
+            notificationOn = isChecked;
+            notificationDetails.visibility = if (notificationOn) View.VISIBLE else View.GONE;
+        })
+
+        val timeUnits = resources.getStringArray(R.array.UnitsOfTime);
+        val timeUnitsSpinner = view.findViewById<Spinner>(R.id.NotificationUnit)
+        if (timeUnitsSpinner != null) {
+            val adapter = context?.let {
+                ArrayAdapter(
+                    it,
+                    android.R.layout.simple_spinner_item, timeUnits
+                )
+            }
+            timeUnitsSpinner.adapter = adapter;
         }
     }
 }
