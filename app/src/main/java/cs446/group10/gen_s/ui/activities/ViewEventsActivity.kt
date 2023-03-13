@@ -5,6 +5,8 @@ import cs446.group10.gen_s.backend.view_model.ViewModel
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cs446.group10.gen_s.R
@@ -16,6 +18,7 @@ class ViewEventsActivity : AppCompatActivity(), IView {
     private val _viewModel = ViewModel
     private lateinit var _recyclerView: RecyclerView
     private lateinit var _recyclerAdapter: EventListViewAdapter
+    private lateinit var noEventText: TextView
     private lateinit var _events: List<Event>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +35,13 @@ class ViewEventsActivity : AppCompatActivity(), IView {
         _viewModel.registerView(this)
 
         initRecyclerView()
+        noEventText = findViewById<TextView>(R.id.noEventText)
+        if (_recyclerAdapter.itemCount == 0) {
+            _recyclerView.visibility = View.GONE
+            noEventText.text = "There are no events yet! Make one to populate this page."
+        } else {
+            noEventText.visibility = View.GONE
+        }
     }
 
     private fun initRecyclerView() {
@@ -54,6 +64,12 @@ class ViewEventsActivity : AppCompatActivity(), IView {
 
     override fun update() {
         _recyclerAdapter.updateDataset(_viewModel.getAllEvents())
+        if (_recyclerAdapter.itemCount == 0) {
+            _recyclerView.visibility = View.GONE
+            noEventText.text = "There are no events yet! Make one to populate this page."
+        } else {
+            noEventText.visibility = View.GONE
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

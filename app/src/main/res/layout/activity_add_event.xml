@@ -140,6 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="49dp"
                     android:layout_weight="1"
+                    android:checked="false"
                     android:text="Notifications?"
                     android:textColor="@android:color/secondary_text_light"
                     android:textSize="16sp" />
@@ -155,6 +156,7 @@
                         android:layout_height="48dp"
                         android:layout_weight="1"
                         android:ems="10"
+                        android:hint="Enter quantity"
                         android:inputType="numberSigned" />
 
                     <Spinner
@@ -169,6 +171,7 @@
                     android:id="@+id/associatedPlanSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:checked="false"
                     android:text="Associated Plan?"
                     android:textSize="16sp" />
 
