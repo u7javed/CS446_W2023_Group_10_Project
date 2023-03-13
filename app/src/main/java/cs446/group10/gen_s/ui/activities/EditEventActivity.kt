@@ -80,9 +80,13 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             if (event != null) {
                 // Get event information
                 val startDateTime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+                _startDate = startDateTime.toLocalDate()
+                _startTime = startDateTime.toLocalTime()
                 val startDateStr = startDateTime.toLocalDate().format(_dateFormatter)
                 val startTimeStr = startDateTime.toLocalTime().format(_timeFormatter)
                 val endDateTime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+                _endDate = endDateTime.toLocalDate()
+                _endTime = endDateTime.toLocalTime()
                 val endDateStr = endDateTime.toLocalDate().format(_dateFormatter)
                 val endTimeStr = endDateTime.toLocalTime().format(_timeFormatter)
 
