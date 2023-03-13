@@ -55,14 +55,14 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
         }
 
         events = listOf(
-            Event("1", "Event 1",  dateTimeStringToEpoch("2023-02-03 13:00"), dateTimeStringToEpoch("2023-02-03 15:00")),
-            Event("2", "Event 2",  dateTimeStringToEpoch("2023-03-03 13:00"), dateTimeStringToEpoch("2023-03-03 15:00")),
-            Event("3", "Event 3",  dateTimeStringToEpoch("2023-04-03 13:00"), dateTimeStringToEpoch("2023-04-03 15:00")),
-            Event("4", "Event 4",  dateTimeStringToEpoch("2023-02-03 13:00"), dateTimeStringToEpoch("2023-02-05 15:00")),
-            Event("5", "Event 5",  dateTimeStringToEpoch("2023-03-03 13:00"), dateTimeStringToEpoch("2023-03-05 15:00")),
-            Event("6", "Event 6",  dateTimeStringToEpoch("2023-04-03 13:00"), dateTimeStringToEpoch("2023-04-05 15:00")),
-            Event("7", "Event 7",  dateTimeStringToEpoch("2023-02-27 13:00"), dateTimeStringToEpoch("2023-03-03 15:00")),
-            Event("8", "Event 8",  dateTimeStringToEpoch("2023-03-30 13:00"), dateTimeStringToEpoch("2023-04-03 15:00"))
+            Event("1", "Event 1",  dateTimeStringToEpoch("2023-02-03 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#ae6179"),
+            Event("2", "Event 2",  dateTimeStringToEpoch("2023-02-05 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#6169ae"),
+            Event("3", "Event 3",  dateTimeStringToEpoch("2023-02-27 13:00"), dateTimeStringToEpoch("2023-03-03 15:00"), color="#6eae61"),
+            Event("4", "Event 4",  dateTimeStringToEpoch("2023-03-03 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#618bae"),
+            Event("5", "Event 5",  dateTimeStringToEpoch("2023-03-05 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#9261ae"),
+            Event("6", "Event 6",  dateTimeStringToEpoch("2023-03-30 13:00"), dateTimeStringToEpoch("2023-04-03 15:00"), color="#ae8e61"),
+            Event("7", "Event 7",  dateTimeStringToEpoch("2023-04-03 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#61a2ae"),
+            Event("8", "Event 8",  dateTimeStringToEpoch("2023-04-05 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#ae619c"),
         )
 
         renderCalender()
@@ -196,9 +196,14 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             val eventsForDay = events.filter { event ->
                 // datetime.month is 1-indexed, currentMonth is 0-indexed
                 val datetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
-                datetime.year == currentYear &&
-                        datetime.month.value - 1 == currentMonth &&
-                        datetime.dayOfMonth == currentDay
+                val eventStartsToday = (datetime.year == currentYear) && (datetime.month.value - 1 == currentMonth) && (datetime.dayOfMonth == currentDay)
+
+                val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+                val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+                val currentDatetime = LocalDateTime.of(currentYear, currentMonth + 1, currentDay, 0, 0)
+                val eventIncludesToday = (currentDatetime in startDatetime..endDatetime)
+
+                eventStartsToday || eventIncludesToday
             }
 
             if (eventsForDay.isNotEmpty()) {
@@ -213,7 +218,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                     eventTextView.gravity = Gravity.CENTER
                     eventTextView.textSize = 9f
                     eventTextView.setTextColor((Color.parseColor("#FFFFFFFF")))
-                    eventTextView.setBackgroundColor((Color.parseColor("#FF6169AE")))
+                    eventTextView.setBackgroundColor((Color.parseColor(event.color)))
 
                     val eventTextViewParams = ViewGroup.MarginLayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
