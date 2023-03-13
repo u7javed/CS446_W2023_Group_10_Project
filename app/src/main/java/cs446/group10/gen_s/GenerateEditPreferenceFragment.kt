@@ -112,5 +112,26 @@ class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferen
                 TimePickerInitialVal(::setStartTime, startTime)
             );
         }
+
+        // end time
+        val endTimeCalendarFragment = TimePickerFragment();
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            replace(R.id.EndTimePickerFragment, endTimeCalendarFragment);
+            commit();
+        }
+
+        fun setEndTime(timeVal: TimeVal) {
+            val chosenEndTime = view.findViewById<TextView>(R.id.chosenEndTime);
+            endTime = timeVal;
+            chosenEndTime.text = TimePickerFragment.convertTimeToString(timeVal);
+        }
+
+        val selectEndTimeButton = view.findViewById<MaterialButton>(R.id.selectEndTime);
+        selectEndTimeButton.setOnClickListener {
+            endTimeCalendarFragment.showTimePicker(
+                TimePickerInitialVal(::setEndTime, endTime)
+            );
+        }
+
     }
 }
