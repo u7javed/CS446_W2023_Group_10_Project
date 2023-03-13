@@ -1,132 +1,63 @@
 package cs446.group10.gen_s.ui.activities
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
-import android.view.View
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cs446.group10.gen_s.R
-import cs446.group10.gen_s.backend.dataClasses.Event
+import cs446.group10.gen_s.backend.dataClasses.Plan
+import cs446.group10.gen_s.backend.model.IView
+import cs446.group10.gen_s.backend.view_model.ViewModel
+import cs446.group10.gen_s.ui.adapters.PlanListViewAdapter
 
-class ViewPlansActivity : AppCompatActivity() {
+class ViewPlansActivity : AppCompatActivity(), IView {
+
+    private val _viewModel = ViewModel
+    private lateinit var _plans: List<Plan>
+    private lateinit var _recyclerView: RecyclerView
+    private lateinit var _recyclerAdapter: PlanListViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_plans)
+        setContentView(R.layout.activity_view_events)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Your Plans"
 
-        val viewPlansLayout = findViewById<LinearLayout>(R.id.view_plans)
+        // Update events
+        _plans = _viewModel.getAllPlans()
 
-        val plans : ArrayList<ViewPlansActivity.Plan> = arrayListOf<ViewPlansActivity.Plan>(
-            ViewPlansActivity.Plan("cs446.group10.gen_s.backend.dataClasses.Plan 1", "Jan 3", "Jan 12", arrayListOf<Event>(Event("cs446.group10.gen_s.backend.dataClasses.Event 2", "Jan 4", 10000000, 10000060))),
-            ViewPlansActivity.Plan("cs446.group10.gen_s.backend.dataClasses.Event 2", "Jan 4", "Jan 5", arrayListOf<Event>())
+        // Register this view to the model
+        _viewModel.registerView(this)
+
+        initRecyclerView()
+    }
+
+    private fun initRecyclerView() {
+        _recyclerView = findViewById(R.id.eventsListView)
+        _recyclerAdapter = PlanListViewAdapter(
+            _plans,
+            onClickListener = ::moveToEditPlanScreen
         )
-
-        for (plan in plans) {
-            // eventLayout
-            val planLayout = LinearLayout(this)
-            planLayout.orientation = LinearLayout.HORIZONTAL
-            planLayout.gravity = Gravity.CENTER_VERTICAL
-            planLayout.setPadding(
-                dpToPixel(16),
-                dpToPixel(6),
-                dpToPixel(16),
-                dpToPixel(6)
-            )
-
-            val planLayoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            planLayoutParams.setMargins(
-                dpToPixel(8),
-                dpToPixel(12),
-                dpToPixel(8),
-                0
-            )
-
-            planLayout.layoutParams = planLayoutParams
-
-            // infoLayout (left)
-            val infoLayout = LinearLayout(this)
-            infoLayout.orientation = LinearLayout.VERTICAL
-            infoLayout.layoutParams = LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1f
-            )
-
-            // eventName (top left)
-            val planNameTextView = TextView(this)
-            planNameTextView.text = plan.planName
-            planNameTextView.textSize = 16f
-            planNameTextView.setTextColor(Color.BLACK)
-
-            // dates (middle left)
-            val dateTextView = TextView(this)
-            dateTextView.text = "${plan.startdate} - ${plan.enddate}"
-            dateTextView.textSize = 12f
-            dateTextView.setTextColor(Color.parseColor("#DD000000"))
-
-            // numberOfEvents (bottom left)
-            val eventsTextView = TextView(this)
-            eventsTextView.text = "${plan.events.size} event(s)"
-            eventsTextView.textSize = 12f
-            eventsTextView.setTextColor(Color.parseColor("#DD000000"))
-
-            // infoLayout (left) has 3 children
-            infoLayout.addView(planNameTextView)
-            infoLayout.addView(dateTextView)
-            infoLayout.addView(eventsTextView)
-
-            //TO DO: Fix spacing
-            // edit image (right)
-            val editImageView = ImageButton(this)
-            editImageView.setImageResource(R.drawable.editicon)
-            editImageView.layoutParams = LinearLayout.LayoutParams(
-                dpToPixel(24),
-                dpToPixel(24)
-            )
-            editImageView.setOnClickListener(object : View.OnClickListener {
-                override fun onClick(view: View?) {
-                    moveToEditPlanPage(plan.planName, plan.startdate, plan.enddate, plan.events)
-                }
-            })
-            // eventLayout has 2 children (left, right)
-            planLayout.addView(infoLayout)
-            planLayout.addView(editImageView)
-
-            viewPlansLayout.addView(planLayout)
-        }
+        _recyclerView.layoutManager = LinearLayoutManager(this)
+        _recyclerView.adapter = _recyclerAdapter
+        _recyclerView.setHasFixedSize(false)
     }
 
-    private fun dpToPixel(_dp: Int) : Int {
-        return (_dp * (resources.displayMetrics.density)).toInt()
-    }
-
-    data class Plan(
-        val planName: String,
-        val startdate: String,
-        val enddate: String,
-        val events: ArrayList<Event>
-    )
-
-    private fun moveToEditPlanPage(planName: String, startDate: String, endDate: String, events: ArrayList<Event>): Boolean {
+    private fun moveToEditPlanScreen(planId: String) {
         val editPlanIntent = Intent(this, EditPlanActivity::class.java)
-        val eventsAsString: String = Gson().toJson(events)
-        editPlanIntent.putExtra("planName", planName)
-        editPlanIntent.putExtra("startDate", startDate)
-        editPlanIntent.putExtra("endDate", endDate)
-        editPlanIntent.putExtra("events", eventsAsString)
-        editPlanIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        editPlanIntent.putExtra("planId", planId)
+        editPlanIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(editPlanIntent)
+    }
+
+    override fun update() {
+        _recyclerAdapter.updateDataset(_viewModel.getAllPlans())
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
         return true
     }
 }

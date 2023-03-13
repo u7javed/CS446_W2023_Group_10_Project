@@ -291,6 +291,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             R.id.fab_import_calendar -> moveToImportCalendarScreen()
             R.id.fab_view_plans -> moveToViewPlansScreen()
             R.id.fab_delete_calendar -> attemptDeleteCalendar()
+            R.id.fab_load_test_data -> attemptLoadInitDate() // TODO: remove once we can add plans
             else -> false
         }
     }
@@ -328,6 +329,23 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
     private fun moveToViewPlansScreen(): Boolean {
         val viewPlansIntent = Intent(this, ViewPlansActivity::class.java)
         startActivity(viewPlansIntent)
+        return true
+    }
+
+    private fun attemptLoadInitDate(): Boolean {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Load Init Date")
+        builder.setMessage("Loading initial data will delete existing data. This action cannot be reversed.")
+        builder.setPositiveButton("Confirm") { dialog, _ ->
+            viewModel.deleteCalendar()
+            viewModel.loadInitialData()
+            dialog.cancel()
+        }
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.cancel()
+        }
+        val alert = builder.create()
+        alert.show()
         return true
     }
 
