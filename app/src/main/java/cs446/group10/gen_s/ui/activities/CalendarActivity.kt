@@ -1,12 +1,10 @@
 package cs446.group10.gen_s.ui.activities
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -19,7 +17,9 @@ import cs446.group10.gen_s.R
 import cs446.group10.gen_s.backend.dataClasses.Event
 import cs446.group10.gen_s.backend.model.IView
 import cs446.group10.gen_s.backend.view_model.ViewModel
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*
 
@@ -28,29 +28,11 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
     private lateinit var actionButton: FloatingActionButton
 
     private val calendar = Calendar.getInstance()
-    private var currentMonth = calendar.get(Calendar.MONTH)
+    private var currentMonth = calendar.get(Calendar.MONTH) // 0-indexed
     private var currentYear = calendar.get(Calendar.YEAR)
     private val viewModel = ViewModel
 
     private lateinit var events: List<Event>
-
-//    @SuppressLint("SimpleDateFormat")
-
-//    private val events : ArrayList<Event> = arrayListOf(
-//        Event("Event 1", SimpleDateFormat("dd-MM-yyyy").parse("06-02-2023")),
-//        Event("Event 2", SimpleDateFormat("dd-MM-yyyy").parse("06-02-2023")),
-//        Event("Event 3", SimpleDateFormat("dd-MM-yyyy").parse("07-02-2023")),
-//        Event("Event 4", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
-//        Event("Event 5", SimpleDateFormat("dd-MM-yyyy").parse("03-03-2023")),
-//        Event("Event 6", SimpleDateFormat("dd-MM-yyyy").parse("04-03-2023")),
-//        Event("Event 7", SimpleDateFormat("dd-MM-yyyy").parse("05-03-2023")),
-//        Event("Event 8", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
-//        Event("Event 9", SimpleDateFormat("dd-MM-yyyy").parse("06-03-2023")),
-//        Event("Event 10", SimpleDateFormat("dd-MM-yyyy").parse("07-03-2023")),
-//        Event("Event 11", SimpleDateFormat("dd-MM-yyyy").parse("06-04-2023")),
-//        Event("Event 12", SimpleDateFormat("dd-MM-yyyy").parse("06-04-2023")),
-//        Event("Event 13", SimpleDateFormat("dd-MM-yyyy").parse("07-04-2023")),
-//    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +53,17 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
         actionButton.setOnClickListener {
             showFabPopup()
         }
+
+        events = listOf(
+            Event("1", "Event 1",  dateTimeStringToEpoch("2023-02-03 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#ae6179"),
+            Event("2", "Event 2",  dateTimeStringToEpoch("2023-02-05 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#6169ae"),
+            Event("3", "Event 3",  dateTimeStringToEpoch("2023-02-27 13:00"), dateTimeStringToEpoch("2023-03-03 15:00"), color="#6eae61"),
+            Event("4", "Event 4",  dateTimeStringToEpoch("2023-03-03 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#618bae"),
+            Event("5", "Event 5",  dateTimeStringToEpoch("2023-03-05 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#9261ae"),
+            Event("6", "Event 6",  dateTimeStringToEpoch("2023-03-30 13:00"), dateTimeStringToEpoch("2023-04-03 15:00"), color="#ae8e61"),
+            Event("7", "Event 7",  dateTimeStringToEpoch("2023-04-03 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#61a2ae"),
+            Event("8", "Event 8",  dateTimeStringToEpoch("2023-04-05 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#ae619c"),
+        )
 
         renderCalender()
     }
@@ -97,10 +90,11 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
         renderCalender()
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "NewApi")
     private fun renderCalender() {
         val yearMonthTextView = findViewById<TextView>(R.id.calendar_year_month)
         val tableLayout = findViewById<LinearLayout>(R.id.calendar_table)
+        val numberOfDays = LocalDate.of(currentYear, currentMonth + 1, 1).lengthOfMonth()
 
         // Remove all views in tableLayout
         tableLayout.removeAllViews()
@@ -185,7 +179,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
         // Add cells for each day in the month
         var currentDay = 1
-        while (currentDay <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+        while (currentDay <= numberOfDays) {
             val dayCell = LinearLayout(this)
             dayCell.orientation = LinearLayout.VERTICAL
             dayCell.layoutParams = cellParams
@@ -200,10 +194,16 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
             // Add events to the day cell
             val eventsForDay = events.filter { event ->
+                // datetime.month is 1-indexed, currentMonth is 0-indexed
                 val datetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
-                datetime.year == currentYear &&
-                        datetime.month.value - 1 == currentMonth &&
-                        datetime.dayOfMonth == currentDay
+                val eventStartsToday = (datetime.year == currentYear) && (datetime.month.value - 1 == currentMonth) && (datetime.dayOfMonth == currentDay)
+
+                val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+                val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+                val currentDatetime = LocalDateTime.of(currentYear, currentMonth + 1, currentDay, 0, 0)
+                val eventIncludesToday = (currentDatetime in startDatetime..endDatetime)
+
+                eventStartsToday || eventIncludesToday
             }
 
             if (eventsForDay.isNotEmpty()) {
@@ -218,7 +218,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                     eventTextView.gravity = Gravity.CENTER
                     eventTextView.textSize = 9f
                     eventTextView.setTextColor((Color.parseColor("#FFFFFFFF")))
-                    eventTextView.setBackgroundColor((Color.parseColor("#FF6169AE")))
+                    eventTextView.setBackgroundColor((Color.parseColor(event.color)))
 
                     val eventTextViewParams = ViewGroup.MarginLayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -240,7 +240,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             currentDay++
             calendar.add(Calendar.DAY_OF_MONTH, 1)
 
-            if (currentDay > calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+            if (currentDay > numberOfDays) {
                 // Add empty cells for days after the last day of the month
                 val tailingEmptyDays = 7 - (calendar.get(Calendar.DAY_OF_WEEK) - 1)
 
@@ -262,6 +262,11 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                 currentRow.layoutParams = rowParams
             }
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun dateTimeStringToEpoch(dateTimeStr: String): Long {
+        return SimpleDateFormat("yyyy-MM-dd hh:mm").parse(dateTimeStr)!!.time / 1000
     }
 
     private fun dpToPixel(_dp: Int) : Int {
@@ -346,5 +351,4 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
         events = viewModel.getAllEvents()
         renderCalender()
     }
-
 }
