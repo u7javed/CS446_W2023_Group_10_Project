@@ -142,18 +142,16 @@ class Model {
 
      fun addPlan(plan: Plan) {
          // add plan to calendar
-         if (plan != null) {
-             for (event in plan.events!!) {
-                 // QUESTION: why don't we just call addEvent??
-                 this.calendar.events.add(event)
-                 eventMap[event.eventId] = event
-             }
-             this.calendar.plans.add(plan)
-             // given a plan, update planMap
-             planMap[plan.planId] = plan
-
-             this.notifyView()
+         for (event in plan.events) {
+             // QUESTION: why don't we just call addEvent??
+             this.calendar.events.add(event)
+             eventMap[event.eventId] = event
          }
+         this.calendar.plans.add(plan)
+         // given a plan, update planMap
+         planMap[plan.planId] = plan
+
+         this.notifyView()
      }
 
      fun editPlan(planId: String,
@@ -190,6 +188,14 @@ class Model {
          // return list of plans
          return this.calendar.plans
      }
+
+    fun getPlanName(planId: String): String? {
+        return if (planId !in planMap) {
+            null
+        } else {
+            planMap[planId]?.name
+        }
+    }
 
      fun getPlanById(planId: String): Plan? {
          // get plan from planId
