@@ -346,6 +346,10 @@ object ViewModel {
         return _model.getEventsData() ?: return listOf()
     }
 
+    fun getAllPlans(): List<Plan> {
+        return _model.getPlansData()
+    }
+
     fun getEventById(eventId: String): Event? {
         return _model.getEventById(eventId)
     }
