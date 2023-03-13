@@ -102,30 +102,35 @@
             android:id="@+id/StartTimePickerFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-<!--        <EditText-->
-<!--            android:id="@+id/StartTimePlaceholder"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:ems="10"-->
-<!--            android:hint="start time"-->
-<!--            android:inputType="textPersonName"-->
-<!--            android:singleLine="true" />-->
-
+        <!--End Time-->
         <TextView
             android:id="@+id/EndTimeLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="End time" />
-
-        <EditText
-            android:id="@+id/EndTimePlaceholder"
+        <TextView
+            android:id="@+id/chosenEndTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="end time"
-            android:inputType="textPersonName"
-            android:singleLine="true" />
+            android:text="End time not selected" />
+        <Button
+            android:id="@+id/selectEndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select End Time" />
+        <FrameLayout
+            android:id="@+id/EndTimePickerFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+<!--        <EditText-->
+<!--            android:id="@+id/EndTimePlaceholder"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:ems="10"-->
+<!--            android:hint="end time"-->
+<!--            android:inputType="textPersonName"-->
+<!--            android:singleLine="true" />-->
 
         <TextView
             android:id="@+id/DurationLabel"
