@@ -35,10 +35,10 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/eventViewName"
+                        android:id="@+id/planViewName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20dp"
+                        android:textSize="26dp"
                         android:textColor="@color/white"
                         android:text="Study for final "
                         android:textStyle="bold"/>
@@ -49,21 +49,13 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/eventViewDates"
+                    android:id="@+id/planViewDates"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16dp"
+                    android:textSize="20dp"
                     android:textColor="@color/white"
                     android:text="Monday - 12 dec to 18 dec"/>
 
-
-                <TextView
-                    android:id="@+id/eventViewNotification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16dp"
-                    android:textColor="@color/white"
-                    android:text="Notification: 12 dec 10:00 PM"/>
 
             </LinearLayout>
 
@@ -76,7 +68,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/planNumEvents"
+                    android:id="@+id/planViewNumEvents"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textColor="@color/white"

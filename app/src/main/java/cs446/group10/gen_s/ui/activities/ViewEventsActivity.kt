@@ -22,8 +22,6 @@ import java.util.*
 class ViewEventsActivity : AppCompatActivity(), IView {
 
     private val _viewModel = ViewModel
-    private val _dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-    private lateinit var _viewEventsLayout: LinearLayout
     private lateinit var _recyclerView: RecyclerView
     private lateinit var _recyclerAdapter: EventListViewAdapter
     private lateinit var _events: List<Event>
@@ -42,7 +40,6 @@ class ViewEventsActivity : AppCompatActivity(), IView {
         // Register this view to the model
         _viewModel.registerView(this)
 
-        _viewEventsLayout = findViewById(R.id.view_events)
         initRecyclerView()
     }
 
