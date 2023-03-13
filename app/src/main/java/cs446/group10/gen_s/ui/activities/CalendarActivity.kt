@@ -218,7 +218,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                     eventTextView.gravity = Gravity.CENTER
                     eventTextView.textSize = 9f
                     eventTextView.setTextColor((Color.parseColor("#FFFFFFFF")))
-                    eventTextView.setBackgroundColor((Color.parseColor("#FF6169AE")))
+                    eventTextView.setBackgroundColor((Color.parseColor(event.color)))
 
                     val eventTextViewParams = ViewGroup.MarginLayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/eventViewPrimaryItem"
+    android:id="@+id/planViewPrimaryItem"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="@color/primaryIconColor"
@@ -9,7 +9,7 @@
     android:elevation="10dp"
     android:layout_height="wrap_content">
 
-<!--    use background tint to assign a color-->
+    <!--    use background tint to assign a color-->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,15 +29,6 @@
                 android:layout_weight="3"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/eventViewDates"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16dp"
-                    android:textColor="@color/white"
-                    android:layout_marginBottom="10dp"
-                    android:text="Monday - 12 dec to 18 dec"/>
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -56,13 +47,16 @@
                         android:layout_height="10dp"/>
 
                 </LinearLayout>
+
                 <TextView
-                    android:id="@+id/eventViewPlan"
+                    android:id="@+id/eventViewDates"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/white"
                     android:layout_height="wrap_content"
                     android:textSize="16dp"
-                    android:text="Plan: Study Plan"/>
+                    android:textColor="@color/white"
+                    android:text="Monday - 12 dec to 18 dec"/>
+
+
                 <TextView
                     android:id="@+id/eventViewNotification"
                     android:layout_width="wrap_content"
@@ -77,16 +71,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_gravity="center"
                 android:minWidth="100dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/eventViewTimes"
+                    android:id="@+id/planNumEvents"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
                     android:textColor="@color/white"
-                    android:text="09:00 AM\n - \n12:00 PM"
+                    android:text="20"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:textSize="32dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:text="Events"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
                     android:textAlignment="center"
                     android:textSize="16dp" />
 
