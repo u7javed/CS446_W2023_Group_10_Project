@@ -18,6 +18,7 @@ class ViewEventsActivity : AppCompatActivity(), IView {
     private val _viewModel = ViewModel
     private lateinit var _recyclerView: RecyclerView
     private lateinit var _recyclerAdapter: EventListViewAdapter
+    private lateinit var noEventText: TextView
     private lateinit var _events: List<Event>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,10 +35,10 @@ class ViewEventsActivity : AppCompatActivity(), IView {
         _viewModel.registerView(this)
 
         initRecyclerView()
-        var noEventText = findViewById<TextView>(R.id.noEventText)
+        noEventText = findViewById<TextView>(R.id.noEventText)
         if (_recyclerAdapter.itemCount == 0) {
             _recyclerView.visibility = View.GONE
-            noEventText.setText("There are no events yet! Make one to populate this page.")
+            noEventText.text = "There are no events yet! Make one to populate this page."
         } else {
             noEventText.visibility = View.GONE
         }
@@ -63,6 +64,12 @@ class ViewEventsActivity : AppCompatActivity(), IView {
 
     override fun update() {
         _recyclerAdapter.updateDataset(_viewModel.getAllEvents())
+        if (_recyclerAdapter.itemCount == 0) {
+            _recyclerView.visibility = View.GONE
+            noEventText.text = "There are no events yet! Make one to populate this page."
+        } else {
+            noEventText.visibility = View.GONE
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

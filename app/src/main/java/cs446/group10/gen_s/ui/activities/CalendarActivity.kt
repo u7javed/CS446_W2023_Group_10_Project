@@ -17,7 +17,7 @@ import cs446.group10.gen_s.R
 import cs446.group10.gen_s.backend.dataClasses.Event
 import cs446.group10.gen_s.backend.model.IView
 import cs446.group10.gen_s.backend.view_model.ViewModel
-import java.text.SimpleDateFormat
+//import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -54,16 +54,16 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             showFabPopup()
         }
 
-        events = listOf(
-            Event("1", "Event 1",  dateTimeStringToEpoch("2023-02-03 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#ae6179"),
-            Event("2", "Event 2",  dateTimeStringToEpoch("2023-02-05 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#6169ae"),
-            Event("3", "Event 3",  dateTimeStringToEpoch("2023-02-27 13:00"), dateTimeStringToEpoch("2023-03-03 15:00"), color="#6eae61"),
-            Event("4", "Event 4",  dateTimeStringToEpoch("2023-03-03 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#618bae"),
-            Event("5", "Event 5",  dateTimeStringToEpoch("2023-03-05 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#9261ae"),
-            Event("6", "Event 6",  dateTimeStringToEpoch("2023-03-30 13:00"), dateTimeStringToEpoch("2023-04-03 15:00"), color="#ae8e61"),
-            Event("7", "Event 7",  dateTimeStringToEpoch("2023-04-03 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#61a2ae"),
-            Event("8", "Event 8",  dateTimeStringToEpoch("2023-04-05 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#ae619c"),
-        )
+//        events = listOf(
+//            Event("1", "Event 1",  dateTimeStringToEpoch("2023-02-03 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#ae6179"),
+//            Event("2", "Event 2",  dateTimeStringToEpoch("2023-02-05 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#6169ae"),
+//            Event("3", "Event 3",  dateTimeStringToEpoch("2023-02-27 13:00"), dateTimeStringToEpoch("2023-03-03 15:00"), color="#6eae61"),
+//            Event("4", "Event 4",  dateTimeStringToEpoch("2023-03-03 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#618bae"),
+//            Event("5", "Event 5",  dateTimeStringToEpoch("2023-03-05 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#9261ae"),
+//            Event("6", "Event 6",  dateTimeStringToEpoch("2023-03-30 13:00"), dateTimeStringToEpoch("2023-04-03 15:00"), color="#ae8e61"),
+//            Event("7", "Event 7",  dateTimeStringToEpoch("2023-04-03 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#61a2ae"),
+//            Event("8", "Event 8",  dateTimeStringToEpoch("2023-04-05 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#ae619c"),
+//        )
 
         renderCalender()
     }
@@ -264,10 +264,10 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
-    private fun dateTimeStringToEpoch(dateTimeStr: String): Long {
-        return SimpleDateFormat("yyyy-MM-dd hh:mm").parse(dateTimeStr)!!.time / 1000
-    }
+//    @SuppressLint("SimpleDateFormat")
+//    private fun dateTimeStringToEpoch(dateTimeStr: String): Long {
+//        return SimpleDateFormat("yyyy-MM-dd hh:mm").parse(dateTimeStr)!!.time / 1000
+//    }
 
     private fun dpToPixel(_dp: Int) : Int {
         return (_dp * (resources.displayMetrics.density)).toInt()

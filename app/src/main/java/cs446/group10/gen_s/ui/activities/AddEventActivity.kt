@@ -149,6 +149,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                     _planId = null
                 }
             }
+            _planIsChecked = true
         } else if (currentPlans.size == 0) {
                 studyPlanSpinner.visibility = View.GONE
                 associatedPlanSwitch.isChecked = false
