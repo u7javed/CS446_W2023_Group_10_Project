@@ -48,16 +48,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Start date" />
-        <TextView
-            android:id="@+id/chosenStartDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start date not selected" />
         <Button
             android:id="@+id/selectStartDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Start Date" />
+        <TextView
+            android:id="@+id/chosenStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start date not selected" />
         <FrameLayout
             android:id="@+id/StartDatePickerFragment"
             android:layout_width="wrap_content"
@@ -68,16 +68,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="End date" />
-        <TextView
-            android:id="@+id/chosenEndDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="End date not selected" />
         <Button
             android:id="@+id/selectEndDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select End Date" />
+        <TextView
+            android:id="@+id/chosenEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="End date not selected" />
         <FrameLayout
             android:id="@+id/EndDatePickerFragment"
             android:layout_width="wrap_content"
@@ -88,16 +88,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Start time" />
-        <TextView
-            android:id="@+id/chosenStartTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start time not selected" />
         <Button
             android:id="@+id/selectStartTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Start Time" />
+        <TextView
+            android:id="@+id/chosenStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start time not selected" />
         <FrameLayout
             android:id="@+id/StartTimePickerFragment"
             android:layout_width="wrap_content"
@@ -108,16 +108,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="End time" />
-        <TextView
-            android:id="@+id/chosenEndTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="End time not selected" />
         <Button
             android:id="@+id/selectEndTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select End Time" />
+        <TextView
+            android:id="@+id/chosenEndTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="End time not selected" />
         <FrameLayout
             android:id="@+id/EndTimePickerFragment"
             android:layout_width="wrap_content"
