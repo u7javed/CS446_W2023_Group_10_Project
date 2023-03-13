@@ -191,13 +191,13 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
                     _planId = null
                 }
             }
+            _planIsChecked = true
         } else if (currentPlans.size == 0) {
             studyPlanSpinner.visibility = View.GONE
             associatedPlanSwitch.isChecked = false
             associatedPlanSwitch.isClickable = false
         }
 
-        _planIsChecked = true
         associatedPlanSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {
                 studyPlanSpinner.visibility = View.GONE
