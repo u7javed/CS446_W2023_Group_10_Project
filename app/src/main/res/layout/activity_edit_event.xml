@@ -24,7 +24,7 @@
 
                 <TextView
                     android:id="@+id/editEventTitle"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="10dp"
                     android:text="Event Information"
@@ -36,7 +36,11 @@
                     android:id="@+id/deleteEventButton"
                     android:layout_width="48dp"
                     android:layout_height="40dp"
+                    android:layout_gravity="left"
                     android:layout_weight="1"
+                    android:background="@color/white"
+                    android:foregroundGravity="left"
+                    android:paddingLeft="100dp"
                     app:srcCompat="@android:drawable/ic_menu_delete" />
             </LinearLayout>
 
@@ -51,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:text="Event Name"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/eventNameInput"
@@ -59,7 +63,7 @@
                     android:layout_height="48dp"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:text="Name"/>
+                    android:text="Name" />
 
                 <TextView
                     android:id="@+id/startDate"
@@ -67,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:text="Start Date"
                     android:textSize="16sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/startDateInput"
@@ -79,9 +83,9 @@
                     android:id="@+id/chosenStartDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Start date not selected"
                     android:paddingBottom="5dp"
-                    android:textColor="@android:color/tertiary_text_light"/>
+                    android:text="Start date not selected"
+                    android:textColor="@android:color/tertiary_text_light" />
 
                 <TextView
                     android:id="@+id/startTime"
@@ -103,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
                     android:text="Start time not selected"
-                    android:textColor="@android:color/tertiary_text_light"/>
+                    android:textColor="@android:color/tertiary_text_light" />
 
                 <TextView
                     android:id="@+id/endDate"
@@ -124,8 +128,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
-                    android:textColor="@android:color/tertiary_text_light"
-                    android:text="End date not selected" />
+                    android:text="End date not selected"
+                    android:textColor="@android:color/tertiary_text_light" />
 
                 <TextView
                     android:id="@+id/endTime"
@@ -146,8 +150,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="5dp"
-                    android:textColor="@android:color/tertiary_text_light"
-                    android:text="End time not selected" />
+                    android:text="End time not selected"
+                    android:textColor="@android:color/tertiary_text_light" />
 
                 <Switch
                     android:id="@+id/notificationSwitchEvent"
