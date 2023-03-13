@@ -52,9 +52,10 @@
                     android:id="@+id/planViewDates"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/white"
-                    android:text="Monday - 12 dec to 18 dec"/>
+                    android:text="Saturday - 2018 March 31 to March 32"/>
 
 
             </LinearLayout>

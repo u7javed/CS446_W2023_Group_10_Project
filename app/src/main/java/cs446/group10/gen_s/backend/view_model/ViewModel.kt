@@ -26,111 +26,116 @@ object ViewModel {
     fun init(context: Context) {
         // Add context to the model
         _model.setContext(context)
-//        _model.addEvent(generateEvent("Event 1",
-//            dateTimeToEpoch("2023-02-06 04:00"),
-//            dateTimeToEpoch("2023-02-06 05:00"), null))
-//        _model.addEvent(generateEvent("Event 2",
-//            dateTimeToEpoch("2023-02-06 12:00"),
-//            dateTimeToEpoch("2023-02-06 14:00"), null))
-//        _model.addEvent(generateEvent("Event 3",
-//            dateTimeToEpoch("2023-02-07 10:00"),
-//            dateTimeToEpoch("2023-02-07 12:30"), null))
-//        _model.addEvent(generateEvent("Event 4",
-//            dateTimeToEpoch("2023-03-03 07:00"),
-//            dateTimeToEpoch("2023-03-03 12:41"), null))
-//        _model.addEvent(generateEvent("Event 5",
-//            dateTimeToEpoch("2023-03-03 13:00"),
-//            dateTimeToEpoch("2023-03-03 15:00"), null))
-//
-//        addPlanToCalendar(
-//            "Study Plan 1",
-//            listOf(
-//                Preference("Class 1",
-//                    LocalDateTime.of(2023, 3, 10, 10, 0).toEpochSecond(ZoneOffset.UTC),
-//                    LocalDateTime.of(2023, 3, 10, 18, 0).toEpochSecond(ZoneOffset.UTC),
-//                    3600
-//                ),
-//                Preference("Class 2",
-//                    LocalDateTime.of(2023, 3, 11, 16, 0).toEpochSecond(ZoneOffset.UTC),
-//                    LocalDateTime.of(2023, 3, 11, 18, 0).toEpochSecond(ZoneOffset.UTC),
-//                    5600
-//                ),
-//                Preference("Class 3",
-//                    LocalDateTime.of(2023, 3, 12, 10, 0).toEpochSecond(ZoneOffset.UTC),
-//                    LocalDateTime.of(2023, 3, 12, 18, 0).toEpochSecond(ZoneOffset.UTC),
-//                    1800
-//                ),
-//                Preference("Class 3",
-//                    LocalDateTime.of(2023, 3, 13, 9, 0).toEpochSecond(ZoneOffset.UTC),
-//                    LocalDateTime.of(2023, 3, 13, 10, 0).toEpochSecond(ZoneOffset.UTC),
-//                    3600
-//                ),
-//            ),
-//            LocalDateTime.of(2023, 3, 10, 8, 0).toEpochSecond(ZoneOffset.UTC),
-//            LocalDateTime.of(2023, 3, 14, 18, 0).toEpochSecond(ZoneOffset.UTC),
-//            "#1BBA9B"
-//        )
-//
-//        _model.addEvent(generateEvent("Event 6",
-//            dateTimeToEpoch("2023-03-04 10:00"),
-//            dateTimeToEpoch("2023-03-04 10:30"), null))
-//        _model.addEvent(generateEvent("Event 7",
-//            dateTimeToEpoch("2023-03-05 14:00"),
-//            dateTimeToEpoch("2023-03-05 16:00"), null))
-//        _model.addEvent(generateEvent("Event 8",
-//            dateTimeToEpoch("2023-03-06 10:00"),
-//            dateTimeToEpoch("2023-03-06 18:00"), null))
-//        _model.addEvent(generateEvent("Event 9",
-//            dateTimeToEpoch("2023-03-06 19:00"),
-//            dateTimeToEpoch("2023-03-06 20:00"), null))
-//
-//        addPlanToCalendar(
-//            "Study Plan 2",
-//            listOf(
-//                Preference("Class 4",
-//                    LocalDateTime.of(2023, 3, 16, 10, 0).toEpochSecond(ZoneOffset.UTC),
-//                    LocalDateTime.of(2023, 3, 16, 18, 0).toEpochSecond(ZoneOffset.UTC),
-//                    3600
-//                ),
-//                Preference("Class 5",
-//                    LocalDateTime.of(2023, 3, 16, 16, 0).toEpochSecond(ZoneOffset.UTC),
-//                    LocalDateTime.of(2023, 3, 16, 18, 0).toEpochSecond(ZoneOffset.UTC),
-//                    5600
-//                ),
-//                Preference("Class 6",
-//                    LocalDateTime.of(2023, 3, 17, 10, 0).toEpochSecond(ZoneOffset.UTC),
-//                    LocalDateTime.of(2023, 3, 17, 18, 0).toEpochSecond(ZoneOffset.UTC),
-//                    1800
-//                ),
-//                Preference("Class 7",
-//                    LocalDateTime.of(2023, 3, 18, 9, 0).toEpochSecond(ZoneOffset.UTC),
-//                    LocalDateTime.of(2023, 3, 18, 10, 0).toEpochSecond(ZoneOffset.UTC),
-//                    3600
-//                ),
-//            ),
-//            LocalDateTime.of(2023, 3, 16, 8, 0).toEpochSecond(ZoneOffset.UTC),
-//            LocalDateTime.of(2023, 3, 18, 18, 0).toEpochSecond(ZoneOffset.UTC),
-//            "#EF233D"
-//        )
-//
-//        _model.addEvent(generateEvent("Event 10",
-//            dateTimeToEpoch("2023-03-07 10:00"),
-//            dateTimeToEpoch("2023-03-07 12:00"), null))
-//        _model.addEvent(generateEvent("Event 11",
-//            dateTimeToEpoch("2023-03-07 12:30"),
-//            dateTimeToEpoch("2023-03-07 16:00"), null))
-//        _model.addEvent(generateEvent("Event 12",
-//            dateTimeToEpoch("2023-03-07 16:00"),
-//            dateTimeToEpoch("2023-03-07 17:00"), null))
-//        _model.addEvent(generateEvent("Event 13",
-//            dateTimeToEpoch("2023-04-05 08:00"),
-//            dateTimeToEpoch("2023-04-05 08:15"), null))
-//        _model.addEvent(generateEvent("Event 14",
-//            dateTimeToEpoch("2023-04-05 12:00"),
-//            dateTimeToEpoch("2023-04-05 13:15"), null))
+
+//        loadInitialData()
 
         // Load from storage
         _model.loadCalendarFromStorage(context)
+    }
+
+    fun loadInitialData() {
+        _model.addEvent(generateEvent("Event 1",
+            dateTimeToEpoch("2023-02-06 04:00"),
+            dateTimeToEpoch("2023-02-06 05:00"), null))
+        _model.addEvent(generateEvent("Event 2",
+            dateTimeToEpoch("2023-02-06 12:00"),
+            dateTimeToEpoch("2023-02-06 14:00"), null))
+        _model.addEvent(generateEvent("Event 3",
+            dateTimeToEpoch("2023-02-07 10:00"),
+            dateTimeToEpoch("2023-02-07 12:30"), null))
+        _model.addEvent(generateEvent("Event 4",
+            dateTimeToEpoch("2023-03-03 07:00"),
+            dateTimeToEpoch("2023-03-03 12:41"), null))
+        _model.addEvent(generateEvent("Event 5",
+            dateTimeToEpoch("2023-03-03 13:00"),
+            dateTimeToEpoch("2023-03-03 15:00"), null))
+
+        addPlanToCalendar(
+            "Study Plan 1",
+            listOf(
+                Preference("Class 1",
+                    LocalDateTime.of(2023, 3, 10, 10, 0).toEpochSecond(ZoneOffset.UTC),
+                    LocalDateTime.of(2023, 3, 10, 18, 0).toEpochSecond(ZoneOffset.UTC),
+                    3600
+                ),
+                Preference("Class 2",
+                    LocalDateTime.of(2023, 3, 11, 16, 0).toEpochSecond(ZoneOffset.UTC),
+                    LocalDateTime.of(2023, 3, 11, 18, 0).toEpochSecond(ZoneOffset.UTC),
+                    5600
+                ),
+                Preference("Class 3",
+                    LocalDateTime.of(2023, 3, 12, 10, 0).toEpochSecond(ZoneOffset.UTC),
+                    LocalDateTime.of(2023, 3, 12, 18, 0).toEpochSecond(ZoneOffset.UTC),
+                    1800
+                ),
+                Preference("Class 3",
+                    LocalDateTime.of(2023, 3, 13, 9, 0).toEpochSecond(ZoneOffset.UTC),
+                    LocalDateTime.of(2023, 3, 13, 10, 0).toEpochSecond(ZoneOffset.UTC),
+                    3600
+                ),
+            ),
+            LocalDateTime.of(2023, 3, 10, 8, 0).toEpochSecond(ZoneOffset.UTC),
+            LocalDateTime.of(2023, 3, 14, 18, 0).toEpochSecond(ZoneOffset.UTC),
+            "#1BBA9B"
+        )
+
+        _model.addEvent(generateEvent("Event 6",
+            dateTimeToEpoch("2023-03-04 10:00"),
+            dateTimeToEpoch("2023-03-04 10:30"), null))
+        _model.addEvent(generateEvent("Event 7",
+            dateTimeToEpoch("2023-03-05 14:00"),
+            dateTimeToEpoch("2023-03-05 16:00"), null))
+        _model.addEvent(generateEvent("Event 8",
+            dateTimeToEpoch("2023-03-06 10:00"),
+            dateTimeToEpoch("2023-03-06 18:00"), null))
+        _model.addEvent(generateEvent("Event 9",
+            dateTimeToEpoch("2023-03-06 19:00"),
+            dateTimeToEpoch("2023-03-06 20:00"), null))
+
+        addPlanToCalendar(
+            "Study Plan 2",
+            listOf(
+                Preference("Class 4",
+                    LocalDateTime.of(2023, 3, 16, 10, 0).toEpochSecond(ZoneOffset.UTC),
+                    LocalDateTime.of(2023, 3, 16, 18, 0).toEpochSecond(ZoneOffset.UTC),
+                    3600
+                ),
+                Preference("Class 5",
+                    LocalDateTime.of(2023, 3, 16, 16, 0).toEpochSecond(ZoneOffset.UTC),
+                    LocalDateTime.of(2023, 3, 16, 18, 0).toEpochSecond(ZoneOffset.UTC),
+                    5600
+                ),
+                Preference("Class 6",
+                    LocalDateTime.of(2023, 3, 17, 10, 0).toEpochSecond(ZoneOffset.UTC),
+                    LocalDateTime.of(2023, 3, 17, 18, 0).toEpochSecond(ZoneOffset.UTC),
+                    1800
+                ),
+                Preference("Class 7",
+                    LocalDateTime.of(2023, 3, 18, 9, 0).toEpochSecond(ZoneOffset.UTC),
+                    LocalDateTime.of(2023, 3, 18, 10, 0).toEpochSecond(ZoneOffset.UTC),
+                    3600
+                ),
+            ),
+            LocalDateTime.of(2023, 3, 16, 8, 0).toEpochSecond(ZoneOffset.UTC),
+            LocalDateTime.of(2023, 3, 18, 18, 0).toEpochSecond(ZoneOffset.UTC),
+            "#EF233D"
+        )
+
+        _model.addEvent(generateEvent("Event 10",
+            dateTimeToEpoch("2023-03-07 10:00"),
+            dateTimeToEpoch("2023-03-07 12:00"), null))
+        _model.addEvent(generateEvent("Event 11",
+            dateTimeToEpoch("2023-03-07 12:30"),
+            dateTimeToEpoch("2023-03-07 16:00"), null))
+        _model.addEvent(generateEvent("Event 12",
+            dateTimeToEpoch("2023-03-07 16:00"),
+            dateTimeToEpoch("2023-03-07 17:00"), null))
+        _model.addEvent(generateEvent("Event 13",
+            dateTimeToEpoch("2023-04-05 08:00"),
+            dateTimeToEpoch("2023-04-05 08:15"), null))
+        _model.addEvent(generateEvent("Event 14",
+            dateTimeToEpoch("2023-04-05 12:00"),
+            dateTimeToEpoch("2023-04-05 13:15"), null))
     }
 
     fun does() {
@@ -281,8 +286,8 @@ object ViewModel {
     }
 
     private fun getStartAndEnd(events: List<Event>): Pair<Long, Long> {
-        var start = 0L
-        var end = 1L
+        var start = Long.MAX_VALUE
+        var end = 0L
         events.forEach { event ->
             start = min(start, event.startDate)
             end = max(end, event.endDate)
@@ -337,9 +342,9 @@ object ViewModel {
         return Event(eventId, name, startDate, endDate, notification, planId)
     }
 
-    fun addEventToCalendar(name: String, startDate: Long, endDate: Long, notification: Long?): Boolean {
+    fun addEventToCalendar(name: String, startDate: Long, endDate: Long, notification: Long?, planId: String? = null): Boolean {
         val event: Event = generateEvent(name, startDate, endDate, notification)
-        return _model.addEvent(event)
+        return _model.addEvent(event, planId)
     }
 
     fun getAllEvents(): List<Event> {
@@ -358,9 +363,9 @@ object ViewModel {
         _model.deleteCalendar()
     }
 
-    fun updateEventInCalendar(eventId: String, name: String, startDate: Long, endDate: Long, notification: Long?): Boolean {
+    fun updateEventInCalendar(eventId: String, name: String, startDate: Long, endDate: Long, notification: Long?, planId: String? = null): Boolean {
         val updatedEvent = Event("holder", name, startDate, endDate, notification)
-        return _model.updateEvent(eventId, updatedEvent)
+        return _model.updateEvent(eventId, updatedEvent, planId)
     }
 
     fun deleteEventInCalendar(eventId: String): Boolean {

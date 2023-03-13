@@ -9,6 +9,8 @@ import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
+import kotlin.math.max
+import kotlin.math.min
 
 /*"New" things needed to be added to cs446.group10.gen_s.backend.view_model.ViewModel:
 - pushing to storage (we think this has to be tied to an android activity)
@@ -46,7 +48,7 @@ class Model {
          pushToStorage(context)
      }
 
-     fun addEvent(event: Event): Boolean {
+     fun addEvent(event: Event, planId: String? = null): Boolean {
          // Check if the event conflicts with an existing event
          calendar.events.forEach { curEvent: Event ->
              if ((event.startDate <= curEvent.startDate && event.endDate > curEvent.startDate) ||
@@ -54,6 +56,16 @@ class Model {
                  (event.startDate <= curEvent.startDate && event.endDate >= curEvent.endDate) ||
                  (event.startDate > curEvent.startDate && event.endDate < curEvent.endDate))
                  return false
+         }
+         if (planId != null && planId in planMap) {
+             if (planMap[planId]?.color != null)
+                 event.color = planMap[planId]?.color!!
+             event.planId = planId
+             planMap[planId]?.events?.add(event)
+             if (event.startDate < planMap[planId]?.start!!)
+                 planMap[planId]?.start = event.startDate
+             if (event.endDate > planMap[planId]?.end!!)
+                 planMap[planId]?.end = event.endDate
          }
          // given an event, add it to the calendar
          calendar.events.add(event)
@@ -88,6 +100,21 @@ class Model {
         }
         return try {
             this.calendar.events.remove(eventMap[eventId])
+
+            // Remove event from plan if in one
+            if (eventMap[eventId]?.planId != null) {
+                val plan = getPlanById(eventMap[eventId]?.planId!!)
+                plan?.events?.remove(eventMap[eventId])
+                if (plan?.events?.isEmpty() == true) {
+                    this.removePlan(eventMap[eventId]?.planId!!)
+                } else {
+                    plan?.events?.forEach { event: Event ->
+                        plan.start = min(plan.start, event.startDate)
+                        plan.end = max(plan.end, event.endDate)
+                    }
+                }
+            }
+
             eventMap.remove(eventId)
             this.notifyView()
             true
@@ -97,7 +124,7 @@ class Model {
         }
     }
 
-    fun updateEvent(eventId: String, event: Event): Boolean {
+    fun updateEvent(eventId: String, event: Event, planId: String? = null): Boolean {
         // Check if the event conflicts with an existing event
         if (eventId !in eventMap)
             return false
@@ -109,10 +136,21 @@ class Model {
                 (event.startDate > curEvent.startDate && event.endDate < curEvent.endDate)))
                     return false
         }
+
         eventMap[eventId]!!.name = event.name
         eventMap[eventId]!!.startDate = event.startDate
         eventMap[eventId]!!.endDate = event.endDate
         eventMap[eventId]!!.notification = event.notification
+        if (planId != null && planId in planMap && eventMap[eventId]!! !in planMap[planId]!!.events) {
+            if (planMap[planId]?.color != null)
+                eventMap[eventId]!!.color = planMap[planId]?.color!!
+            eventMap[eventId]!!.planId = planId
+            planMap[planId]?.events?.add(eventMap[eventId]!!)
+            if (eventMap[eventId]!!.startDate < planMap[planId]?.start!!)
+                planMap[planId]?.start = eventMap[eventId]!!.startDate
+            if (eventMap[eventId]!!.endDate > planMap[planId]?.end!!)
+                planMap[planId]?.end = eventMap[eventId]!!.endDate
+        }
         this.notifyView()
         return true
     }
@@ -174,11 +212,11 @@ class Model {
          if (plan != null) {
              this.calendar.plans.remove(plan)
 
-             for (event in plan!!.events) {
+             for (event in plan.events) {
                  this.removeEvent(event.eventId)
              }
 
-             planMap.remove(plan?.planId, plan)
+             planMap.remove(plan.planId, plan)
 
              this.notifyView()
          }

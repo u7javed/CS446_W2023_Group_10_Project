@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cs446.group10.gen_s.R
+import cs446.group10.gen_s.backend.dataClasses.Event
 import cs446.group10.gen_s.backend.dataClasses.Plan
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -53,8 +54,13 @@ class PlanListViewAdapter(
         val startDay: String = startDate.dayOfWeek.toString().lowercase().replaceFirstChar { it.titlecase() }
 
         var dateText = "$startDay - ${months[startDate.monthValue]} ${startDate.dayOfMonth}"
-        if (startDate.dayOfWeek != endDate.dayOfWeek) {
-            dateText += " to ${months[endDate.monthValue]} ${endDate.dayOfMonth}"
+        if (startDate.year != endDate.year) {
+            dateText += ", ${startDate.year}"
+        }
+        dateText += if (startDate.dayOfWeek != endDate.dayOfWeek || plan.end - plan.start > 86400) {
+            " to ${months[endDate.monthValue]} ${endDate.dayOfMonth}, ${endDate.year}"
+        } else {
+            ", ${startDate.year}"
         }
 
         holder.dates.text = dateText
@@ -68,7 +74,11 @@ class PlanListViewAdapter(
         }
     }
 
-
     override fun getItemCount() = dataSet.size
+
+    fun updateDataset(newDataset: List<Plan>) {
+        dataSet = newDataset
+        notifyDataSetChanged()
+    }
 
 }

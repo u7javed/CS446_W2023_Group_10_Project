@@ -29,6 +29,9 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var endDateText: TextView;
     private lateinit var endTimeText: TextView;
 
+    private lateinit var dpd: DatePickerDialog
+    private lateinit var tpd: TimePickerDialog
+
     private lateinit var _eventNameText: EditText
     private var _startDate: LocalDate? = null
     private var _startTime: LocalTime? = null
@@ -136,29 +139,25 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                     parent: AdapterView<*>,
                     view: View, position: Int, id: Long
                 ) {
-                    //TO DO: integrate with backend
                     _planId = currentPlans[position].planId
-                    println("PLAN CHOSEN: ${currentPlans[position].planId}")
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    //TO DO: integrate with backend
                     _planId = null
-                    println("PLAN CHOSEN: $_planId}")
                 }
             }
         }
 
         var associatedPlanSwitch = findViewById<Switch>(R.id.associatedPlanSwitch)
         associatedPlanSwitch.isChecked = true
+        _planIsChecked = true
         associatedPlanSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {
-                _planIsChecked = false
                 studyPlanSpinner.visibility = View.GONE
             } else {
-                _planIsChecked = true
                 studyPlanSpinner.visibility = View.VISIBLE
             }
+            _planIsChecked = isChecked
         }
     }
 
@@ -170,7 +169,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
             val month = cal.get(Calendar.MONTH)
             val day = cal.get(Calendar.DAY_OF_MONTH)
 
-            val dpd = DatePickerDialog(
+            dpd = DatePickerDialog(
                 this,
                 { _, year, monthOfYear, dayOfMonth ->
 
@@ -198,7 +197,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
             val c = Calendar.getInstance()
             dH = c[Calendar.HOUR]
             dMin = c[Calendar.MINUTE]
-            val tpd = TimePickerDialog(
+            tpd = TimePickerDialog(
                 this,
                 { _, hour, minute ->
                     if (v == btnStartTimePicker) {
@@ -227,8 +226,11 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
         if (startDate >= endDate) {
             return false
         }
+        var planId: String? = null
+        if (_planIsChecked && _planId != null)
+            planId = _planId
         // TODO: Deal with notification
-        return _viewModel.addEventToCalendar(eventName, startDate, endDate, null)
+        return _viewModel.addEventToCalendar(eventName, startDate, endDate, null, planId)
     }
 
     private fun errorToast() {
@@ -240,6 +242,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+        dpd.dismiss()
+        tpd.dismiss()
         finish()
         return true
     }

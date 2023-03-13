@@ -1,23 +1,14 @@
 package cs446.group10.gen_s.ui.activities
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
-import android.view.View
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import cs446.group10.gen_s.R
-import cs446.group10.gen_s.backend.dataClasses.Event
 import cs446.group10.gen_s.backend.dataClasses.Plan
 import cs446.group10.gen_s.backend.model.IView
 import cs446.group10.gen_s.backend.view_model.ViewModel
-import cs446.group10.gen_s.ui.adapters.EventListViewAdapter
 import cs446.group10.gen_s.ui.adapters.PlanListViewAdapter
 
 class ViewPlansActivity : AppCompatActivity(), IView {
@@ -62,8 +53,7 @@ class ViewPlansActivity : AppCompatActivity(), IView {
     }
 
     override fun update() {
-        _plans = _viewModel.getAllPlans()
-        _recyclerAdapter.notifyDataSetChanged()
+        _recyclerAdapter.updateDataset(_viewModel.getAllPlans())
     }
 
     override fun onSupportNavigateUp(): Boolean {

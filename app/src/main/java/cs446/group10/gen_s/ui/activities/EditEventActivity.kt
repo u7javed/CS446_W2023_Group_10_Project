@@ -38,6 +38,8 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
     private var _startTime: LocalTime? = null
     private var _endDate: LocalDate? = null
     private var _endTime: LocalTime? = null
+    private var _planId: String? = null
+    private var _planIsChecked: Boolean = false
     private var _notification: Long? = null
 
 
@@ -157,7 +159,10 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         //TO-DO: connect to backend
-        val currentPlans = resources.getStringArray(R.array.TempPlans)
+        val currentPlans: MutableList<PlanSpinner> = mutableListOf()
+        _viewModel.getAllPlans().forEach { plan ->
+            currentPlans.add(PlanSpinner(plan.planId, plan.name))
+        }
         val studyPlanSpinner = findViewById<Spinner>(R.id.studyPlanSpinner)
 
         if (studyPlanSpinner != null) {
@@ -173,24 +178,26 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
                     parent: AdapterView<*>,
                     view: View, position: Int, id: Long
                 ) {
-                    //TO DO: integrate with backend
+                    _planId = currentPlans[position].planId
 
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    //TO DO: integrate with backend
+                    _planId = null
                 }
             }
         }
 
         var associatedPlanSwitch = findViewById<Switch>(R.id.associatedPlanSwitch)
         associatedPlanSwitch.isChecked = true
+        _planIsChecked = true
         associatedPlanSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {
                 studyPlanSpinner.visibility = View.GONE
             } else {
                 studyPlanSpinner.visibility = View.VISIBLE
             }
+            _planIsChecked = isChecked
         }
     }
 
@@ -258,8 +265,11 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
         if (startDate >= endDate) {
             return false
         }
+        var planId: String? = null
+        if (_planIsChecked && _planId != null)
+            planId = _planId
         // TODO: Deal with notification
-        return _viewModel.updateEventInCalendar(_eventId, eventName, startDate, endDate, null)
+        return _viewModel.updateEventInCalendar(_eventId, eventName, startDate, endDate, null, planId)
     }
 
     private fun deleteEvent(eventId: String): Boolean {
@@ -279,6 +289,16 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             this,
             "Failed to delete Event $_eventId",
             Toast.LENGTH_SHORT).show()
+    }
+
+    class PlanSpinner (
+        val planId: String,
+        val planName: String) {
+
+        override fun toString(): String {
+            return planName
+        }
+
     }
 
 }

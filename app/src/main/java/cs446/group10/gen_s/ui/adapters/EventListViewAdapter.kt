@@ -63,8 +63,13 @@ class EventListViewAdapter(
         val startDay: String = startDate.dayOfWeek.toString().lowercase().replaceFirstChar { it.titlecase() }
 
         var dateText = "$startDay - ${months[startDate.monthValue]} ${startDate.dayOfMonth}"
-        if (startDate.dayOfWeek != endDate.dayOfWeek || event.endDate - event.startDate > 86400L) {
-            dateText += " to ${months[endDate.monthValue]} ${endDate.dayOfMonth}"
+        if (startDate.year != endDate.year) {
+            dateText += ", ${startDate.year}"
+        }
+        dateText += if (startDate.dayOfWeek != endDate.dayOfWeek || event.endDate - event.startDate > 86400L) {
+            " to ${months[endDate.monthValue]} ${endDate.dayOfMonth}, ${endDate.year}"
+        } else {
+            ", ${startDate.year}"
         }
 
         holder.dates.text = dateText
@@ -88,6 +93,11 @@ class EventListViewAdapter(
         holder.primaryItem.setOnClickListener {
             onClickListener(event.eventId)
         }
+    }
+
+    fun updateDataset(newDataset: List<Event>) {
+        dataSet = newDataset
+        notifyDataSetChanged()
     }
 
 
