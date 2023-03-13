@@ -34,6 +34,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
     private var _startTime: LocalTime? = null
     private var _endDate: LocalDate? = null
     private var _endTime: LocalTime? = null
+    private var _planId: String? = null
+    private var _planIsChecked: Boolean = false
     private var _notification: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,7 +117,10 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         //TO-DO: connect to backend
-        val currentPlans = resources.getStringArray(R.array.TempPlans)
+        val currentPlans: MutableList<PlanSpinner> = mutableListOf()
+        _viewModel.getAllPlans().forEach { plan ->
+            currentPlans.add(PlanSpinner(plan.planId, plan.name))
+        }
         val studyPlanSpinner = findViewById<Spinner>(R.id.studyPlanSpinner)
 
         if (studyPlanSpinner != null) {
@@ -132,11 +137,14 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                     view: View, position: Int, id: Long
                 ) {
                     //TO DO: integrate with backend
-
+                    _planId = currentPlans[position].planId
+                    println("PLAN CHOSEN: ${currentPlans[position].planId}")
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
                     //TO DO: integrate with backend
+                    _planId = null
+                    println("PLAN CHOSEN: $_planId}")
                 }
             }
         }
@@ -145,8 +153,10 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
         associatedPlanSwitch.isChecked = true
         associatedPlanSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {
+                _planIsChecked = false
                 studyPlanSpinner.visibility = View.GONE
             } else {
+                _planIsChecked = true
                 studyPlanSpinner.visibility = View.VISIBLE
             }
         }
@@ -183,25 +193,25 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
             )
             dpd.show()
         } else if (v == btnStartTimePicker || v == btnEndTimePicker) {
-                val dH: Int
-                val dMin: Int
-                val c = Calendar.getInstance()
-                dH = c[Calendar.HOUR]
-                dMin = c[Calendar.MINUTE]
-                val tpd = TimePickerDialog(
-                    this,
-                    { _, hour, minute ->
-                        if (v == btnStartTimePicker) {
-                            _startTime = LocalTime.of(hour, minute)
-                            startTimeText.text = "${hour}h:${minute}m"
-                        } else {
-                            _endTime = LocalTime.of(hour, minute)
-                            endTimeText.text = "${hour}h:${minute}m"
-                        }
-                    }, dH, dMin, false
-                )
-                tpd.show()
-            }
+            val dH: Int
+            val dMin: Int
+            val c = Calendar.getInstance()
+            dH = c[Calendar.HOUR]
+            dMin = c[Calendar.MINUTE]
+            val tpd = TimePickerDialog(
+                this,
+                { _, hour, minute ->
+                    if (v == btnStartTimePicker) {
+                        _startTime = LocalTime.of(hour, minute)
+                        startTimeText.text = "${hour}h:${minute}m"
+                    } else {
+                        _endTime = LocalTime.of(hour, minute)
+                        endTimeText.text = "${hour}h:${minute}m"
+                    }
+                }, dH, dMin, false
+            )
+            tpd.show()
+        }
     }
 
     private fun createEvent(): Boolean {
@@ -232,5 +242,15 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    class PlanSpinner (
+        val planId: String,
+        val planName: String) {
+
+        override fun toString(): String {
+            return planName
+        }
+
     }
 }
