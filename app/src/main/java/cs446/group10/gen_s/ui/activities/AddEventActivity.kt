@@ -119,6 +119,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
+
+        var associatedPlanSwitch = findViewById<Switch>(R.id.associatedPlanSwitch)
         //TO-DO: connect to backend
         val currentPlans: MutableList<PlanSpinner> = mutableListOf()
         _viewModel.getAllPlans().forEach { plan ->
@@ -126,7 +128,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
         }
         val studyPlanSpinner = findViewById<Spinner>(R.id.studyPlanSpinner)
 
-        if (studyPlanSpinner != null) {
+        if (studyPlanSpinner != null && currentPlans.size != 0) {
+            associatedPlanSwitch.isChecked = true
             val adapter = ArrayAdapter(
                 this,
                 android.R.layout.simple_spinner_item, currentPlans
@@ -146,10 +149,12 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                     _planId = null
                 }
             }
+        } else if (currentPlans.size == 0) {
+                studyPlanSpinner.visibility = View.GONE
+                associatedPlanSwitch.isChecked = false
+                associatedPlanSwitch.isClickable = false
         }
 
-        var associatedPlanSwitch = findViewById<Switch>(R.id.associatedPlanSwitch)
-        associatedPlanSwitch.isChecked = true
         _planIsChecked = true
         associatedPlanSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {

@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import cs446.group10.gen_s.R
 import cs446.group10.gen_s.backend.dataClasses.Event
+import cs446.group10.gen_s.backend.dataClasses.Plan
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -158,14 +159,17 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
+        var associatedPlanSwitch = findViewById<Switch>(R.id.associatedPlanSwitch)
+
         //TO-DO: connect to backend
         val currentPlans: MutableList<PlanSpinner> = mutableListOf()
         _viewModel.getAllPlans().forEach { plan ->
             currentPlans.add(PlanSpinner(plan.planId, plan.name))
         }
+
         val studyPlanSpinner = findViewById<Spinner>(R.id.studyPlanSpinner)
 
-        if (studyPlanSpinner != null) {
+        if (studyPlanSpinner != null && currentPlans.size != 0) {
             val adapter = ArrayAdapter(
                 this,
                 android.R.layout.simple_spinner_item, currentPlans
@@ -186,9 +190,12 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
                     _planId = null
                 }
             }
+        } else if (currentPlans.size == 0) {
+            studyPlanSpinner.visibility = View.GONE
+            associatedPlanSwitch.isChecked = false
+            associatedPlanSwitch.isClickable = false
         }
 
-        var associatedPlanSwitch = findViewById<Switch>(R.id.associatedPlanSwitch)
         associatedPlanSwitch.isChecked = true
         _planIsChecked = true
         associatedPlanSwitch?.setOnCheckedChangeListener { _, isChecked ->
