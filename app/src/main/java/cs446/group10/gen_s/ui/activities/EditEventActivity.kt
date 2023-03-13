@@ -25,7 +25,7 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var btnStartTimePicker: Button;
     private lateinit var btnEndDatePicker: Button;
     private lateinit var btnEndTimePicker: Button;
-    private lateinit var deleteEvent: ImageButton;
+    private lateinit var deleteEvent: Button;
     private lateinit var confirmEditEvent: Button;
 
     private lateinit var startDate: TextView;
@@ -102,7 +102,7 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-        deleteEvent = findViewById<ImageButton>(R.id.deleteEventButton)
+        deleteEvent = findViewById<Button>(R.id.deleteEventButton)
         deleteEvent.setOnClickListener {
             val res: Boolean = deleteEvent(_eventId)
             if (res)
