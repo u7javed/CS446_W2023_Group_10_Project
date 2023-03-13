@@ -61,7 +61,7 @@ class EventListViewAdapter(
         val startDay: String = startDate.dayOfWeek.toString().lowercase().replaceFirstChar { it.titlecase() }
 
         var dateText = "$startDay - ${months[startDate.monthValue]} ${startDate.dayOfMonth}"
-        if (startDate.dayOfWeek != endDate.dayOfWeek) {
+        if (startDate.dayOfWeek != endDate.dayOfWeek || event.endDate - event.startDate > 86400L) {
             dateText += " to ${months[endDate.monthValue]} ${endDate.dayOfMonth}"
         }
 
