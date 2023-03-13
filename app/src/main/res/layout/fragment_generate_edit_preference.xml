@@ -42,75 +42,95 @@
             android:hint="Preference 1"
             android:inputType="textPersonName"
             android:singleLine="true" />
-<!--Start Date-->
+        <!--Start Date-->
         <TextView
             android:id="@+id/StartDateLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Start date" />
-        <TextView
-            android:id="@+id/chosenStartDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start date not selected" />
         <Button
             android:id="@+id/selectStartDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select Start Date" />
+        <TextView
+            android:id="@+id/chosenStartDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Start date not selected" />
         <FrameLayout
             android:id="@+id/StartDatePickerFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-<!--End Date-->
+        <!--End Date-->
         <TextView
             android:id="@+id/EndDateLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="End date" />
-        <TextView
-            android:id="@+id/chosenEndDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="End date not selected" />
         <Button
             android:id="@+id/selectEndDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Select End Date" />
+        <TextView
+            android:id="@+id/chosenEndDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="End date not selected" />
         <FrameLayout
             android:id="@+id/EndDatePickerFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <!--Start Time-->
         <TextView
             android:id="@+id/StartTimeLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Start time" />
-
-        <EditText
-            android:id="@+id/StartTimePlaceholder"
+        <Button
+            android:id="@+id/selectStartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Start Time" />
+        <TextView
+            android:id="@+id/chosenStartTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="start time"
-            android:inputType="textPersonName"
-            android:singleLine="true" />
-
+            android:text="Start time not selected" />
+        <FrameLayout
+            android:id="@+id/StartTimePickerFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <!--End Time-->
         <TextView
             android:id="@+id/EndTimeLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="End time" />
-
-        <EditText
-            android:id="@+id/EndTimePlaceholder"
+        <Button
+            android:id="@+id/selectEndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select End Time" />
+        <TextView
+            android:id="@+id/chosenEndTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="end time"
-            android:inputType="textPersonName"
-            android:singleLine="true" />
+            android:text="End time not selected" />
+        <FrameLayout
+            android:id="@+id/EndTimePickerFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+<!--        <EditText-->
+<!--            android:id="@+id/EndTimePlaceholder"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:ems="10"-->
+<!--            android:hint="end time"-->
+<!--            android:inputType="textPersonName"-->
+<!--            android:singleLine="true" />-->
 
         <TextView
             android:id="@+id/DurationLabel"

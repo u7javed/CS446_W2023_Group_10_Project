@@ -39,6 +39,8 @@ class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferen
 
         var startDate: DateVal? = null;
         var endDate: DateVal? = null;
+        var startTime: TimeVal? = null;
+        var endTime: TimeVal? = null;
 
         if (newPreference) {
             // will be removed later
@@ -89,5 +91,47 @@ class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferen
                 DatePickerInitialVal(::setEndDate, endDate)
             );
         }
+
+        // start time
+
+        val startTimeCalendarFragment = TimePickerFragment();
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            replace(R.id.StartTimePickerFragment, startTimeCalendarFragment);
+            commit();
+        }
+
+        fun setStartTime(timeVal: TimeVal) {
+            val chosenStartTime = view.findViewById<TextView>(R.id.chosenStartTime);
+            startTime = timeVal;
+            chosenStartTime.text = TimePickerFragment.convertTimeToString(timeVal);
+        }
+
+        val selectStartTimeButton = view.findViewById<MaterialButton>(R.id.selectStartTime);
+        selectStartTimeButton.setOnClickListener {
+            startTimeCalendarFragment.showTimePicker(
+                TimePickerInitialVal(::setStartTime, startTime)
+            );
+        }
+
+        // end time
+        val endTimeCalendarFragment = TimePickerFragment();
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            replace(R.id.EndTimePickerFragment, endTimeCalendarFragment);
+            commit();
+        }
+
+        fun setEndTime(timeVal: TimeVal) {
+            val chosenEndTime = view.findViewById<TextView>(R.id.chosenEndTime);
+            endTime = timeVal;
+            chosenEndTime.text = TimePickerFragment.convertTimeToString(timeVal);
+        }
+
+        val selectEndTimeButton = view.findViewById<MaterialButton>(R.id.selectEndTime);
+        selectEndTimeButton.setOnClickListener {
+            endTimeCalendarFragment.showTimePicker(
+                TimePickerInitialVal(::setEndTime, endTime)
+            );
+        }
+
     }
 }

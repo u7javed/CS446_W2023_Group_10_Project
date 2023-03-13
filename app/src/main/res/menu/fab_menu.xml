@@ -4,6 +4,10 @@
     <item android:id="@+id/fab_view_events"
         android:title="View Events"/>
 
+    <item
+        android:id="@+id/fab_view_plans"
+        android:title="View Plans" />
+
     <item android:id="@+id/fab_add_event"
         android:title="Add an Event"/>
 
@@ -16,10 +20,10 @@
     <item android:id="@+id/fab_import_calendar"
         android:title="Import Calendar"/>
     <item
-        android:id="@+id/fab_view_plans"
-        android:title="View Plans" />
-    <item
         android:id="@+id/fab_delete_calendar"
         android:title="Delete Calendar"/>
+    <item
+        android:id="@+id/fab_load_test_data"
+        android:title="Load Test Data"/>
 
 </menu>

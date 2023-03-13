@@ -10,6 +10,7 @@ import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
 import cs446.group10.gen_s.R
 import cs446.group10.gen_s.backend.dataClasses.Event
+import cs446.group10.gen_s.backend.view_model.ViewModel
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -23,6 +24,7 @@ class EventListViewAdapter(
 
     val months = listOf("Holder", "Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec")
     val timeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
+    private val viewModel = ViewModel
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -61,13 +63,18 @@ class EventListViewAdapter(
         val startDay: String = startDate.dayOfWeek.toString().lowercase().replaceFirstChar { it.titlecase() }
 
         var dateText = "$startDay - ${months[startDate.monthValue]} ${startDate.dayOfMonth}"
-        if (startDate.dayOfWeek != endDate.dayOfWeek) {
-            dateText += " to ${months[endDate.monthValue]} ${endDate.dayOfMonth}"
+        if (startDate.year != endDate.year) {
+            dateText += ", ${startDate.year}"
+        }
+        dateText += if (startDate.dayOfWeek != endDate.dayOfWeek || event.endDate - event.startDate > 86400L) {
+            " to ${months[endDate.monthValue]} ${endDate.dayOfMonth}, ${endDate.year}"
+        } else {
+            ", ${startDate.year}"
         }
 
         holder.dates.text = dateText
         holder.name.text = event.name
-        holder.plan.text = "Plan: None" // TODO: add plan data
+        holder.plan.text = "Plan: ${viewModel.getPlanName(event.planId)}"
 
         val startTimeStr = timeFormatter.format(startDate.toLocalTime()).toString()
         val endTimeStr = timeFormatter.format(endDate.toLocalTime()).toString()
@@ -86,6 +93,11 @@ class EventListViewAdapter(
         holder.primaryItem.setOnClickListener {
             onClickListener(event.eventId)
         }
+    }
+
+    fun updateDataset(newDataset: List<Event>) {
+        dataSet = newDataset
+        notifyDataSetChanged()
     }
 
 
