@@ -170,6 +170,7 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
         val studyPlanSpinner = findViewById<Spinner>(R.id.studyPlanSpinner)
 
         if (studyPlanSpinner != null && currentPlans.size != 0) {
+            associatedPlanSwitch.isChecked = true
             val adapter = ArrayAdapter(
                 this,
                 android.R.layout.simple_spinner_item, currentPlans
@@ -196,7 +197,6 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             associatedPlanSwitch.isClickable = false
         }
 
-        associatedPlanSwitch.isChecked = true
         _planIsChecked = true
         associatedPlanSwitch?.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {
