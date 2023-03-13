@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import cs446.group10.gen_s.backend.view_model.ViewModel
 import android.os.Bundle
+import android.text.format.Time
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,9 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var startTime: TextView;
     private lateinit var endTime: TextView;
     private lateinit var _eventId: String
+
+    private lateinit var tpd: TimePickerDialog;
+    private lateinit var dpd: DatePickerDialog;
 
     private lateinit var _eventNameText: EditText
     private var _startDate: LocalDate? = null
@@ -215,7 +219,7 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             val month = cal.get(Calendar.MONTH)
             val day = cal.get(Calendar.DAY_OF_MONTH)
 
-            val dpd = DatePickerDialog(
+            dpd = DatePickerDialog(
                 this,
                 { _, year, monthOfYear, dayOfMonth ->
 
@@ -243,7 +247,7 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             val c = Calendar.getInstance()
             dH = c[Calendar.HOUR]
             dMin = c[Calendar.MINUTE]
-            val tpd = TimePickerDialog(
+            tpd = TimePickerDialog(
                 this,
                 { _, hour, minute ->
                     if (v == btnStartTimePicker) {
@@ -296,6 +300,13 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
             this,
             "Failed to delete Event $_eventId",
             Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        dpd.dismiss()
+        tpd.dismiss()
+        finish()
+        return true
     }
 
     class PlanSpinner (
