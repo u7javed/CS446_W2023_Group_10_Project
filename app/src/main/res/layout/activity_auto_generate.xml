@@ -7,16 +7,6 @@
     android:padding="20dp"
     tools:context=".ui.activities.AutoGenerateActivity">
 
-<!--    <TextView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:gravity="center"-->
-<!--        android:text="This is where plans are auto-generated"-->
-<!--        android:textColor="@color/primaryTextColor"-->
-<!--        android:textSize="20dp"-->
-<!--        android:textStyle="bold" />-->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
