@@ -1,20 +1,38 @@
 package cs446.group10.gen_s
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
+import cs446.group10.gen_s.ui.activities.GeneratePlanActivity
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.*
+
+data class DurationVal(
+    val quantity: String,
+    val unit: String,
+)
 
 data class PlanPreferenceDetail(
     val preferenceName: String,
-    val startDate: Date,
-    val endDate: Date,
-    val startTime: Int,
-    val endTime: Int,
-    val duration: Int,
+    val startDate: DateVal,
+    val endDate: DateVal,
+    val startTime: TimeVal,
+    val endTime: TimeVal,
+//    val startDateYear: Int,
+//    val startDateMonth: Int,
+//    val startDateDay: Int,
+//    val endDateYear: Int,
+//    val endDateMonth: Int,
+//    val endDateDay: Int,
+//    val startTimeHour: Int,
+//    val startTimeMin: Int,
+//    val endTimeHour: Int,
+//    val endTimeMin: Int,
+    val duration: DurationVal,
 )
 
 data class PlanPreferenceInitialVal(
@@ -27,7 +45,10 @@ data class PlanPreferenceInitialVal(
  * Use the [GenerateEditPreferenceFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferenceInitialVal) :
+class GenerateEditPreferenceFragment(
+    private val preferenceDetails: PlanPreferenceInitialVal,
+    private val generatePlanActivity: GeneratePlanActivity,
+) :
     Fragment(R.layout.fragment_generate_edit_preference) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,7 +56,7 @@ class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferen
 
         val newPreference = this.preferenceDetails.newPreference;
 
-        val preferenceName = view.findViewById<EditText>(R.id.PreferenceNameTextField);
+        val PreferenceName = view.findViewById<EditText>(R.id.PreferenceNameTextField);
 
         var startDate: DateVal? = null;
         var endDate: DateVal? = null;
@@ -45,7 +66,7 @@ class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferen
         if (newPreference) {
             // will be removed later
             // used to test passing parameters from one fragment (GenerateFragment) to another fragment (GenerateEditPreferenceFragment)
-            preferenceName.setText("New Preference");
+            PreferenceName.setText("");
         } else {
             // set variables
         }
@@ -131,6 +152,45 @@ class GenerateEditPreferenceFragment(private val preferenceDetails: PlanPreferen
             endTimeCalendarFragment.showTimePicker(
                 TimePickerInitialVal(::setEndTime, endTime)
             );
+        }
+
+        val timeUnits = resources.getStringArray(R.array.UnitsOfDuration);
+        val timeUnitsSpinner = view.findViewById<Spinner>(R.id.DurationUnit)
+        if (timeUnitsSpinner != null) {
+            val adapter = context?.let {
+                ArrayAdapter(
+                    it,
+                    android.R.layout.simple_spinner_item, timeUnits
+                )
+            }
+            timeUnitsSpinner.adapter = adapter;
+        }
+
+
+
+
+
+        val confirmPreferenceButton = view.findViewById<MaterialButton>(R.id.ConfirmPreferenceButton);
+        confirmPreferenceButton.setOnClickListener {
+            val NotificationTime = view.findViewById<EditText>(R.id.NotificationTime);
+            startDate = if (startDate != null) startDate else DateVal(0, 0, 0);
+            endDate = if (endDate != null) endDate else DateVal(0, 0, 0);
+            startTime = if (startTime != null) startTime else TimeVal(0, 0);
+            endTime = if (endTime != null) endTime else TimeVal(0, 0);
+            generatePlanActivity.addPreference(
+                PlanPreferenceDetail(
+                    PreferenceName.text.toString(),
+                    startDate!!,
+                    endDate!!,
+                    startTime!!,
+                    endTime!!,
+                    DurationVal(
+                        NotificationTime.text.toString(),
+                        timeUnitsSpinner.selectedItem.toString(),
+                    )
+                )
+            );
+            generatePlanActivity.showPlanInfoPage();
         }
 
     }

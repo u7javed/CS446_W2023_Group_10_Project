@@ -3,6 +3,8 @@ package cs446.group10.gen_s
 import android.app.DatePickerDialog
 import androidx.fragment.app.Fragment
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 data class DateVal(
@@ -103,6 +105,23 @@ class DatePickerFragment : Fragment(R.layout.fragment_date_picker) {
             cal.set(Calendar.MONTH, dateVal.month)
             cal.set(Calendar.DAY_OF_MONTH, dateVal.day)
             return sdf.format(cal.time);
+        }
+
+        fun convertDateToLocalDate(dateVal: DateVal?): LocalDate {
+            if (dateVal == null) {
+                return LocalDate.parse("");
+            }
+            val format = "dd-MM-yyyy"
+            var formatter = DateTimeFormatter.ofPattern(format)
+            val sdf = SimpleDateFormat(format, Locale.US)
+
+            var cal = Calendar.getInstance()
+            cal.set(Calendar.YEAR, dateVal.year)
+            cal.set(Calendar.MONTH, dateVal.month)
+            cal.set(Calendar.DAY_OF_MONTH, dateVal.day)
+            val dateStr = sdf.format(cal.time);
+
+            return LocalDate.parse(dateStr, formatter)
         }
     }
 }
