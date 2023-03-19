@@ -22,17 +22,8 @@ data class PlanPreferenceDetail(
     val endDate: DateVal,
     val startTime: TimeVal,
     val endTime: TimeVal,
-//    val startDateYear: Int,
-//    val startDateMonth: Int,
-//    val startDateDay: Int,
-//    val endDateYear: Int,
-//    val endDateMonth: Int,
-//    val endDateDay: Int,
-//    val startTimeHour: Int,
-//    val startTimeMin: Int,
-//    val endTimeHour: Int,
-//    val endTimeMin: Int,
     val duration: DurationVal,
+    val frequency: String,
 )
 
 data class PlanPreferenceInitialVal(
@@ -173,6 +164,7 @@ class GenerateEditPreferenceFragment(
         val confirmPreferenceButton = view.findViewById<MaterialButton>(R.id.ConfirmPreferenceButton);
         confirmPreferenceButton.setOnClickListener {
             val NotificationTime = view.findViewById<EditText>(R.id.NotificationTime);
+            val Frequency = view.findViewById<EditText>(R.id.Frequency);
             startDate = if (startDate != null) startDate else DateVal(0, 0, 0);
             endDate = if (endDate != null) endDate else DateVal(0, 0, 0);
             startTime = if (startTime != null) startTime else TimeVal(0, 0);
@@ -187,7 +179,8 @@ class GenerateEditPreferenceFragment(
                     DurationVal(
                         NotificationTime.text.toString(),
                         timeUnitsSpinner.selectedItem.toString(),
-                    )
+                    ),
+                    Frequency.text.toString()
                 )
             );
             generatePlanActivity.showPlanInfoPage();

@@ -69,7 +69,10 @@ class GeneratePlanActivity : AppCompatActivity() {
                         TimePickerFragment.convertTimeToString(newPreference.startTime) +
                         " - " +
                         TimePickerFragment.convertTimeToString(newPreference.endTime),
-                newPreference.duration.quantity + " " + newPreference.duration.unit
+                newPreference.duration.quantity + " " + newPreference.duration.unit +
+                        " | " +
+                        "Every " + newPreference.frequency + " day(s)",
+                imageResourceId=R.drawable.editicon,
             )
         )
     }
