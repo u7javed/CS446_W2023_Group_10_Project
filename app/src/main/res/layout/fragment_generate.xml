@@ -12,8 +12,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/GenerateButton"
+            app:layout_constraintTop_toTopOf="parent">
 
             <fragment
                 android:name="cs446.group10.gen_s.PlanBasicInfoFragment"

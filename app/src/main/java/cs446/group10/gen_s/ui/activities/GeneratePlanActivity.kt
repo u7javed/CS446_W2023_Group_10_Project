@@ -9,6 +9,44 @@ import cs446.group10.gen_s.*
 class GeneratePlanActivity : AppCompatActivity() {
     private var preferences = mutableListOf<PlanPreferenceDetail>();
     private var preferenceItems = mutableListOf<ListTabDetail>();
+//    private var preferenceItems = mutableListOf<ListTabDetail>(
+//    ListTabDetail(
+//        "HI",
+//        "D1",
+//        "D2",
+//        imageResourceId=R.drawable.editicon,
+//    ),
+//    ListTabDetail(
+//        "HI",
+//        "D1",
+//        "D2",
+//        imageResourceId=R.drawable.editicon,
+//    ),
+//    ListTabDetail(
+//        "HI",
+//        "D1",
+//        "D2",
+//        imageResourceId=R.drawable.editicon,
+//    ),
+//    ListTabDetail(
+//        "HI",
+//        "D1",
+//        "D2",
+//        imageResourceId=R.drawable.editicon,
+//    ),
+//    ListTabDetail(
+//        "HI",
+//        "D1",
+//        "D2",
+//        imageResourceId=R.drawable.editicon,
+//    ),
+//    ListTabDetail(
+//        "HI",
+//        "D1",
+//        "D2",
+//        imageResourceId=R.drawable.editicon,
+//    ),
+//    );
     private lateinit var preferenceItemsAdapter: ListTabsAdapter;
 
     override fun onCreate(savedInstanceState: Bundle?) {
