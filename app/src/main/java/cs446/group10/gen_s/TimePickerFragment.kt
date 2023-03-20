@@ -2,6 +2,11 @@ package cs446.group10.gen_s
 
 import android.app.TimePickerDialog
 import androidx.fragment.app.Fragment
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 data class TimeVal(
@@ -50,6 +55,16 @@ class TimePickerFragment : Fragment(R.layout.fragment_time_picker) {
             val hStr = if (timeVal.hour < 10) "0${timeVal.hour}" else "${timeVal.hour}";
             val minStr = if (timeVal.minute < 10) "0${timeVal.minute}" else "${timeVal.minute}";
             return "${hStr}:${minStr}";
+        }
+
+        fun converTimeToLocalDate(timeVal: TimeVal): LocalDateTime {
+            if (timeVal == null) {
+                return LocalDateTime.parse("");
+            }
+            val format = "hh:mm"
+            var formatter = DateTimeFormatter.ofPattern(format)
+
+            return LocalDateTime.parse(convertTimeToString(timeVal), DateTimeFormatter.ofPattern(format));
         }
     }
 }
