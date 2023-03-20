@@ -3,6 +3,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import cs446.group10.gen_s.ui.activities.GeneratePlanActivity
@@ -46,8 +47,21 @@ class GenerateEditPreferenceFragment(
         super.onViewCreated(view, savedInstanceState);
 
         val newPreference = this.preferenceDetails.newPreference;
+        val preferenceDetail = this.preferenceDetails.preferenceDetail;
 
         val PreferenceName = view.findViewById<EditText>(R.id.PreferenceNameTextField);
+        val chosenStartDate = view.findViewById<TextView>(R.id.chosenStartDate);
+        val selectStartDateButton = view.findViewById<MaterialButton>(R.id.selectStartDate);
+        val chosenEndDate = view.findViewById<TextView>(R.id.chosenEndDate);
+        val selectEndDateButton = view.findViewById<MaterialButton>(R.id.selectEndDate);
+        val chosenStartTime = view.findViewById<TextView>(R.id.chosenStartTime);
+        val selectStartTimeButton = view.findViewById<MaterialButton>(R.id.selectStartTime);
+        val chosenEndTime = view.findViewById<TextView>(R.id.chosenEndTime);
+        val selectEndTimeButton = view.findViewById<MaterialButton>(R.id.selectEndTime);
+        val timeUnitsSpinner = view.findViewById<Spinner>(R.id.DurationUnit);
+        val durationTime = view.findViewById<EditText>(R.id.DurationTime);
+        val frequency = view.findViewById<EditText>(R.id.Frequency);
+        val timeUnits = resources.getStringArray(R.array.UnitsOfDuration);
 
         var startDate: DateVal? = null;
         var endDate: DateVal? = null;
@@ -60,6 +74,34 @@ class GenerateEditPreferenceFragment(
             PreferenceName.setText("");
         } else {
             // set variables
+            if (preferenceDetail != null) {
+                PreferenceName.setText(preferenceDetail.preferenceName)
+                startDate = preferenceDetail.startDate;
+                chosenStartDate.text = DatePickerFragment.convertDateToString(startDate);
+                endDate = preferenceDetail.endDate;
+                chosenEndDate.text = DatePickerFragment.convertDateToString(endDate);
+                startTime = preferenceDetail.startTime;
+                chosenStartTime.text = TimePickerFragment.convertTimeToString(startTime);
+                endTime = preferenceDetail.endTime;
+                chosenEndTime.text = TimePickerFragment.convertTimeToString(endTime);
+                durationTime.setText(preferenceDetail.duration.quantity);
+
+                if (timeUnitsSpinner != null) {
+                    val adapter = context?.let {
+                        ArrayAdapter(
+                            it,
+                            android.R.layout.simple_spinner_item, timeUnits
+                        )
+                    }
+                    timeUnitsSpinner.adapter = adapter;
+                    if (adapter != null) {
+                        timeUnitsSpinner.setSelection(adapter.getPosition(preferenceDetail.duration.unit))
+                    };
+                }
+
+                frequency.setText(preferenceDetail.frequency);
+            };
+
         }
 
         // start date
@@ -71,12 +113,10 @@ class GenerateEditPreferenceFragment(
         }
 
         fun setStartDate(dateVal: DateVal) {
-            val chosenStartDate = view.findViewById<TextView>(R.id.chosenStartDate);
             startDate = dateVal;
             chosenStartDate.text = DatePickerFragment.convertDateToString(dateVal);
         }
 
-        val selectStartDateButton = view.findViewById<MaterialButton>(R.id.selectStartDate);
         selectStartDateButton.setOnClickListener {
             startDateCalendarFragment.showDatePicker(
                 DatePickerInitialVal(::setStartDate, startDate)
@@ -92,12 +132,10 @@ class GenerateEditPreferenceFragment(
         }
 
         fun setEndDate(dateVal: DateVal) {
-            val chosenEndDate = view.findViewById<TextView>(R.id.chosenEndDate);
             endDate = dateVal;
             chosenEndDate.text = DatePickerFragment.convertDateToString(dateVal);
         }
 
-        val selectEndDateButton = view.findViewById<MaterialButton>(R.id.selectEndDate);
         selectEndDateButton.setOnClickListener {
             endDateCalendarFragment.showDatePicker(
                 DatePickerInitialVal(::setEndDate, endDate)
@@ -113,12 +151,10 @@ class GenerateEditPreferenceFragment(
         }
 
         fun setStartTime(timeVal: TimeVal) {
-            val chosenStartTime = view.findViewById<TextView>(R.id.chosenStartTime);
             startTime = timeVal;
             chosenStartTime.text = TimePickerFragment.convertTimeToString(timeVal);
         }
 
-        val selectStartTimeButton = view.findViewById<MaterialButton>(R.id.selectStartTime);
         selectStartTimeButton.setOnClickListener {
             startTimeCalendarFragment.showTimePicker(
                 TimePickerInitialVal(::setStartTime, startTime)
@@ -133,20 +169,16 @@ class GenerateEditPreferenceFragment(
         }
 
         fun setEndTime(timeVal: TimeVal) {
-            val chosenEndTime = view.findViewById<TextView>(R.id.chosenEndTime);
             endTime = timeVal;
             chosenEndTime.text = TimePickerFragment.convertTimeToString(timeVal);
         }
 
-        val selectEndTimeButton = view.findViewById<MaterialButton>(R.id.selectEndTime);
         selectEndTimeButton.setOnClickListener {
             endTimeCalendarFragment.showTimePicker(
                 TimePickerInitialVal(::setEndTime, endTime)
             );
         }
 
-        val timeUnits = resources.getStringArray(R.array.UnitsOfDuration);
-        val timeUnitsSpinner = view.findViewById<Spinner>(R.id.DurationUnit)
         if (timeUnitsSpinner != null) {
             val adapter = context?.let {
                 ArrayAdapter(
@@ -158,13 +190,22 @@ class GenerateEditPreferenceFragment(
         }
 
 
+        val cancelPreferenceButton = view.findViewById<MaterialButton>(R.id.CancelPreferenceButton);
+        cancelPreferenceButton.setOnClickListener {
+            generatePlanActivity.showPlanInfoPage();
+        }
 
+        val removePreferenceButton = view.findViewById<AppCompatImageButton>(R.id.removePreferenceButton);
+        removePreferenceButton.setOnClickListener {
+            if (preferenceDetails.preferenceDetail != null) {
+                generatePlanActivity.removePreference(preferenceDetails.preferenceDetail);
+            }
+            generatePlanActivity.showPlanInfoPage();
+        }
 
 
         val confirmPreferenceButton = view.findViewById<MaterialButton>(R.id.ConfirmPreferenceButton);
         confirmPreferenceButton.setOnClickListener {
-            val NotificationTime = view.findViewById<EditText>(R.id.NotificationTime);
-            val Frequency = view.findViewById<EditText>(R.id.Frequency);
             startDate = if (startDate != null) startDate else DateVal(0, 0, 0);
             endDate = if (endDate != null) endDate else DateVal(0, 0, 0);
             startTime = if (startTime != null) startTime else TimeVal(0, 0);
@@ -177,10 +218,10 @@ class GenerateEditPreferenceFragment(
                     startTime!!,
                     endTime!!,
                     DurationVal(
-                        NotificationTime.text.toString(),
+                        durationTime.text.toString(),
                         timeUnitsSpinner.selectedItem.toString(),
                     ),
-                    Frequency.text.toString()
+                    frequency.text.toString()
                 )
             );
             generatePlanActivity.showPlanInfoPage();

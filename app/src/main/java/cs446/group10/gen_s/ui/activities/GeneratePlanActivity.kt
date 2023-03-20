@@ -83,9 +83,9 @@ class GeneratePlanActivity : AppCompatActivity() {
         }
     }
 
-    public fun showEditPreferencePage() {
+    public fun showEditPreferencePage(preferenceDetail: PlanPreferenceDetail? = null) {
         val generateEditPreferenceFragment = GenerateEditPreferenceFragment(
-            PlanPreferenceInitialVal(true, null),
+            PlanPreferenceInitialVal(preferenceDetail == null, preferenceDetail),
             this
         );
 
@@ -95,24 +95,39 @@ class GeneratePlanActivity : AppCompatActivity() {
         }
     }
 
+    public fun formListTabDetail(preference: PlanPreferenceDetail): ListTabDetail {
+        fun editPreference() {
+            showEditPreferencePage(preference);
+        }
+        return ListTabDetail(
+            preference.preferenceName,
+            DatePickerFragment.convertDateToString(preference.startDate) +
+                    " - " +
+                    DatePickerFragment.convertDateToString(preference.endDate) +
+                    " | " +
+                    TimePickerFragment.convertTimeToString(preference.startTime) +
+                    " - " +
+                    TimePickerFragment.convertTimeToString(preference.endTime),
+            preference.duration.quantity + " " + preference.duration.unit +
+                    " | " +
+                    "Every " + preference.frequency + " day(s)",
+            imageResourceId=R.drawable.editicon,
+            onClick=::editPreference
+        )
+    }
+
     public fun addPreference(newPreference: PlanPreferenceDetail) {
         preferences.add(newPreference);
-        preferenceItems.add(
-            ListTabDetail(
-                newPreference.preferenceName,
-                DatePickerFragment.convertDateToString(newPreference.startDate) +
-                        " - " +
-                        DatePickerFragment.convertDateToString(newPreference.endDate) +
-                        " | " +
-                        TimePickerFragment.convertTimeToString(newPreference.startTime) +
-                        " - " +
-                        TimePickerFragment.convertTimeToString(newPreference.endTime),
-                newPreference.duration.quantity + " " + newPreference.duration.unit +
-                        " | " +
-                        "Every " + newPreference.frequency + " day(s)",
-                imageResourceId=R.drawable.editicon,
-            )
-        )
+        preferenceItems.add(formListTabDetail(newPreference));
+    }
+
+    public fun removePreference(preferenceToRemove: PlanPreferenceDetail) {
+        preferences.remove(preferenceToRemove);
+        preferenceItems = mutableListOf<ListTabDetail>();
+        for (preference in preferences) {
+            preferenceItems.add(formListTabDetail(preference));
+        }
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
