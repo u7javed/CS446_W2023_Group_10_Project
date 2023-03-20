@@ -34,7 +34,7 @@ class TimePickerFragment : Fragment(R.layout.fragment_time_picker) {
 
         if (initVal.timeVal != null) {
             dH = initVal.timeVal.hour;
-            dMin = initVal.timeVal.hour;
+            dMin = initVal.timeVal.minute;
         }
 
         val tpd = context?.let {
