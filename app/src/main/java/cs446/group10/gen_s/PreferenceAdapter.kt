@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
@@ -14,6 +15,7 @@ data class ListTabDetail(
     var description1: String? = null,
     var description2: String? = null,
     var imageResourceId: Int? = null, // R.drawable.xxxxx
+    var onClick: (()->Unit)? = null,
 )
 
 class ListTabsAdapter(
@@ -21,12 +23,14 @@ class ListTabsAdapter(
     private var uniqueItemCount: Int = 0
 ) : RecyclerView.Adapter<ListTabsAdapter.ListTabsViewHolder>() {
     class ListTabsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val tabContainer: LinearLayout;
         val tabHeader: TextView;
         val tabDescription1: TextView;
         val tabDescription2: TextView;
         val tabIcon: ImageButton;
 
         init {
+            tabContainer = itemView.findViewById<LinearLayout>(R.id.itemTabContainer);
             tabHeader = itemView.findViewById<TextView>(R.id.itemHeader);
             tabDescription1 = itemView.findViewById<TextView>(R.id.itemDescription1);
             tabDescription2 = itemView.findViewById<TextView>(R.id.itemDescription2);
@@ -68,17 +72,14 @@ class ListTabsAdapter(
         } else {
             viewHolder.tabDescription2.visibility = View.GONE;
         }
-        if (item.description2 != null) {
-            viewHolder.tabDescription2.visibility = View.VISIBLE;
-            viewHolder.tabDescription2.text = item.description2;
-        } else {
-            viewHolder.tabDescription2.visibility = View.GONE;
-        }
         if (item.imageResourceId != null) {
             viewHolder.tabIcon.visibility = View.VISIBLE;
             viewHolder.tabIcon.setImageResource(item.imageResourceId!!);
         } else {
             viewHolder.tabIcon.visibility = View.GONE;
+        }
+        if (item.onClick != null) {
+            viewHolder.tabContainer.setOnClickListener { item?.onClick?.invoke(); };
         }
     }
 

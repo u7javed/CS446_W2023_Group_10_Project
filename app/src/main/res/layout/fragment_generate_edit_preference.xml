@@ -25,16 +25,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
-                    <TextView
-                        android:id="@+id/PreferenceDetailHeader"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:text="Preference"
-                        android:textColor="@color/primaryTextColor"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/PreferenceDetailHeader"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Preference"
+                            android:textColor="@color/primaryTextColor"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageButton
+                            android:id="@+id/removePreferenceButton"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:background="#00FFFFFF"
+                            android:scaleType="centerInside"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/delete_icon"
+                            android:contentDescription="Delete Preference" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
                         android:id="@+id/PreferenceNameLabel"
@@ -155,11 +175,11 @@
                         android:orientation="horizontal">
 
                         <EditText
-                            android:id="@+id/NotificationTime"
+                            android:id="@+id/DurationTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ems="10"
-                            android:hint="5"
+                            android:hint="30"
                             android:inputType="number|numberDecimal"
                             android:singleLine="true" />
 
@@ -185,7 +205,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:ems="10"
-                            android:hint="30"
+                            android:hint="1"
                             android:inputType="number|numberDecimal"
                             android:singleLine="true" />
 
