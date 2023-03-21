@@ -3,6 +3,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
@@ -206,44 +207,23 @@ class GenerateEditPreferenceFragment(
             generatePlanActivity.showPlanInfoPage();
         }
 
-        fun addPreference() {
-            startDate = if (startDate != null) startDate else DateVal(0, 0, 0);
-            endDate = if (endDate != null) endDate else DateVal(0, 0, 0);
-            startTime = if (startTime != null) startTime else TimeVal(0, 0);
-            endTime = if (endTime != null) endTime else TimeVal(0, 0);
-            generatePlanActivity.addPreference(
-                PlanPreferenceDetail(
-                    PreferenceName.text.toString(),
-                    startDate!!,
-                    endDate!!,
-                    startTime!!,
-                    endTime!!,
-                    DurationVal(
-                        durationTime.text.toString(),
-                        timeUnitsSpinner.selectedItem.toString(),
-                    ),
-                    frequency.text.toString()
-                )
-            );
+        fun addPreference(preferenceData: PlanPreferenceDetail) {
+            generatePlanActivity.addPreference(preferenceData);
             generatePlanActivity.showPlanInfoPage();
         }
 
-        fun updatePreference() {
+        fun updatePreference(preferenceData: PlanPreferenceDetail) {
             if (preferenceDetail != null) {
-                startDate = if (startDate != null) startDate else DateVal(0, 0, 0);
-                endDate = if (endDate != null) endDate else DateVal(0, 0, 0);
-                startTime = if (startTime != null) startTime else TimeVal(0, 0);
-                endTime = if (endTime != null) endTime else TimeVal(0, 0);
-                preferenceDetail.preferenceName = PreferenceName.text.toString();
-                preferenceDetail.startDate = startDate!!;
-                preferenceDetail.endDate = endDate!!;
-                preferenceDetail.startTime = startTime!!;
-                preferenceDetail.endTime = endTime!!;
+                preferenceDetail.preferenceName = preferenceData.preferenceName;
+                preferenceDetail.startDate = preferenceData.startDate;
+                preferenceDetail.endDate = preferenceData.endDate;
+                preferenceDetail.startTime = preferenceData.startTime;
+                preferenceDetail.endTime = preferenceData.endTime;
                 preferenceDetail.duration = DurationVal(
-                    durationTime.text.toString(),
-                    timeUnitsSpinner.selectedItem.toString(),
+                    preferenceData.duration.quantity,
+                    preferenceData.duration.unit,
                 );
-                preferenceDetail.frequency = frequency.text.toString();
+                preferenceDetail.frequency = preferenceData.frequency;
             }
             generatePlanActivity.updatePreference();
             generatePlanActivity.showPlanInfoPage();
@@ -252,10 +232,36 @@ class GenerateEditPreferenceFragment(
 
         val confirmPreferenceButton = view.findViewById<MaterialButton>(R.id.ConfirmPreferenceButton);
         confirmPreferenceButton.setOnClickListener {
+            if (PreferenceName.text.toString() == "" ||
+                startDate == null || endDate == null || startTime == null || endTime == null ||
+                durationTime.text.toString() == "" || frequency.text.toString() == "") {
+                val builder = context?.let { it1 -> AlertDialog.Builder(it1) }
+                builder?.setTitle("Invalid Input")
+                builder?.setMessage("Fill in all the information to proceed.")
+                builder?.setPositiveButton("Confirm") { dialog, _ ->
+                    dialog.cancel()
+                }
+                val alert = builder?.create()
+                alert?.show()
+                return@setOnClickListener;
+            }
+
+            val preferenceData = PlanPreferenceDetail(
+                PreferenceName.text.toString(),
+                startDate!!,
+                endDate!!,
+                startTime!!,
+                endTime!!,
+                DurationVal(
+                    durationTime.text.toString(),
+                    timeUnitsSpinner.selectedItem.toString(),
+                ),
+                frequency.text.toString()
+            )
             if (newPreference) {
-                addPreference();
+                addPreference(preferenceData);
             } else {
-                updatePreference();
+                updatePreference(preferenceData);
             }
         }
     }
