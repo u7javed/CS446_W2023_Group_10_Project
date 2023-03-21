@@ -121,13 +121,20 @@ class GeneratePlanActivity : AppCompatActivity() {
         preferenceItems.add(formListTabDetail(newPreference));
     }
 
-    public fun removePreference(preferenceToRemove: PlanPreferenceDetail) {
-        preferences.remove(preferenceToRemove);
+    private fun setPreferenceItemsUsingPreference() {
         preferenceItems = mutableListOf<ListTabDetail>();
         for (preference in preferences) {
             preferenceItems.add(formListTabDetail(preference));
         }
+    }
 
+    public fun updatePreference() {
+        setPreferenceItemsUsingPreference();
+    }
+
+    public fun removePreference(preferenceToRemove: PlanPreferenceDetail) {
+        preferences.remove(preferenceToRemove);
+        setPreferenceItemsUsingPreference();
     }
 
     override fun onSupportNavigateUp(): Boolean {
