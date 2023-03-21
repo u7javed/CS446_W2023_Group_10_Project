@@ -196,6 +196,9 @@ class GenerateEditPreferenceFragment(
         }
 
         val removePreferenceButton = view.findViewById<AppCompatImageButton>(R.id.removePreferenceButton);
+
+        removePreferenceButton.visibility = if (preferenceDetails.newPreference) View.GONE else View.VISIBLE;
+
         removePreferenceButton.setOnClickListener {
             if (preferenceDetails.preferenceDetail != null) {
                 generatePlanActivity.removePreference(preferenceDetails.preferenceDetail);
