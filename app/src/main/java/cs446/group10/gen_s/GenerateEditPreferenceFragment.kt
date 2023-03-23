@@ -25,7 +25,6 @@ data class PlanPreferenceDetail(
     var startTime: TimeVal,
     var endTime: TimeVal,
     var duration: DurationVal,
-    var frequency: String,
 )
 
 data class PlanPreferenceInitialVal(
@@ -61,7 +60,6 @@ class GenerateEditPreferenceFragment(
         val selectEndTimeButton = view.findViewById<MaterialButton>(R.id.selectEndTime);
         val timeUnitsSpinner = view.findViewById<Spinner>(R.id.DurationUnit);
         val durationTime = view.findViewById<EditText>(R.id.DurationTime);
-        val frequency = view.findViewById<EditText>(R.id.Frequency);
         val timeUnits = resources.getStringArray(R.array.UnitsOfDuration);
 
         var startDate: DateVal? = null;
@@ -99,8 +97,6 @@ class GenerateEditPreferenceFragment(
                         timeUnitsSpinner.setSelection(adapter.getPosition(preferenceDetail.duration.unit))
                     };
                 }
-
-                frequency.setText(preferenceDetail.frequency);
             };
 
         }
@@ -223,7 +219,6 @@ class GenerateEditPreferenceFragment(
                     preferenceData.duration.quantity,
                     preferenceData.duration.unit,
                 );
-                preferenceDetail.frequency = preferenceData.frequency;
             }
             generatePlanActivity.updatePreference();
             generatePlanActivity.showPlanInfoPage();
@@ -234,7 +229,7 @@ class GenerateEditPreferenceFragment(
         confirmPreferenceButton.setOnClickListener {
             if (PreferenceName.text.toString() == "" ||
                 startDate == null || endDate == null || startTime == null || endTime == null ||
-                durationTime.text.toString() == "" || frequency.text.toString() == "") {
+                durationTime.text.toString() == "") {
                 val builder = context?.let { it1 -> AlertDialog.Builder(it1) }
                 builder?.setTitle("Invalid Input")
                 builder?.setMessage("Fill in all the information to proceed.")
@@ -256,7 +251,6 @@ class GenerateEditPreferenceFragment(
                     durationTime.text.toString(),
                     timeUnitsSpinner.selectedItem.toString(),
                 ),
-                frequency.text.toString()
             )
             if (newPreference) {
                 addPreference(preferenceData);

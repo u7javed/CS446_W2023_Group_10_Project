@@ -1,5 +1,6 @@
 package cs446.group10.gen_s.ui.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -78,22 +79,31 @@ class GeneratePlanActivity : AppCompatActivity() {
     }
 
     public fun generatePlan() {
-        val planBasicInfo = generateFragment.getPlanBasicInfo();
-        if (!planBasicInfo.valid) {
+        fun showError(message: String) {
             val builder = this.let { it1 -> AlertDialog.Builder(it1) }
             builder?.setTitle("Invalid Input")
-            builder?.setMessage("Fill in all the information to proceed.")
+            builder?.setMessage(message)
             builder?.setPositiveButton("Confirm") { dialog, _ ->
                 dialog.cancel()
             }
             val alert = builder?.create()
             alert?.show()
+        }
+        val planBasicInfo = generateFragment.getPlanBasicInfo();
+        if (!planBasicInfo.valid) {
+            showError("Fill in all the information to proceed.");
             return;
         }
 
-        ViewModel.addPlanToCalendar(
+        val preferences = mapToViewModelPreference();
+        if (preferences.size == 0) {
+            showError("Add at least 1 preference to proceed");
+            return;
+        }
+
+        val newPlan = ViewModel.addPlanToCalendar(
             planBasicInfo.planName,
-            mapToViewModelPreference(),
+            preferences,
             LocalDateTime.of(
                 planBasicInfo.startDate!!.year,
                 planBasicInfo.startDate!!.month + 1,
@@ -108,7 +118,18 @@ class GeneratePlanActivity : AppCompatActivity() {
                 23,
                 59
             ).toEpochSecond(ZoneOffset.UTC),
+            "#1BBA9B"
         )
+
+        if (newPlan == null) {
+            showError("A plan cannot be generated due to conflicts.");
+            return;
+        }
+
+
+        val generatedPlanIntent = Intent(this, GeneratedPlanActivity::class.java)
+        generatedPlanIntent.putExtra("planId", newPlan.planId);
+        startActivity(generatedPlanIntent)
     }
 
     public fun getPreferences(): MutableList<PlanPreferenceDetail> {
@@ -167,9 +188,7 @@ class GeneratePlanActivity : AppCompatActivity() {
                     TimePickerFragment.convertTimeToString(preference.startTime) +
                     " - " +
                     TimePickerFragment.convertTimeToString(preference.endTime),
-            preference.duration.quantity + " " + preference.duration.unit +
-                    " | " +
-                    "Every " + preference.frequency + " day(s)",
+            preference.duration.quantity + " " + preference.duration.unit,
             imageResourceId=R.drawable.editicon,
             onClick=::editPreference
         )

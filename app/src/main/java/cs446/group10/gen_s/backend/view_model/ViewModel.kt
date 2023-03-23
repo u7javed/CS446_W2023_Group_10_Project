@@ -320,12 +320,14 @@ object ViewModel {
         startRange: Long,
         endRange: Long,
         color: String? = null
-    ) {
+    ): Plan? {
         val plan: Plan? = generatePlan(planName, preferences, startRange, endRange, color)
         if (plan == null) {
             // TODO: return an error message or display an error
+            return null;
         }
         _model.addPlan(plan!!)
+        return plan;
     }
 
     private fun generateEvent(
