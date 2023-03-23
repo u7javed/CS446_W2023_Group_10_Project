@@ -1,53 +1,27 @@
 package cs446.group10.gen_s.ui.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.button.MaterialButton
 import cs446.group10.gen_s.*
+import cs446.group10.gen_s.backend.dataClasses.Preference
+import cs446.group10.gen_s.backend.view_model.ViewModel
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class GeneratePlanActivity : AppCompatActivity() {
     private var preferences = mutableListOf<PlanPreferenceDetail>();
     private var preferenceItems = mutableListOf<ListTabDetail>();
-//    private var preferenceItems = mutableListOf<ListTabDetail>(
-//    ListTabDetail(
-//        "HI",
-//        "D1",
-//        "D2",
-//        imageResourceId=R.drawable.editicon,
-//    ),
-//    ListTabDetail(
-//        "HI",
-//        "D1",
-//        "D2",
-//        imageResourceId=R.drawable.editicon,
-//    ),
-//    ListTabDetail(
-//        "HI",
-//        "D1",
-//        "D2",
-//        imageResourceId=R.drawable.editicon,
-//    ),
-//    ListTabDetail(
-//        "HI",
-//        "D1",
-//        "D2",
-//        imageResourceId=R.drawable.editicon,
-//    ),
-//    ListTabDetail(
-//        "HI",
-//        "D1",
-//        "D2",
-//        imageResourceId=R.drawable.editicon,
-//    ),
-//    ListTabDetail(
-//        "HI",
-//        "D1",
-//        "D2",
-//        imageResourceId=R.drawable.editicon,
-//    ),
-//    );
+    private lateinit var generateFragment: GenerateFragment;
     private lateinit var preferenceItemsAdapter: ListTabsAdapter;
+    private var planName: String = "";
+    private var startDate: DateVal? = null;
+    private var endDate: DateVal? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +30,17 @@ class GeneratePlanActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = "Generate Plan"
 
+        val planBasicInfo = PlanBasicInfoFragment.formPlanBasicInfo(
+            planName,
+            startDate,
+            endDate
+        )
+
         preferenceItemsAdapter = ListTabsAdapter(preferenceItems);
-        val generateFragment = GenerateFragment(
+        generateFragment = GenerateFragment(
             this,
-            preferenceItemsAdapter
+            preferenceItemsAdapter,
+            planBasicInfo
         );
 
         supportFragmentManager.beginTransaction().apply {
@@ -68,14 +49,108 @@ class GeneratePlanActivity : AppCompatActivity() {
         }
     }
 
-    public fun getPreferences(): MutableList<ListTabDetail> {
+    private fun mapToViewModelPreference(): MutableList<Preference> {
+        val result = mutableListOf<Preference>();
+        for (preference in preferences) {
+            result.add(
+                Preference(
+                    preference.preferenceName,
+                    LocalDateTime.of(
+                        preference.startDate.year,
+                        preference.startDate.month + 1,
+                        preference.startDate.day,
+                        preference.startTime.hour,
+                        preference.startTime.minute
+                    ).toEpochSecond(ZoneOffset.UTC),
+                    LocalDateTime.of(
+                        preference.endDate.year,
+                        preference.endDate.month + 1,
+                        preference.endDate.day,
+                        preference.endTime.hour,
+                        preference.endTime.minute
+                    ).toEpochSecond(ZoneOffset.UTC),
+                    (if (preference.duration.unit == "Hour(s)")
+                        preference.duration.quantity.toInt() * 60 * 60
+                    else preference.duration.quantity.toInt() * 60).toLong()
+                )
+            )
+        }
+        return result;
+    }
+
+    public fun generatePlan() {
+        fun showError(message: String) {
+            val builder = this.let { it1 -> AlertDialog.Builder(it1) }
+            builder?.setTitle("Invalid Input")
+            builder?.setMessage(message)
+            builder?.setPositiveButton("Confirm") { dialog, _ ->
+                dialog.cancel()
+            }
+            val alert = builder?.create()
+            alert?.show()
+        }
+        val planBasicInfo = generateFragment.getPlanBasicInfo();
+        if (!planBasicInfo.valid) {
+            showError("Fill in all the information to proceed.");
+            return;
+        }
+
+        val preferences = mapToViewModelPreference();
+        if (preferences.size == 0) {
+            showError("Add at least 1 preference to proceed");
+            return;
+        }
+
+        val newPlan = ViewModel.addPlanToCalendar(
+            planBasicInfo.planName,
+            preferences,
+            LocalDateTime.of(
+                planBasicInfo.startDate!!.year,
+                planBasicInfo.startDate!!.month + 1,
+                planBasicInfo.startDate!!.day,
+                0,
+                0
+            ).toEpochSecond(ZoneOffset.UTC),
+            LocalDateTime.of(
+                planBasicInfo.endDate!!.year,
+                planBasicInfo.endDate!!.month + 1,
+                planBasicInfo.endDate!!.day,
+                23,
+                59
+            ).toEpochSecond(ZoneOffset.UTC),
+            "#1BBA9B"
+        )
+
+        if (newPlan == null) {
+            showError("A plan cannot be generated due to conflicts.");
+            return;
+        }
+
+
+        val generatedPlanIntent = Intent(this, GeneratedPlanActivity::class.java)
+        generatedPlanIntent.putExtra("planId", newPlan.planId);
+        startActivity(generatedPlanIntent)
+    }
+
+    public fun getPreferences(): MutableList<PlanPreferenceDetail> {
+        return preferences;
+    }
+
+    public fun getPreferencesTabs(): MutableList<ListTabDetail> {
         return preferenceItems;
     }
 
     public fun showPlanInfoPage() {
-        val generateFragment = GenerateFragment(
+        val planBasicInfo = PlanBasicInfoFragment.formPlanBasicInfo(
+            planName,
+            startDate,
+            endDate
+        )
+
+        generateFragment = GenerateFragment(
             this,
-            preferenceItemsAdapter
+            preferenceItemsAdapter,
+            planBasicInfo,
         );
         supportFragmentManager?.beginTransaction()?.apply {
             replace(R.id.GenerateMainFragment, generateFragment);
@@ -84,6 +159,11 @@ class GeneratePlanActivity : AppCompatActivity() {
     }
 
     public fun showEditPreferencePage(preferenceDetail: PlanPreferenceDetail? = null) {
+        val planBasicInfo = generateFragment.getPlanBasicInfo();
+        planName = planBasicInfo.planName;
+        startDate = planBasicInfo.startDate;
+        endDate = planBasicInfo.endDate;
+
         val generateEditPreferenceFragment = GenerateEditPreferenceFragment(
             PlanPreferenceInitialVal(preferenceDetail == null, preferenceDetail),
             this
@@ -108,9 +188,7 @@ class GeneratePlanActivity : AppCompatActivity() {
                     TimePickerFragment.convertTimeToString(preference.startTime) +
                     " - " +
                     TimePickerFragment.convertTimeToString(preference.endTime),
-            preference.duration.quantity + " " + preference.duration.unit +
-                    " | " +
-                    "Every " + preference.frequency + " day(s)",
+            preference.duration.quantity + " " + preference.duration.unit,
             imageResourceId=R.drawable.editicon,
             onClick=::editPreference
         )

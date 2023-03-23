@@ -17,9 +17,13 @@
             app:layout_constraintBottom_toTopOf="@+id/GenerateButton"
             app:layout_constraintTop_toTopOf="parent">
 
-            <fragment
-                android:name="cs446.group10.gen_s.PlanBasicInfoFragment"
-                android:id="@+id/PlanBasicInfoFragment"
+<!--            <fragment-->
+<!--                android:name="cs446.group10.gen_s.PlanBasicInfoFragment"-->
+<!--                android:id="@+id/PlanBasicInfoFragment"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content" />-->
+            <FrameLayout
+                android:id="@+id/PlanBasicInfoPlaceholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

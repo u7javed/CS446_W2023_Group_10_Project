@@ -5,6 +5,18 @@ import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
+import cs446.group10.gen_s.ui.activities.GeneratePlanActivity
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+
+data class PlanBasicInfoDetail(
+    val valid: Boolean,
+    val planName: String,
+    var startDate: DateVal?,
+    var endDate: DateVal?,
+)
 
 
 /**
@@ -12,11 +24,30 @@ import com.google.android.material.button.MaterialButton
  * Use the [PlanBasicInfoFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class PlanBasicInfoFragment : Fragment(R.layout.fragment_plan_basic_info) {
+class PlanBasicInfoFragment(
+    private val initialPlanBasicInfo: PlanBasicInfoDetail,
+): Fragment(R.layout.fragment_plan_basic_info) {
+
+    private var startDate: DateVal? = null;
+    private var endDate: DateVal? = null;
+    private var notificationOn: Boolean = false;
+    private lateinit var nameTextField: EditText;
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        var startDate: DateVal? = null;
-        var endDate: DateVal? = null;
-        var notificationOn: Boolean = false;
+        startDate = initialPlanBasicInfo.startDate;
+        endDate = initialPlanBasicInfo.endDate;
+        notificationOn = false;
+        nameTextField = view.findViewById(R.id.PlanNameTextField);
+        nameTextField.setText(initialPlanBasicInfo.planName);
+
+        val chosenStartDate = view.findViewById<TextView>(R.id.chosenPlanStartDate);
+        if (startDate != null) {
+            chosenStartDate.text = DatePickerFragment.convertDateToString(startDate!!);
+        }
+
+        val chosenEndDate = view.findViewById<TextView>(R.id.chosenPlanEndDate);
+        if (endDate != null) {
+            chosenEndDate.text = DatePickerFragment.convertDateToString(endDate!!);
+        }
 
         // start date
 
@@ -82,6 +113,32 @@ class PlanBasicInfoFragment : Fragment(R.layout.fragment_plan_basic_info) {
                 )
             }
             timeUnitsSpinner.adapter = adapter;
+        }
+    }
+
+    public fun getPlanBasicInfo(): PlanBasicInfoDetail {
+        return PlanBasicInfoFragment.formPlanBasicInfo(nameTextField, startDate, endDate);
+    }
+
+    companion object {
+        fun formPlanBasicInfo(planName: String, startDate: DateVal?, endDate: DateVal?): PlanBasicInfoDetail {
+            var valid = planName != "" && startDate != null && endDate != null;
+            return PlanBasicInfoDetail(
+                valid,
+                planName,
+                startDate,
+                endDate,
+            )
+        }
+        fun formPlanBasicInfo(nameTextField: EditText, startDate: DateVal?, endDate: DateVal?): PlanBasicInfoDetail {
+            var valid = nameTextField != null && startDate != null && endDate != null;
+            valid = valid && nameTextField!!.text.toString() != "";
+            return PlanBasicInfoDetail(
+                valid,
+                nameTextField!!.text.toString(),
+                startDate,
+                endDate,
+            )
         }
     }
 }
