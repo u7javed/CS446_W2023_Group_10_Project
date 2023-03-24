@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
@@ -271,6 +272,9 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                     eventTextView.gravity = Gravity.CENTER
                     eventTextView.textSize = 9f
                     eventTextView.setTextColor((Color.parseColor("#FFFFFFFF")))
+                    eventTextView.maxLines = 1
+                    eventTextView.ellipsize = TextUtils.TruncateAt.END
+                    eventTextView.setSingleLine()
 
                     val eventTextViewParams = TableRow.LayoutParams(
                         TableRow.LayoutParams.MATCH_PARENT,
