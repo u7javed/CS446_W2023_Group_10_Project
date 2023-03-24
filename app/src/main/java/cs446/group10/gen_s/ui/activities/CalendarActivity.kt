@@ -176,6 +176,48 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             currentRow.addView(emptyCell)
         }
 
+        val hashMapEvent = HashMap<String, Int>()
+        val hashMapDate = HashMap<Int, Int>()
+
+        // Find events for this month
+        val eventsForMonth = events.filter { event ->
+            // datetime.month is 1-indexed, currentMonth is 0-indexed
+            val startMonth = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC).month.value
+            val endMonth = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC).month.value
+
+            (startMonth - 1) <= currentMonth && currentMonth <= (endMonth - 1)
+        }
+
+        eventsForMonth.forEach { event ->
+            val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+            val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+
+            val dateList = mutableListOf<Int>()
+
+            var currentDateTime = startDatetime
+            while (currentDateTime.isBefore(endDatetime)) {
+                if (currentDateTime.month.value - 1 == currentMonth) {
+                    dateList.add(currentDateTime.dayOfMonth)
+                }
+                currentDateTime = currentDateTime.plusDays(1)
+            }
+
+            var index = 0
+            dateList.forEach { date ->
+                val existingIndex = hashMapDate[date]
+
+                if (existingIndex != null && existingIndex >= index) {
+                    index = existingIndex + 1
+                }
+            }
+
+            dateList.forEach { date ->
+                hashMapDate[date] = index
+            }
+
+            hashMapEvent[event.eventId] = index
+        }
+
         // Add cells for each day in the month
         var currentDay = 1
         while (currentDay <= numberOfDays) {
@@ -191,7 +233,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
             dayCell.addView(dayNumberTextView)
 
-            // Add events to the day cell
+            // Find if there are events for today
             val eventsForDay = events.filter { event ->
                 // datetime.month is 1-indexed, currentMonth is 0-indexed
                 val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
@@ -205,6 +247,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                 eventStartsToday || eventIncludesToday
             }
 
+            // Add events to the day cell
             if (eventsForDay.isNotEmpty()) {
                 // Create a new table layout to hold the events for the day
                 val eventTable = TableLayout(this)
@@ -213,8 +256,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                     TableLayout.LayoutParams.WRAP_CONTENT,
                 )
 
-                // Add each event to the table layout
-                for (event in eventsForDay) {
+                for (i in 0 until 4) {
                     // eventRow contains a eventTextView
                     val eventRow = TableRow(this)
                     eventRow.layoutParams = TableRow.LayoutParams(
@@ -223,13 +265,12 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                     )
                     eventRow.weightSum = 1f
 
-                    // eventTextView
+                    // eventTextView placeholder
                     val eventTextView = TextView(this)
-                    eventTextView.text = event.name
+                    eventTextView.text = ""
                     eventTextView.gravity = Gravity.CENTER
                     eventTextView.textSize = 9f
                     eventTextView.setTextColor((Color.parseColor("#FFFFFFFF")))
-                    eventTextView.setBackgroundColor((Color.parseColor(event.color)))
 
                     val eventTextViewParams = TableRow.LayoutParams(
                         TableRow.LayoutParams.MATCH_PARENT,
@@ -238,32 +279,51 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                     )
                     eventTextViewParams.setMargins(dpToPixel(3), 0, dpToPixel(3), dpToPixel(2))
 
+                    eventTextView.layoutParams = eventTextViewParams
+
+                    eventRow.addView(eventTextView)
+                    eventTable.addView(eventRow)
+                }
+
+                // Add each event to the table layout
+                for (event in eventsForDay) {
+                    val index = hashMapEvent[event.eventId]
+
+                    if (index!! > 3) {
+                        break
+                    }
+
+                    val eventRow = eventTable.getChildAt(index) as TableRow
+                    val eventTextView = eventRow.getChildAt(0) as TextView
+
+                    eventTextView.setBackgroundColor((Color.parseColor(event.color)))
+
+                    val eventTextViewParams = eventTextView.layoutParams as TableRow.LayoutParams
+
                     val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
                     val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
 
                     // multi-day event
                     if (startDatetime.dayOfMonth != endDatetime.dayOfMonth) {
                         if (startDatetime.dayOfMonth == currentDay) {
+                            eventTextView.text = event.name
                             eventTextViewParams.rightMargin = 0
                         } else if (endDatetime.dayOfMonth == currentDay){
-                            eventTextView.text = ""
                             eventTextViewParams.leftMargin = 0
                         } else {
-                            eventTextView.text = ""
                             eventTextViewParams.leftMargin = 0
                             eventTextViewParams.rightMargin = 0
                         }
 
                         // first day of the month
-                        if (currentDay == 1) {
+                        if (currentDay == 1 || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                             eventTextView.text = event.name
                         }
+                    } else {
+                        eventTextView.text = event.name
                     }
 
                     eventTextView.layoutParams = eventTextViewParams
-
-                    eventRow.addView(eventTextView)
-                    eventTable.addView(eventRow)
                 }
 
                 // Add the table layout to the day cell
