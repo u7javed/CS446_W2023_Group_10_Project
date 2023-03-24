@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import android.widget.PopupMenu.OnMenuItemClickListener
 import androidx.appcompat.app.AlertDialog
@@ -125,9 +124,9 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             1f
         )
         cellParams.setMargins(
+            0,
             dpToPixel(3),
-            dpToPixel(3),
-            dpToPixel(3),
+            0,
             dpToPixel(3)
         )
 
@@ -195,11 +194,11 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             // Add events to the day cell
             val eventsForDay = events.filter { event ->
                 // datetime.month is 1-indexed, currentMonth is 0-indexed
-                val datetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
-                val eventStartsToday = (datetime.year == currentYear) && (datetime.month.value - 1 == currentMonth) && (datetime.dayOfMonth == currentDay)
-
                 val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
                 val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+
+                val eventStartsToday = (startDatetime.year == currentYear) && (startDatetime.month.value - 1 == currentMonth) && (startDatetime.dayOfMonth == currentDay)
+
                 val currentDatetime = LocalDateTime.of(currentYear, currentMonth + 1, currentDay, 0, 0)
                 val eventIncludesToday = (currentDatetime in startDatetime..endDatetime)
 
@@ -207,12 +206,24 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             }
 
             if (eventsForDay.isNotEmpty()) {
-                // Create a new linear layout to hold the events for the day
-                val eventsLayout = LinearLayout(this)
-                eventsLayout.orientation = LinearLayout.VERTICAL
+                // Create a new table layout to hold the events for the day
+                val eventTable = TableLayout(this)
+                eventTable.layoutParams = TableLayout.LayoutParams(
+                    TableLayout.LayoutParams.MATCH_PARENT,
+                    TableLayout.LayoutParams.WRAP_CONTENT,
+                )
 
-                // Add each event to the linear layout
+                // Add each event to the table layout
                 for (event in eventsForDay) {
+                    // eventRow contains a eventTextView
+                    val eventRow = TableRow(this)
+                    eventRow.layoutParams = TableRow.LayoutParams(
+                        TableRow.LayoutParams.MATCH_PARENT,
+                        TableRow.LayoutParams.WRAP_CONTENT
+                    )
+                    eventRow.weightSum = 1f
+
+                    // eventTextView
                     val eventTextView = TextView(this)
                     eventTextView.text = event.name
                     eventTextView.gravity = Gravity.CENTER
@@ -220,18 +231,21 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                     eventTextView.setTextColor((Color.parseColor("#FFFFFFFF")))
                     eventTextView.setBackgroundColor((Color.parseColor(event.color)))
 
-                    val eventTextViewParams = ViewGroup.MarginLayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    val eventTextViewParams = TableRow.LayoutParams(
+                        TableRow.LayoutParams.MATCH_PARENT,
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        1f
                     )
-                    eventTextViewParams.setMargins(0, 0, 0, dpToPixel(2))
+                    eventTextViewParams.setMargins(dpToPixel(3), 0, dpToPixel(3), dpToPixel(2))
+
                     eventTextView.layoutParams = eventTextViewParams
 
-                    eventsLayout.addView(eventTextView)
+                    eventRow.addView(eventTextView)
+                    eventTable.addView(eventRow)
                 }
 
-                // Add the linear layout to the day cell
-                dayCell.addView(eventsLayout)
+                // Add the table layout to the day cell
+                dayCell.addView(eventTable)
             }
 
             currentRow.addView(dayCell)
