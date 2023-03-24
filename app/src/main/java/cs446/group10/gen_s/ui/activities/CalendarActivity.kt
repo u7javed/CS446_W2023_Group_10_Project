@@ -5,10 +5,10 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import android.widget.PopupMenu.OnMenuItemClickListener
 import androidx.appcompat.app.AlertDialog
@@ -22,6 +22,7 @@ import java.time.LocalDateTime
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*
+import kotlin.collections.HashMap
 
 class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
@@ -56,13 +57,15 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
 //        events = listOf(
 //            Event("1", "Event 1",  dateTimeStringToEpoch("2023-02-03 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#ae6179"),
-//            Event("2", "Event 2",  dateTimeStringToEpoch("2023-02-05 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#6169ae"),
+//            Event("2", "Event 2",  dateTimeStringToEpoch("2023-02-05 13:00"), dateTimeStringToEpoch("2023-02-06 15:00"), color="#6169ae"),
 //            Event("3", "Event 3",  dateTimeStringToEpoch("2023-02-27 13:00"), dateTimeStringToEpoch("2023-03-03 15:00"), color="#6eae61"),
 //            Event("4", "Event 4",  dateTimeStringToEpoch("2023-03-03 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#618bae"),
-//            Event("5", "Event 5",  dateTimeStringToEpoch("2023-03-05 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#9261ae"),
+//            Event("5", "Event 5",  dateTimeStringToEpoch("2023-03-05 13:00"), dateTimeStringToEpoch("2023-03-06 15:00"), color="#9261ae"),
 //            Event("6", "Event 6",  dateTimeStringToEpoch("2023-03-30 13:00"), dateTimeStringToEpoch("2023-04-03 15:00"), color="#ae8e61"),
 //            Event("7", "Event 7",  dateTimeStringToEpoch("2023-04-03 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#61a2ae"),
-//            Event("8", "Event 8",  dateTimeStringToEpoch("2023-04-05 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#ae619c"),
+//            Event("8", "Event 8",  dateTimeStringToEpoch("2023-04-05 13:00"), dateTimeStringToEpoch("2023-04-06 15:00"), color="#ae619c"),
+//            Event("9", "Event 9",  dateTimeStringToEpoch("2023-04-20 13:00"), dateTimeStringToEpoch("2023-04-22 15:00"), color="#6169ae"),
+//            Event("10", "Event 10",  dateTimeStringToEpoch("2023-04-22 13:00"), dateTimeStringToEpoch("2023-04-22 15:00"), color="#ae6179"),
 //        )
 
         renderCalender()
@@ -125,9 +128,9 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             1f
         )
         cellParams.setMargins(
+            0,
             dpToPixel(3),
-            dpToPixel(3),
-            dpToPixel(3),
+            0,
             dpToPixel(3)
         )
 
@@ -177,6 +180,63 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             currentRow.addView(emptyCell)
         }
 
+        val hashMapEvent = HashMap<String, Int>()
+        val hashMapDateIndexEvent = HashMap<Int, HashMap<Int, String>>()
+
+        // Find events for this month
+        val eventsForMonth = events.filter { event ->
+            // datetime.month is 1-indexed, currentMonth is 0-indexed
+            val startMonth = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC).month.value
+            val endMonth = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC).month.value
+
+            (startMonth - 1) <= currentMonth && currentMonth <= (endMonth - 1)
+        }
+
+        eventsForMonth.forEach { event ->
+            val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+            val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+
+            val dateList = mutableListOf<Int>()
+
+            var currentDateTime = startDatetime
+            while (currentDateTime.isBefore(endDatetime)) {
+                if (currentDateTime.month.value - 1 == currentMonth) {
+                    dateList.add(currentDateTime.dayOfMonth)
+                }
+                currentDateTime = currentDateTime.plusDays(1)
+            }
+
+            var index = 0
+            dateList.forEach { date ->
+                val existingHashmapIndexEvent = hashMapDateIndexEvent[date]
+
+                if (existingHashmapIndexEvent != null) {
+                    val existingIndexes = existingHashmapIndexEvent.keys
+
+                    for (i in eventsForMonth.indices) {
+                        if (!existingIndexes.contains(i) && i >= index) {
+                            index = i
+                            break
+                        }
+                    }
+                }
+            }
+
+            dateList.forEach { date ->
+                var hashmapIndexEvent = hashMapDateIndexEvent[date]
+
+                if (hashmapIndexEvent == null) {
+                    hashmapIndexEvent = HashMap()
+                }
+
+                hashmapIndexEvent[index] = event.eventId
+
+                hashMapDateIndexEvent[date] = hashmapIndexEvent
+            }
+
+            hashMapEvent[event.eventId] = index
+        }
+
         // Add cells for each day in the month
         var currentDay = 1
         while (currentDay <= numberOfDays) {
@@ -192,46 +252,112 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
             dayCell.addView(dayNumberTextView)
 
-            // Add events to the day cell
+            // Find if there are events for today
             val eventsForDay = events.filter { event ->
                 // datetime.month is 1-indexed, currentMonth is 0-indexed
-                val datetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
-                val eventStartsToday = (datetime.year == currentYear) && (datetime.month.value - 1 == currentMonth) && (datetime.dayOfMonth == currentDay)
-
                 val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
                 val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+
+                val eventStartsToday = (startDatetime.year == currentYear) && (startDatetime.month.value - 1 == currentMonth) && (startDatetime.dayOfMonth == currentDay)
+
                 val currentDatetime = LocalDateTime.of(currentYear, currentMonth + 1, currentDay, 0, 0)
                 val eventIncludesToday = (currentDatetime in startDatetime..endDatetime)
 
                 eventStartsToday || eventIncludesToday
             }
 
+            // Add events to the day cell
             if (eventsForDay.isNotEmpty()) {
-                // Create a new linear layout to hold the events for the day
-                val eventsLayout = LinearLayout(this)
-                eventsLayout.orientation = LinearLayout.VERTICAL
+                // Create a new table layout to hold the events for the day
+                val eventTable = TableLayout(this)
+                eventTable.layoutParams = TableLayout.LayoutParams(
+                    TableLayout.LayoutParams.MATCH_PARENT,
+                    TableLayout.LayoutParams.WRAP_CONTENT,
+                )
 
-                // Add each event to the linear layout
-                for (event in eventsForDay) {
+                for (i in 0 until 4) {
+                    // eventRow contains a eventTextView
+                    val eventRow = TableRow(this)
+                    eventRow.layoutParams = TableRow.LayoutParams(
+                        TableRow.LayoutParams.MATCH_PARENT,
+                        TableRow.LayoutParams.WRAP_CONTENT
+                    )
+                    eventRow.weightSum = 1f
+
+                    // eventTextView placeholder
                     val eventTextView = TextView(this)
-                    eventTextView.text = event.name
+                    eventTextView.text = ""
                     eventTextView.gravity = Gravity.CENTER
                     eventTextView.textSize = 9f
                     eventTextView.setTextColor((Color.parseColor("#FFFFFFFF")))
-                    eventTextView.setBackgroundColor((Color.parseColor(event.color)))
+                    eventTextView.maxLines = 1
+                    eventTextView.ellipsize = TextUtils.TruncateAt.END
+                    eventTextView.setSingleLine()
 
-                    val eventTextViewParams = ViewGroup.MarginLayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    val eventTextViewParams = TableRow.LayoutParams(
+                        TableRow.LayoutParams.MATCH_PARENT,
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        1f
                     )
-                    eventTextViewParams.setMargins(0, 0, 0, dpToPixel(2))
+                    eventTextViewParams.setMargins(dpToPixel(3), 0, dpToPixel(3), dpToPixel(2))
+
                     eventTextView.layoutParams = eventTextViewParams
 
-                    eventsLayout.addView(eventTextView)
+                    eventRow.addView(eventTextView)
+                    eventTable.addView(eventRow)
                 }
 
-                // Add the linear layout to the day cell
-                dayCell.addView(eventsLayout)
+                // Add each event to the table layout
+                for (event in eventsForDay) {
+                    val index = hashMapEvent[event.eventId]
+
+                    if (index!! > 3) {
+                        break
+                    }
+
+                    val eventRow = eventTable.getChildAt(index) as TableRow
+                    val eventTextView = eventRow.getChildAt(0) as TextView
+
+                    eventTextView.setBackgroundColor((Color.parseColor(event.color)))
+
+                    val eventTextViewParams = eventTextView.layoutParams as TableRow.LayoutParams
+
+                    val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+                    val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+
+                    // multi-day event
+                    if (startDatetime.dayOfMonth != endDatetime.dayOfMonth) {
+                        if (startDatetime.dayOfMonth == currentDay) {
+                            eventTextView.text = event.name
+                            eventTextViewParams.rightMargin = 0
+                        } else if (endDatetime.dayOfMonth == currentDay){
+                            eventTextViewParams.leftMargin = 0
+                        } else {
+                            eventTextViewParams.leftMargin = 0
+                            eventTextViewParams.rightMargin = 0
+                        }
+
+                        // first day of the month
+                        if (currentDay == 1 || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                            eventTextView.text = event.name
+                        }
+                    } else {
+                        eventTextView.text = event.name
+                    }
+
+                    if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                        eventTextViewParams.leftMargin = 0
+                    }
+
+                    if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                        eventTextViewParams.rightMargin = 0
+                    }
+
+                    eventTextView.layoutParams = eventTextViewParams
+                }
+
+                // Add the table layout to the day cell
+                dayCell.addView(eventTable)
             }
 
             currentRow.addView(dayCell)
