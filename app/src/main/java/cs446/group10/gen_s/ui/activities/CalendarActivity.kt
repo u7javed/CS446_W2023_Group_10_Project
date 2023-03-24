@@ -325,6 +325,14 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                         }
                     } else {
                         eventTextView.text = event.name
+
+                        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                            eventTextViewParams.leftMargin = 0
+                        }
+
+                        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                            eventTextViewParams.rightMargin = 0
+                        }
                     }
 
                     eventTextView.layoutParams = eventTextViewParams
