@@ -22,6 +22,7 @@ import java.time.LocalDateTime
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.util.*
+import kotlin.collections.HashMap
 
 class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
@@ -56,13 +57,15 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
 //        events = listOf(
 //            Event("1", "Event 1",  dateTimeStringToEpoch("2023-02-03 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#ae6179"),
-//            Event("2", "Event 2",  dateTimeStringToEpoch("2023-02-05 13:00"), dateTimeStringToEpoch("2023-02-05 15:00"), color="#6169ae"),
+//            Event("2", "Event 2",  dateTimeStringToEpoch("2023-02-05 13:00"), dateTimeStringToEpoch("2023-02-06 15:00"), color="#6169ae"),
 //            Event("3", "Event 3",  dateTimeStringToEpoch("2023-02-27 13:00"), dateTimeStringToEpoch("2023-03-03 15:00"), color="#6eae61"),
 //            Event("4", "Event 4",  dateTimeStringToEpoch("2023-03-03 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#618bae"),
-//            Event("5", "Event 5",  dateTimeStringToEpoch("2023-03-05 13:00"), dateTimeStringToEpoch("2023-03-05 15:00"), color="#9261ae"),
+//            Event("5", "Event 5",  dateTimeStringToEpoch("2023-03-05 13:00"), dateTimeStringToEpoch("2023-03-06 15:00"), color="#9261ae"),
 //            Event("6", "Event 6",  dateTimeStringToEpoch("2023-03-30 13:00"), dateTimeStringToEpoch("2023-04-03 15:00"), color="#ae8e61"),
 //            Event("7", "Event 7",  dateTimeStringToEpoch("2023-04-03 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#61a2ae"),
-//            Event("8", "Event 8",  dateTimeStringToEpoch("2023-04-05 13:00"), dateTimeStringToEpoch("2023-04-05 15:00"), color="#ae619c"),
+//            Event("8", "Event 8",  dateTimeStringToEpoch("2023-04-05 13:00"), dateTimeStringToEpoch("2023-04-06 15:00"), color="#ae619c"),
+//            Event("9", "Event 9",  dateTimeStringToEpoch("2023-04-20 13:00"), dateTimeStringToEpoch("2023-04-22 15:00"), color="#6169ae"),
+//            Event("10", "Event 10",  dateTimeStringToEpoch("2023-04-22 13:00"), dateTimeStringToEpoch("2023-04-22 15:00"), color="#ae6179"),
 //        )
 
         renderCalender()
@@ -178,7 +181,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
         }
 
         val hashMapEvent = HashMap<String, Int>()
-        val hashMapDate = HashMap<Int, Int>()
+        val hashMapDateIndexEvent = HashMap<Int, HashMap<Int, String>>()
 
         // Find events for this month
         val eventsForMonth = events.filter { event ->
@@ -205,15 +208,30 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 
             var index = 0
             dateList.forEach { date ->
-                val existingIndex = hashMapDate[date]
+                val existingHashmapIndexEvent = hashMapDateIndexEvent[date]
 
-                if (existingIndex != null && existingIndex >= index) {
-                    index = existingIndex + 1
+                if (existingHashmapIndexEvent != null) {
+                    val existingIndexes = existingHashmapIndexEvent.keys
+
+                    for (i in eventsForMonth.indices) {
+                        if (!existingIndexes.contains(i) && i >= index) {
+                            index = i
+                            break
+                        }
+                    }
                 }
             }
 
             dateList.forEach { date ->
-                hashMapDate[date] = index
+                var hashmapIndexEvent = hashMapDateIndexEvent[date]
+
+                if (hashmapIndexEvent == null) {
+                    hashmapIndexEvent = HashMap()
+                }
+
+                hashmapIndexEvent[index] = event.eventId
+
+                hashMapDateIndexEvent[date] = hashmapIndexEvent
             }
 
             hashMapEvent[event.eventId] = index
@@ -325,14 +343,14 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                         }
                     } else {
                         eventTextView.text = event.name
+                    }
 
-                        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-                            eventTextViewParams.leftMargin = 0
-                        }
+                    if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                        eventTextViewParams.leftMargin = 0
+                    }
 
-                        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-                            eventTextViewParams.rightMargin = 0
-                        }
+                    if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                        eventTextViewParams.rightMargin = 0
                     }
 
                     eventTextView.layoutParams = eventTextViewParams
