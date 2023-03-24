@@ -238,6 +238,28 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
                     )
                     eventTextViewParams.setMargins(dpToPixel(3), 0, dpToPixel(3), dpToPixel(2))
 
+                    val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+                    val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+
+                    // multi-day event
+                    if (startDatetime.dayOfMonth != endDatetime.dayOfMonth) {
+                        if (startDatetime.dayOfMonth == currentDay) {
+                            eventTextViewParams.rightMargin = 0
+                        } else if (endDatetime.dayOfMonth == currentDay){
+                            eventTextView.text = ""
+                            eventTextViewParams.leftMargin = 0
+                        } else {
+                            eventTextView.text = ""
+                            eventTextViewParams.leftMargin = 0
+                            eventTextViewParams.rightMargin = 0
+                        }
+
+                        // first day of the month
+                        if (currentDay == 1) {
+                            eventTextView.text = event.name
+                        }
+                    }
+
                     eventTextView.layoutParams = eventTextViewParams
 
                     eventRow.addView(eventTextView)
