@@ -246,12 +246,14 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             dayCell.id = currentDay
 
             dayCell.setOnClickListener {
-                val intent = Intent(this, ViewEventsActivity::class.java)
-                intent.putExtra("currentDay", it.id)
-                intent.putExtra("currentMonth", currentMonth)
-                intent.putExtra("currentYear", currentYear)
-                startActivity(intent)
-                return@setOnClickListener
+                if (filterTodayEvents(events, it.id).isNotEmpty()) {
+                    val intent = Intent(this, ViewEventsActivity::class.java)
+                    intent.putExtra("currentDay", it.id)
+                    intent.putExtra("currentMonth", currentMonth)
+                    intent.putExtra("currentYear", currentYear)
+                    startActivity(intent)
+                    return@setOnClickListener
+                }
             }
 
             val dayNumberTextView = TextView(this)
