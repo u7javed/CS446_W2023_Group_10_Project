@@ -243,6 +243,16 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             val dayCell = LinearLayout(this)
             dayCell.orientation = LinearLayout.VERTICAL
             dayCell.layoutParams = cellParams
+            dayCell.id = currentDay
+
+            dayCell.setOnClickListener {
+                val intent = Intent(this, ViewEventsActivity::class.java)
+                intent.putExtra("currentDay", it.id)
+                intent.putExtra("currentMonth", currentMonth)
+                intent.putExtra("currentYear", currentYear)
+                startActivity(intent)
+                return@setOnClickListener
+            }
 
             val dayNumberTextView = TextView(this)
             dayNumberTextView.text = currentDay.toString()
@@ -253,18 +263,7 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
             dayCell.addView(dayNumberTextView)
 
             // Find if there are events for today
-            val eventsForDay = events.filter { event ->
-                // datetime.month is 1-indexed, currentMonth is 0-indexed
-                val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
-                val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
-
-                val eventStartsToday = (startDatetime.year == currentYear) && (startDatetime.month.value - 1 == currentMonth) && (startDatetime.dayOfMonth == currentDay)
-
-                val currentDatetime = LocalDateTime.of(currentYear, currentMonth + 1, currentDay, 0, 0)
-                val eventIncludesToday = (currentDatetime in startDatetime..endDatetime)
-
-                eventStartsToday || eventIncludesToday
-            }
+            val eventsForDay = filterTodayEvents(events, currentDay)
 
             // Add events to the day cell
             if (eventsForDay.isNotEmpty()) {
@@ -394,6 +393,21 @@ class CalendarActivity : AppCompatActivity(), OnMenuItemClickListener, IView {
 //    private fun dateTimeStringToEpoch(dateTimeStr: String): Long {
 //        return SimpleDateFormat("yyyy-MM-dd hh:mm").parse(dateTimeStr)!!.time / 1000
 //    }
+
+    private fun filterTodayEvents(events: List<Event>, currentDay: Int) : List<Event>{
+        return events.filter { event ->
+            // datetime.month is 1-indexed, currentMonth is 0-indexed
+            val startDatetime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+            val endDatetime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+
+            val eventStartsToday = (startDatetime.year == currentYear) && (startDatetime.month.value - 1 == currentMonth) && (startDatetime.dayOfMonth == currentDay)
+
+            val currentDatetime = LocalDateTime.of(currentYear, currentMonth + 1, currentDay, 0, 0)
+            val eventIncludesToday = (currentDatetime in startDatetime..endDatetime)
+
+            eventStartsToday || eventIncludesToday
+        }
+    }
 
     private fun dpToPixel(_dp: Int) : Int {
         return (_dp * (resources.displayMetrics.density)).toInt()
