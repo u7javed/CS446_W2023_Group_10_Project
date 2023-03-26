@@ -248,8 +248,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        dpd.dismiss()
-        tpd.dismiss()
+        if (dpd != null) dpd.dismiss()
+        if (tpd != null) tpd.dismiss()
         finish()
         return true
     }

@@ -343,10 +343,11 @@ object ViewModel {
             endRange,
             getExistingEvents(startRange, endRange)
         ) ?: return null
+        val planId: String = IdManager.generateId()
         events.forEach { event ->
             event.color = color
+            event.planId = planId
         }
-        val planId: String = IdManager.generateId()
         val sanitizedName: String = ViewModelHelper.sanitizePlanName(planName)
         val startEndPair: Pair<Long, Long> = getStartAndEnd(events)
         return Plan(planId, sanitizedName, startEndPair.first, startEndPair.second, events as MutableList<Event>, color)
