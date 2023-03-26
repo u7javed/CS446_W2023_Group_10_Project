@@ -29,8 +29,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var endDateText: TextView;
     private lateinit var endTimeText: TextView;
 
-    private lateinit var dpd: DatePickerDialog
-    private lateinit var tpd: TimePickerDialog
+    private var dpd: DatePickerDialog? = null
+    private var tpd: TimePickerDialog? = null
 
     private lateinit var _eventNameText: EditText
     private var _startDate: LocalDate? = null
@@ -196,7 +196,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                 month,
                 day
             )
-            dpd.show()
+            dpd!!.show()
         } else if (v == btnStartTimePicker || v == btnEndTimePicker) {
             val dH: Int
             val dMin: Int
@@ -215,7 +215,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }, dH, dMin, false
             )
-            tpd.show()
+            tpd!!.show()
         }
     }
 
@@ -248,8 +248,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        dpd.dismiss()
-        tpd.dismiss()
+        if (dpd != null) dpd!!.dismiss()
+        if (tpd != null) tpd!!.dismiss()
         finish()
         return true
     }
