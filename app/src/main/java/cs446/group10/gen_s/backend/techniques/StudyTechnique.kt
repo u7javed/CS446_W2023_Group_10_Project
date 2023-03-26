@@ -6,7 +6,7 @@ import cs446.group10.gen_s.backend.dataClasses.Space
 
 interface StudyTechnique {
 
-    fun generateEvents(startRange: Long, endRange: Long, existingEvents: List<Event>): List<Event>? {
+    fun techniqueAlgorithm(startRange: Long, endRange: Long, existingEvents: List<Event>): List<Event>? {
         // Get open spaces
         val openSpaces: MutableList<Space> = mutableListOf()
         val spaceSize: Long = studyDuration() + breakDuration()

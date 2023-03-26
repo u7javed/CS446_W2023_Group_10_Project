@@ -5,6 +5,6 @@ enum class Technique {
     FlowtimeA,
     FlowtimeB,
     FlowtimeC,
-    Animerdoro,
+    Animedoro,
     FiftyTwoSeventeen
 }
