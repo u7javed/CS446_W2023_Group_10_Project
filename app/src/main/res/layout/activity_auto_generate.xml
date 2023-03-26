@@ -7,7 +7,7 @@
     android:padding="20dp"
     tools:context=".ui.activities.AutoGenerateActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -19,34 +19,152 @@
             app:layout_constraintBottom_toTopOf="@+id/GenerateButton"
             app:layout_constraintTop_toTopOf="parent">
 
-            <fragment
-                android:name="cs446.group10.gen_s.PlanBasicInfoFragment"
-                android:id="@+id/PlanBasicInfoFragment"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/PlanInfoHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="Plan Information"
+                    android:textColor="@color/primaryTextColor"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/PlanNameLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Plan name" />
+
+                <EditText
+                    android:id="@+id/PlanNameTextField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Study Plan 1"
+                    android:inputType="textPersonName"
+                    android:singleLine="true" />
+                <!--Plan start Date-->
+                <TextView
+                    android:id="@+id/StartDateLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start date" />
+                <Button
+                    android:id="@+id/selectPlanStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select Start Date" />
+                <TextView
+                    android:id="@+id/chosenPlanStartDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start date not selected" />
+                <FrameLayout
+                    android:id="@+id/PlanStartDatePickerFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
 
-            <TextView
-                android:id="@+id/TechniqueLabel"
+                <!--Plan end Date-->
+                <TextView
+                    android:id="@+id/EndDateLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="End date" />
+                <Button
+                    android:id="@+id/selectPlanEndDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select End Date" />
+                <TextView
+                    android:id="@+id/chosenPlanEndDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="End date not selected" />
+                <FrameLayout
+                    android:id="@+id/PlanEndDatePickerFragment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Switch
+                    android:id="@+id/autoGenerateNotificationSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Notification"
+                    android:textColor="#717171" />
+
+                <LinearLayout
+                    android:id="@+id/NotificationDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/NotificationTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="5"
+                        android:inputType="number|numberDecimal"
+                        android:singleLine="true" />
+
+                    <Spinner
+                        android:id="@+id/NotificationUnit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/TechniqueLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Study Technique" />
+
+                <Spinner
+                    android:id="@+id/TechniqueSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Study Technique" />
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/TechniqueSpinner"
+                <Button
+                    android:id="@+id/selectColorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select Color" />
+
+                <View
+                    android:id="@+id/colorSelectedView"
+                    android:layout_marginStart="30dp"
+                    android:background="@color/blueAccentColor"
+                    android:layout_width="36dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="36dp" />
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/GenerateButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Generate Plan"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/GenerateButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Generate Plan"
-            app:layout_constraintBottom_toBottomOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </RelativeLayout>
