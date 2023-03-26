@@ -2,11 +2,17 @@ package cs446.group10.gen_s.backend.view_model
 
 import IdManager
 import ViewModelHelper
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import cs446.group10.gen_s.backend.model.Model
 import androidx.lifecycle.ViewModel
 import cs446.group10.gen_s.backend.dataClasses.*
 import cs446.group10.gen_s.backend.model.IView
+import cs446.group10.gen_s.backend.notifications.*
 import cs446.group10.gen_s.backend.techniques.Technique
 import cs446.group10.gen_s.backend.techniques.TechniqueFactory
 import java.time.LocalDateTime
@@ -15,6 +21,7 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Duration.Companion.milliseconds
 
 object ViewModel {
 
@@ -34,6 +41,55 @@ object ViewModel {
 
         // Load from storage
         _model.loadCalendarFromStorage(context)
+        // Create notification channel for future notification creations
+        createNotificationChannel(context)
+    }
+
+    private fun createNotificationChannel(context: Context) {
+        val name = "Notification Channel"
+        val desc = "This notification channel notifies of any upcoming events and their corresponding times"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelID, name, importance)
+        channel.description = desc
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun scheduleNotification(context: Context, event: Event) {
+        if (event.notification == null)
+            return
+        val intent = Intent(context.applicationContext, Notification::class.java)
+
+        val timeRemaining = (event.startDate - event.notification!!) / 60
+        val startTime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+        val endTime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+
+        val title = "Event ${event.name} in $timeRemaining minutes"
+        val message = "Event ${event.name} is starting at ${startTime.toLocalTime()} " +
+                "on ${startTime.toLocalDate()} and ending at ${endTime.toLocalTime()}" +
+                "on ${endTime.toLocalDate()} which is in $timeRemaining minutes."
+        intent.putExtra(titleExtra, title)
+        intent.putExtra(messageExtra, message)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context.applicationContext,
+            notificationID,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            event.notification!!*1000,
+            pendingIntent
+        )
+    }
+
+    private fun scheduleMultipleNotifications(context: Context, events: List<Event>) {
+        events.forEach {
+            scheduleNotification(context, it)
+        }
     }
 
     fun loadInitialData() {
