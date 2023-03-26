@@ -32,19 +32,27 @@ class AutoGenerateActivity : AppCompatActivity() {
     private lateinit var selectedColorBox: View
     private lateinit var planStartDateButton: Button
     private lateinit var planEndDateButton: Button
+    private lateinit var planStartTimeButton: Button
+    private lateinit var planEndTimeButton: Button
     private lateinit var colorPicker: AlertDialog
     private lateinit var planNameField: EditText
     private lateinit var planNameLabel: TextView
     private lateinit var startDateText: TextView
     private lateinit var endDateText: TextView
+    private lateinit var startTimeText: TextView
+    private lateinit var endTimeText: TextView
     private lateinit var dpd: DatePickerDialog
+    private lateinit var tpd: TimePickerDialog
 
     private var pickedColorHex: Int = 0x0
     private var planColor: String = "#ff000000"
     private var selectedTechnique: Technique = Technique.Pomodoro
     private var startDate: LocalDate? = null
     private var endDate: LocalDate? = null
+    private var startTime: LocalTime = LocalTime.of(8, 0)
+    private var endTime: LocalTime = LocalTime.of(23, 59)
     private var isStartDatePicker: Boolean = true
+    private var isStartTimePicker: Boolean = true
 
     private val viewModel = ViewModel
 
@@ -81,8 +89,12 @@ class AutoGenerateActivity : AppCompatActivity() {
         generatePlanButton = findViewById(R.id.autoGenerateButton)
         startDateText = findViewById(R.id.autoGenerateChosenPlanStartDate)
         endDateText = findViewById(R.id.autoGenerateChosenPlanEndDate)
+        startTimeText = findViewById(R.id.autoGenerateChosenPlanStartTime)
+        endTimeText = findViewById(R.id.autoGenerateChosenPlanEndTime)
         planStartDateButton = findViewById(R.id.autoGeneratePlanStartDateButton)
         planEndDateButton = findViewById(R.id.autoGeneratePlanEndDateButton)
+        planStartTimeButton = findViewById(R.id.autoGeneratePlanStartTimeButton)
+        planEndTimeButton = findViewById(R.id.autoGeneratePlanEndTimeButton)
 
         selectColorButton.setOnClickListener {
             colorPicker.show()
@@ -131,6 +143,25 @@ class AutoGenerateActivity : AppCompatActivity() {
             LocalDate.now().monthValue-1,
             LocalDate.now().dayOfMonth
         )
+
+        startTimeText.text = "${startTime.hour}h:${startTime.minute}m"
+        endTimeText.text = "${endTime.hour}h:${endTime.minute}m"
+        tpd = TimePickerDialog(
+            this,
+            { _, hour, minute ->
+                if (isStartTimePicker) {
+                    startTime = LocalTime.of(hour, minute)
+                    startTimeText.text = "${hour}h:${minute}m"
+                } else {
+                    endTime = LocalTime.of(hour, minute)
+                    endTimeText.text = "${hour}h:${minute}m"
+                }
+            },
+            LocalTime.now().hour,
+            LocalTime.now().minute,
+            false
+        )
+
         planStartDateButton.setOnClickListener {
             isStartDatePicker = true
             dpd.show()
@@ -140,6 +171,14 @@ class AutoGenerateActivity : AppCompatActivity() {
             dpd.show()
         }
 
+        planStartTimeButton.setOnClickListener {
+            isStartTimePicker = true
+            tpd.show()
+        }
+        planEndTimeButton.setOnClickListener {
+            isStartTimePicker = false
+            tpd.show()
+        }
         // Assign generate button click response
         generatePlanButton.setOnClickListener {
             val res: Boolean = attemptPlanCreation()
@@ -151,7 +190,6 @@ class AutoGenerateActivity : AppCompatActivity() {
     }
 
     private fun attemptPlanCreation(): Boolean {
-        println("COLOR Selected: $planColor")
         if (planNameField.text.toString().isEmpty()) {
             planNameLabel.setTextColor(Color.RED)
             return false
@@ -165,8 +203,14 @@ class AutoGenerateActivity : AppCompatActivity() {
         val endDate: Long = LocalDateTime.of(endDate!!, LocalTime.MIDNIGHT).toEpochSecond(
             ZoneOffset.UTC)
 
+        // Get restrictions
+        if (startTime.isAfter(endTime))
+            return false
+
+        val dayRestrictions: Pair<LocalTime, LocalTime> = Pair(startTime, endTime)
+
         val newPlan = viewModel.addTechniquePlanToCalendar(
-            planName, selectedTechnique, startDate, endDate, planColor) ?: return false
+            planName, selectedTechnique, startDate, endDate, dayRestrictions, planColor) ?: return false
         return true
     }
 
@@ -180,6 +224,7 @@ class AutoGenerateActivity : AppCompatActivity() {
     override fun onStop() {
         colorPicker.dismiss()
         dpd.dismiss()
+        tpd.dismiss()
         super.onStop()
     }
     override fun onSupportNavigateUp(): Boolean {

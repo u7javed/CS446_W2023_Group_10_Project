@@ -52,6 +52,7 @@
                 <!--Plan start Date-->
                 <TextView
                     android:id="@+id/StartDateLabel"
+                    android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Start date" />
@@ -74,6 +75,7 @@
                 <!--Plan end Date-->
                 <TextView
                     android:id="@+id/EndDateLabel"
+                    android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="End date" />
@@ -87,15 +89,46 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="End date not selected" />
-                <FrameLayout
-                    android:id="@+id/PlanEndDatePickerFragment"
+
+                <!--Plan start time-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Start time per Day" />
+                <Button
+                    android:id="@+id/autoGeneratePlanStartTimeButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="Select Start Time Per Day" />
+                <TextView
+                    android:id="@+id/autoGenerateChosenPlanStartTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="End date not selected" />
+
+                <!--Plan end time-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="End time per day" />
+                <Button
+                    android:id="@+id/autoGeneratePlanEndTimeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select End Time Per Day" />
+                <TextView
+                    android:id="@+id/autoGenerateChosenPlanEndTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="End date not selected" />
 
                 <Switch
                     android:id="@+id/autoGenerateNotificationSwitch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
                     android:text="Notification"
                     android:textColor="#717171" />
 

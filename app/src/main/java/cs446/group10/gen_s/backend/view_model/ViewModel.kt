@@ -10,6 +10,7 @@ import cs446.group10.gen_s.backend.model.IView
 import cs446.group10.gen_s.backend.techniques.Technique
 import cs446.group10.gen_s.backend.techniques.TechniqueFactory
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import kotlin.math.max
@@ -335,12 +336,14 @@ object ViewModel {
         technique: Technique,
         startRange: Long,
         endRange: Long,
+        dayRestriction: Pair<LocalTime, LocalTime>,
         color: String
     ): Plan? {
         val events: List<Event> = TechniqueFactory.generateEvents(
             technique,
             startRange,
             endRange,
+            dayRestriction,
             getExistingEvents(startRange, endRange)
         ) ?: return null
         val planId: String = IdManager.generateId()
@@ -359,9 +362,10 @@ object ViewModel {
         technique: Technique,
         startRange: Long,
         endRange: Long,
+        dayRestriction: Pair<LocalTime, LocalTime>,
         color: String
     ): Plan? {
-        val plan: Plan = generateTechniquePlan(planName, technique, startRange, endRange, color)
+        val plan: Plan = generateTechniquePlan(planName, technique, startRange, endRange, dayRestriction, color)
             ?: return null
         _model.addPlan(plan)
         return plan
