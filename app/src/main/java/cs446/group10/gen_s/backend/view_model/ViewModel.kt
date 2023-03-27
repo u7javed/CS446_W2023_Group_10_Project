@@ -420,6 +420,10 @@ object ViewModel {
         return _model.getPlanName(planId) ?: "None"
     }
 
+    fun getPlanFromId(planId: String): Plan? {
+        return _model.getPlanById(planId)
+    }
+
     private fun dateTimeToEpoch(dateTimeStr: String): Long {
         val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeStr, _dateToEpochFormatter)
         return dateTime.toEpochSecond(ZoneOffset.UTC)
