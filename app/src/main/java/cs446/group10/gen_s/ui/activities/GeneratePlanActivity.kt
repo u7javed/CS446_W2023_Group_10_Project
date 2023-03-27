@@ -22,6 +22,7 @@ class GeneratePlanActivity : AppCompatActivity() {
     private var planName: String = "";
     private var startDate: DateVal? = null;
     private var endDate: DateVal? = null;
+    private var planColor: String = "#ff000000";
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +34,8 @@ class GeneratePlanActivity : AppCompatActivity() {
         val planBasicInfo = PlanBasicInfoFragment.formPlanBasicInfo(
             planName,
             startDate,
-            endDate
+            endDate,
+            planColor
         )
 
         preferenceItemsAdapter = ListTabsAdapter(preferenceItems);
@@ -118,7 +120,7 @@ class GeneratePlanActivity : AppCompatActivity() {
                 23,
                 59
             ).toEpochSecond(ZoneOffset.UTC),
-            "#1BBA9B"
+            planColor,
         )
 
         if (newPlan == null) {
@@ -144,7 +146,8 @@ class GeneratePlanActivity : AppCompatActivity() {
         val planBasicInfo = PlanBasicInfoFragment.formPlanBasicInfo(
             planName,
             startDate,
-            endDate
+            endDate,
+            planColor,
         )
 
         generateFragment = GenerateFragment(
@@ -163,6 +166,7 @@ class GeneratePlanActivity : AppCompatActivity() {
         planName = planBasicInfo.planName;
         startDate = planBasicInfo.startDate;
         endDate = planBasicInfo.endDate;
+        planColor = planBasicInfo.planColor;
 
         val generateEditPreferenceFragment = GenerateEditPreferenceFragment(
             PlanPreferenceInitialVal(preferenceDetail == null, preferenceDetail),
