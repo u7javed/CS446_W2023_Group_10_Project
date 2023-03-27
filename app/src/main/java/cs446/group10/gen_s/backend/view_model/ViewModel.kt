@@ -420,7 +420,7 @@ object ViewModel {
         return _model.getPlanName(planId) ?: "None"
     }
 
-    fun getPlanFromId(planId: String): Plan? {
+    fun getPlanById(planId: String): Plan? {
         return _model.getPlanById(planId)
     }
 
