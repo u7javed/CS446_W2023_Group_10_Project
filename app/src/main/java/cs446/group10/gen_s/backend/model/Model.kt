@@ -302,6 +302,14 @@ class Model {
 
     }
 
+    fun updatePlanName(planId: String, newName: String) {
+        var plan = getPlanById(planId)
+        if (plan != null) {
+            plan.name = newName
+            this.notifyView()
+        }
+    }
+
     fun deleteCalendar() {
         this.calendar = Calendar("og")
         eventMap.clear()
