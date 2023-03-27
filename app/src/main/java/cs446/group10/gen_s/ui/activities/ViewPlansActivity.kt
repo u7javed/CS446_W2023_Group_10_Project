@@ -48,7 +48,6 @@ class ViewPlansActivity : AppCompatActivity(), IView {
     private fun moveToEditPlanScreen(planId: String) {
         val editPlanIntent = Intent(this, EditPlanActivity::class.java)
         editPlanIntent.putExtra("planId", planId)
-        editPlanIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(editPlanIntent)
     }
 
