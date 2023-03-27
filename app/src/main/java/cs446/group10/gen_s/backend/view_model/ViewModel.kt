@@ -420,6 +420,14 @@ object ViewModel {
         return _model.getPlanName(planId) ?: "None"
     }
 
+    fun removePlanById(planId: String) {
+        _model.removePlan(planId)
+    }
+
+    fun editPlanNameById(planId: String, newName: String) {
+        _model.updatePlanName(planId, ViewModelHelper.sanitizePlanName(newName))
+    }
+
     fun getPlanById(planId: String): Plan? {
         return _model.getPlanById(planId)
     }
