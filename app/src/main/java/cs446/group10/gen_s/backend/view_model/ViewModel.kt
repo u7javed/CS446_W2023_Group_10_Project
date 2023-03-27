@@ -424,6 +424,16 @@ object ViewModel {
         _model.removePlan(planId)
     }
 
+    fun editPlanColorById(planId: String, newColor: String) {
+        if (!ViewModelHelper.validHexColor(newColor))
+            return
+        _model.updatePlanColor(planId, newColor)
+    }
+
+    fun editPlanNotifications(planId: String, newTime: Long) {
+        // TODO: Implement
+    }
+
     fun editPlanNameById(planId: String, newName: String) {
         _model.updatePlanName(planId, ViewModelHelper.sanitizePlanName(newName))
     }
