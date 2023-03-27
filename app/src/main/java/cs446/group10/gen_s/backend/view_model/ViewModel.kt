@@ -64,10 +64,10 @@ object ViewModel {
         val startTime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
         val endTime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
 
-        val title = "Event ${event.name} in $timeRemaining minutes"
+        val title = "Event ${event.name} starts in $timeRemaining minutes"
         val message = "Event ${event.name} is starting at ${startTime.toLocalTime()} " +
-                "on ${startTime.toLocalDate()} and ending at ${endTime.toLocalTime()}" +
-                "on ${endTime.toLocalDate()} which is in $timeRemaining minutes."
+                "on ${startTime.toLocalDate()} and ending at ${endTime.toLocalTime()} " +
+                "on ${endTime.toLocalDate()}."
         intent.putExtra(titleExtra, title)
         intent.putExtra(messageExtra, message)
 
@@ -110,6 +110,7 @@ object ViewModel {
             dateTimeToEpoch("2023-03-03 15:00"), null))
 
         addPlanToCalendar(
+            null,
             "Study Plan 1",
             listOf(
                 Preference("Class 1",
@@ -152,6 +153,7 @@ object ViewModel {
             dateTimeToEpoch("2023-03-06 20:00"), null))
 
         addPlanToCalendar(
+            null,
             "Study Plan 2",
             listOf(
                 Preference("Class 4",
@@ -374,6 +376,7 @@ object ViewModel {
     }
 
     fun addPlanToCalendar(
+        context: Context?,
         planName: String,
         preferences: List<Preference>,
         startRange: Long,
@@ -384,6 +387,8 @@ object ViewModel {
             ?:
             return null
         _model.addPlan(plan!!)
+        if (context != null)
+            scheduleMultipleNotifications(context, plan.events)
         return plan;
     }
 
@@ -414,6 +419,7 @@ object ViewModel {
     }
 
     fun addTechniquePlanToCalendar(
+        context: Context,
         planName: String,
         technique: Technique,
         startRange: Long,
@@ -424,6 +430,7 @@ object ViewModel {
         val plan: Plan = generateTechniquePlan(planName, technique, startRange, endRange, dayRestriction, color)
             ?: return null
         _model.addPlan(plan)
+        scheduleMultipleNotifications(context, plan.events)
         return plan
     }
 
@@ -441,9 +448,19 @@ object ViewModel {
         return Event(eventId, name, startDate, endDate, notification, planId)
     }
 
-    fun addEventToCalendar(name: String, startDate: Long, endDate: Long, notification: Long?, planId: String? = null): Boolean {
+    fun addEventToCalendar(
+        context: Context,
+        name: String,
+        startDate: Long,
+        endDate: Long,
+        notification: Long?,
+        planId: String? = null
+    ): Boolean {
         val event: Event = generateEvent(name, startDate, endDate, notification)
-        return _model.addEvent(event, planId)
+        val success = _model.addEvent(event, planId)
+        if (success)
+            scheduleNotification(context, event)
+        return success
     }
 
     fun getAllEvents(): List<Event> {

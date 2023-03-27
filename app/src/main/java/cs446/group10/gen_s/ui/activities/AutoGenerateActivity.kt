@@ -210,7 +210,7 @@ class AutoGenerateActivity : AppCompatActivity() {
         val dayRestrictions: Pair<LocalTime, LocalTime> = Pair(startTime, endTime)
 
         val newPlan = viewModel.addTechniquePlanToCalendar(
-            planName, selectedTechnique, startDate, endDate, dayRestrictions, planColor) ?: return false
+            this, planName, selectedTechnique, startDate, endDate, dayRestrictions, planColor) ?: return false
         return true
     }
 
