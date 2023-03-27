@@ -310,6 +310,17 @@ class Model {
         }
     }
 
+    fun updatePlanColor(planId: String, newColor: String) {
+        var plan = getPlanById(planId)
+        if (plan != null) {
+            plan.color = newColor
+            plan.events.forEach { event: Event ->
+                event.color = newColor
+            }
+            this.notifyView()
+        }
+    }
+
     fun deleteCalendar() {
         this.calendar = Calendar("og")
         eventMap.clear()
