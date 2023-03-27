@@ -4,12 +4,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Switch
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageButton
 import com.google.android.material.button.MaterialButton
 import cs446.group10.gen_s.*
 import cs446.group10.gen_s.backend.dataClasses.Plan
@@ -123,6 +121,17 @@ class EditPlanActivity : AppCompatActivity() {
             } else {
                 notificationDetails.visibility = View.GONE
             }
+        }
+
+        val removePlanButton = findViewById<ImageButton>(R.id.RemovePlanButton);
+        removePlanButton.setOnClickListener {
+            ViewModel.removePlanById(planId);
+        }
+
+        val editPlanButton = findViewById<Button>(R.id.EditPlanButton);
+        editPlanButton.setOnClickListener {
+            planName = nameTextField.text.toString();
+            ViewModel.editPlanNameById(planId, planName);
         }
     }
 }

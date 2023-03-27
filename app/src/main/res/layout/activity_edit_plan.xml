@@ -30,7 +30,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
-                android:id="@+id/removePlanButton"
+                android:id="@+id/RemovePlanButton"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:background="#00FFFFFF"
@@ -144,7 +144,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/GenerateButton"
+        android:id="@+id/EditPlanButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Edit Plan"
