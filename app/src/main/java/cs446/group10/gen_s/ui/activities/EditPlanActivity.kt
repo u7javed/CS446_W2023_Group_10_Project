@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageButton
 import com.google.android.material.button.MaterialButton
 import cs446.group10.gen_s.*
 import cs446.group10.gen_s.backend.dataClasses.Plan
@@ -15,7 +14,6 @@ import cs446.group10.gen_s.backend.view_model.ViewModel
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import com.flask.colorpicker.ColorPickerView
-import com.flask.colorpicker.builder.ColorPickerClickListener
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 
 class EditPlanActivity : AppCompatActivity() {
@@ -132,6 +130,11 @@ class EditPlanActivity : AppCompatActivity() {
         editPlanButton.setOnClickListener {
             planName = nameTextField.text.toString();
             ViewModel.editPlanNameById(planId, planName);
+            ViewModel.editPlanColorById(planId, planColor);
+
+            val viewPlanIntent = Intent(this, ViewPlansActivity::class.java)
+            viewPlanIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(viewPlanIntent)
         }
     }
 }

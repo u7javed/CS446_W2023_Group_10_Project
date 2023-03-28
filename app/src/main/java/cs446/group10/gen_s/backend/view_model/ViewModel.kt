@@ -425,8 +425,9 @@ object ViewModel {
     }
 
     fun editPlanColorById(planId: String, newColor: String) {
-        if (!ViewModelHelper.validHexColor(newColor))
-            return
+        if (!ViewModelHelper.validHexColor(newColor)) {
+            return;
+        }
         _model.updatePlanColor(planId, newColor)
     }
 
