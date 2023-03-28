@@ -28,7 +28,6 @@ class AutoGenerateActivity : AppCompatActivity() {
     private lateinit var notificationSwitch: Switch
     private lateinit var techniqueSpinner: Spinner
     private lateinit var generatePlanButton: Button
-    private lateinit var selectColorButton: Button
     private lateinit var selectedColorBox: View
     private lateinit var planStartDateButton: Button
     private lateinit var planEndDateButton: Button
@@ -82,7 +81,6 @@ class AutoGenerateActivity : AppCompatActivity() {
         selectedColorBox = findViewById(R.id.colorSelectedView)
         notificationDetails = findViewById(R.id.autoGenerateNotificationDetails)
         notificationSwitch = findViewById(R.id.autoGenerateNotificationSwitch)
-        selectColorButton = findViewById(R.id.selectColorButton)
         techniqueSpinner = findViewById(R.id.autoGenerateTechniqueSpinner)
         planNameField = findViewById(R.id.autoGeneratePlanNameTextField)
         planNameLabel = findViewById(R.id.autoGeneratePlanNameLabel)
@@ -96,7 +94,7 @@ class AutoGenerateActivity : AppCompatActivity() {
         planStartTimeButton = findViewById(R.id.autoGeneratePlanStartTimeButton)
         planEndTimeButton = findViewById(R.id.autoGeneratePlanEndTimeButton)
 
-        selectColorButton.setOnClickListener {
+        selectedColorBox.setOnClickListener {
             colorPicker.show()
         }
 

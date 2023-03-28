@@ -41,7 +41,6 @@ class PlanBasicInfoFragment(
     private var pickedColorHex: Int = 0x0
     private var planColor: String = "#ff000000"
     private lateinit var nameTextField: EditText;
-    private lateinit var selectColorButton: MaterialButton;
     private lateinit var selectedColorBox: View;
     private lateinit var colorPicker: AlertDialog;
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -147,10 +146,7 @@ class PlanBasicInfoFragment(
             }
             .build()
 
-
-        selectColorButton = view.findViewById(R.id.selectColorButton)
-
-        selectColorButton.setOnClickListener {
+        selectedColorBox.setOnClickListener {
             colorPicker.show()
         }
     }

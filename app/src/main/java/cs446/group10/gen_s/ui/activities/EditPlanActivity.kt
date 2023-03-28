@@ -23,7 +23,6 @@ class EditPlanActivity : AppCompatActivity() {
     private var endDate: DateVal? = null;
     private var pickedColorHex: Int = 0x0
     private var planColor: String = "#ff000000"
-    private lateinit var selectColorButton: MaterialButton;
     private lateinit var selectedColorBox: View;
     private lateinit var colorPicker: AlertDialog;
 
@@ -101,9 +100,7 @@ class EditPlanActivity : AppCompatActivity() {
             .build()
 
 
-        selectColorButton = findViewById<MaterialButton>(R.id.selectColorButton)
-
-        selectColorButton.setOnClickListener {
+        selectedColorBox.setOnClickListener {
             colorPicker.show()
         }
 
