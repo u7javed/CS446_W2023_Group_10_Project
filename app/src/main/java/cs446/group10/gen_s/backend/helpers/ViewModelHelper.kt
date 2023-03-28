@@ -16,7 +16,7 @@ object ViewModelHelper {
         if (input.length != 7 && input.length != 9)
             return false
 
-        input.forEach { c ->
+        input.substring(1).forEach { c ->
             if ((c !in '0'..'9') && (c !in 'a'..'f') && (c !in 'A'..'F'))
                 return false
         }

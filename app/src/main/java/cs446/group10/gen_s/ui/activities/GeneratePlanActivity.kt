@@ -3,11 +3,7 @@ package cs446.group10.gen_s.ui.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import com.google.android.material.button.MaterialButton
 import cs446.group10.gen_s.*
 import cs446.group10.gen_s.backend.dataClasses.Preference
 import cs446.group10.gen_s.backend.view_model.ViewModel
@@ -19,6 +15,7 @@ class GeneratePlanActivity : AppCompatActivity() {
     private var preferenceItems = mutableListOf<ListTabDetail>();
     private lateinit var generateFragment: GenerateFragment;
     private lateinit var preferenceItemsAdapter: ListTabsAdapter;
+    private var planId: String = "";
     private var planName: String = "";
     private var startDate: DateVal? = null;
     private var endDate: DateVal? = null;
