@@ -505,5 +505,58 @@ object ViewModel {
         val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeStr, _dateToEpochFormatter)
         return dateTime.toEpochSecond(ZoneOffset.UTC)
     }
+    // function that takes in ics file name (stored in app/src/main/assets folder) and converts into list of events
+    private fun icsToEvents (context: Context, icsFileName : String):  MutableList<Event> {
+        //icsFileName = "testEce.ics"
+        var eventList : MutableList<Event> = mutableListOf()
+        val icsStringList = context.assets.open(icsFileName).bufferedReader().use {
+            it.readLines()
+        }
 
+        var name : String? = null
+        var startDate : Long? = null
+        var endDate : Long? = null
+
+        icsStringList.forEach{
+            if (it.contains("SUMMARY:")){
+                name = it.replace("SUMMARY:", "")
+            }
+            if (it.contains("DTSTART")){
+                if (it.contains(";VALUE=DATE:")){ //all-day event
+                    var date = it.replace("DTSTART;VALUE=DATE:", "")
+                    // TODO: need to format date(20230317) into 2023-03-17
+                    // TODO: figure out how to add allday event
+                    startDate = 20230317
+                }
+                else{ //not all-day event
+                    var dateTime = it.replace("DTSTART:", "")
+                    // TODO: need to format dateTime (20230328T140000Z) - utc into 2023-03-28 10:00
+                    var startDate = dateTimeToEpoch(dateTime)
+                }
+            }
+            if (it.contains("DTEND")){
+                if (it.contains(";VALUE=DATE:")){ //all-day event
+                    var date = it.replace("DTEND;VALUE=DATE:", "")
+                    // TODO: need to format date(20230317) into 2023-03-17
+                    // TODO: figure out how to add allday event
+                    var endDate = 2023-03-17
+                }
+                else{ //not all-day event
+                    var dateTime = it.replace("DTSTART:", "")
+                    // TODO: need to format dateTime (20230328T140000Z) - UTC into 2023-03-28 10:00
+                    var endDate = dateTimeToEpoch(dateTime)
+                }
+            }
+
+            if (it.contains("END:VEVENT")){ // denotes line with all the info about event
+                //add event to event list
+                if (name != null && startDate != null && endDate != null){
+                    var event = generateEvent(name!!, startDate!!, endDate, null, null, null)
+                    eventList.add(event)
+                }
+            }
+        }
+
+        return eventList
+    }
 }
