@@ -15,11 +15,15 @@ class GeneratePlanActivity : AppCompatActivity() {
     private var preferenceItems = mutableListOf<ListTabDetail>();
     private lateinit var generateFragment: GenerateFragment;
     private lateinit var preferenceItemsAdapter: ListTabsAdapter;
-    private var planId: String = "";
     private var planName: String = "";
     private var startDate: DateVal? = null;
     private var endDate: DateVal? = null;
     private var planColor: String = "#ff000000";
+    private var notification: NotificationDetail = NotificationDetail (
+        false,
+        "",
+        0,
+    );
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +36,8 @@ class GeneratePlanActivity : AppCompatActivity() {
             planName,
             startDate,
             endDate,
-            planColor
+            planColor,
+            notification,
         )
 
         preferenceItemsAdapter = ListTabsAdapter(preferenceItems);
@@ -100,6 +105,21 @@ class GeneratePlanActivity : AppCompatActivity() {
             return;
         }
 
+        val startDateLong = LocalDateTime.of(
+            planBasicInfo.startDate!!.year,
+            planBasicInfo.startDate!!.month + 1,
+            planBasicInfo.startDate!!.day,
+            0,
+            0
+        ).toEpochSecond(ZoneOffset.UTC);
+
+        var notificationLong: Long? = null
+        if (planBasicInfo.notification.notificationOn) {
+            val notificationMultiplier =
+                PlanBasicInfoFragment.getMultiplierFromUnitPosition(planBasicInfo.notification.notificationUnitPosition);
+            notificationLong = startDateLong - (planBasicInfo.notification.notificationTime.toLong() * notificationMultiplier);
+        }
+
         val newPlan = ViewModel.addPlanToCalendar(
             planBasicInfo.planName,
             preferences,
@@ -117,7 +137,7 @@ class GeneratePlanActivity : AppCompatActivity() {
                 23,
                 59
             ).toEpochSecond(ZoneOffset.UTC),
-            null, // TODO: add notification in the form of EPOCH SECONDS (UTC OFFSET) here
+            notificationLong, // TODO: add notification in the form of EPOCH SECONDS (UTC OFFSET) here
             planColor,
         )
 
@@ -146,6 +166,7 @@ class GeneratePlanActivity : AppCompatActivity() {
             startDate,
             endDate,
             planColor,
+            notification,
         )
 
         generateFragment = GenerateFragment(
@@ -165,6 +186,7 @@ class GeneratePlanActivity : AppCompatActivity() {
         startDate = planBasicInfo.startDate;
         endDate = planBasicInfo.endDate;
         planColor = planBasicInfo.planColor;
+        notification = planBasicInfo.notification;
 
         val generateEditPreferenceFragment = GenerateEditPreferenceFragment(
             PlanPreferenceInitialVal(preferenceDetail == null, preferenceDetail),
