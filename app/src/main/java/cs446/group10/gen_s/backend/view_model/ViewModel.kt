@@ -480,7 +480,11 @@ object ViewModel {
     }
 
     fun editPlanNotifications(planId: String, newTime: Long) {
-        // TODO: Implement
+        val plan: Plan = getPlanById(planId) ?: return
+        plan.events.forEach { event ->
+            event.notification = newTime
+        }
+        scheduleMultipleNotifications(plan.events)
     }
 
     fun editPlanNameById(planId: String, newName: String) {
