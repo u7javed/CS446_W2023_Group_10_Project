@@ -11,10 +11,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import cs446.group10.gen_s.R
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneOffset
+import java.time.*
 import java.util.*
 
 
@@ -248,15 +245,19 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
             planId = _planId
         // Assign notification if valid
         var notification: Long? = null
-        if (notificationSwitch.isChecked && notificationInput.text.toString().isNotEmpty()) {
+        if (notificationSwitch.isChecked) {
+            if (notificationInput.text.toString().isEmpty()) {
+                return false
+            }
+            ZoneOffset.systemDefault()
             _notification = notificationInput.text.toString().toLong()
             notification = startDate - (_notification * _notificationMultiplier)
-            if (notification <= LocalDateTime.now().toEpochSecond(ZoneOffset.UTC))
+            if (notification <= LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) {
                 return false
-        } else{
-            return false
+            }
         }
-        return _viewModel.addEventToCalendar(this, eventName, startDate, endDate, notification, planId)
+
+        return _viewModel.addEventToCalendar(eventName, startDate, endDate, notification, planId)
     }
 
     private fun errorToast() {

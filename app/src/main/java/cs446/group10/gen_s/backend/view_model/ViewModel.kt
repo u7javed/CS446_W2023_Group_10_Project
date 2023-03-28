@@ -15,9 +15,7 @@ import cs446.group10.gen_s.backend.model.IView
 import cs446.group10.gen_s.backend.notifications.*
 import cs446.group10.gen_s.backend.techniques.Technique
 import cs446.group10.gen_s.backend.techniques.TechniqueFactory
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneOffset
+import java.time.*
 import java.time.format.DateTimeFormatter
 import kotlin.math.max
 import kotlin.math.min
@@ -27,6 +25,7 @@ object ViewModel {
 
     private val _openSpaces: MutableList<Space> = mutableListOf()
     private val _model: Model = Model()
+    private val zoneOffset: Int = ZonedDateTime.now().offset.totalSeconds
     private val _dateToEpochFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
     fun registerView(view: IView) {
@@ -36,29 +35,18 @@ object ViewModel {
     fun init(context: Context) {
         // Add context to the model
         _model.setContext(context)
-
+        // Create notification channel for future notification creations
+        _model.createNotificationChannel()
 //        loadInitialData()
 
         // Load from storage
         _model.loadCalendarFromStorage(context)
-        // Create notification channel for future notification creations
-        createNotificationChannel(context)
     }
 
-    private fun createNotificationChannel(context: Context) {
-        val name = "Notification Channel"
-        val desc = "This notification channel notifies of any upcoming events and their corresponding times"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(channelID, name, importance)
-        channel.description = desc
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-    }
 
-    private fun scheduleNotification(context: Context, event: Event) {
+    private fun scheduleNotification(event: Event) {
         if (event.notification == null)
             return
-        val intent = Intent(context.applicationContext, Notification::class.java)
 
         val timeRemaining = (event.startDate - event.notification!!) / 60
         val startTime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
@@ -68,27 +56,13 @@ object ViewModel {
         val message = "Event ${event.name} is starting at ${startTime.toLocalTime()} " +
                 "on ${startTime.toLocalDate()} and ending at ${endTime.toLocalTime()} " +
                 "on ${endTime.toLocalDate()}."
-        intent.putExtra(titleExtra, title)
-        intent.putExtra(messageExtra, message)
 
-        val pendingIntent = PendingIntent.getBroadcast(
-            context.applicationContext,
-            notificationID,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            event.notification!!*1000,
-            pendingIntent
-        )
+        _model.scheduleNotification(event.eventId, event.notification!! - zoneOffset, title, message)
     }
 
-    private fun scheduleMultipleNotifications(context: Context, events: List<Event>) {
+    private fun scheduleMultipleNotifications(events: List<Event>) {
         events.forEach {
-            scheduleNotification(context, it)
+            scheduleNotification(it)
         }
     }
 
@@ -110,7 +84,6 @@ object ViewModel {
             dateTimeToEpoch("2023-03-03 15:00"), null))
 
         addPlanToCalendar(
-            null,
             "Study Plan 1",
             listOf(
                 Preference("Class 1",
@@ -153,7 +126,6 @@ object ViewModel {
             dateTimeToEpoch("2023-03-06 20:00"), null))
 
         addPlanToCalendar(
-            null,
             "Study Plan 2",
             listOf(
                 Preference("Class 4",
@@ -376,7 +348,6 @@ object ViewModel {
     }
 
     fun addPlanToCalendar(
-        context: Context?,
         planName: String,
         preferences: List<Preference>,
         startRange: Long,
@@ -386,9 +357,8 @@ object ViewModel {
         val plan: Plan = generatePlan(planName, preferences, startRange, endRange, color)
             ?:
             return null
-        _model.addPlan(plan!!)
-        if (context != null)
-            scheduleMultipleNotifications(context, plan.events)
+        _model.addPlan(plan)
+        scheduleMultipleNotifications(plan.events)
         return plan;
     }
 
@@ -419,7 +389,6 @@ object ViewModel {
     }
 
     fun addTechniquePlanToCalendar(
-        context: Context,
         planName: String,
         technique: Technique,
         startRange: Long,
@@ -430,7 +399,7 @@ object ViewModel {
         val plan: Plan = generateTechniquePlan(planName, technique, startRange, endRange, dayRestriction, color)
             ?: return null
         _model.addPlan(plan)
-        scheduleMultipleNotifications(context, plan.events)
+        scheduleMultipleNotifications(plan.events)
         return plan
     }
 
@@ -449,7 +418,6 @@ object ViewModel {
     }
 
     fun addEventToCalendar(
-        context: Context,
         name: String,
         startDate: Long,
         endDate: Long,
@@ -459,7 +427,7 @@ object ViewModel {
         val event: Event = generateEvent(name, startDate, endDate, notification)
         val success = _model.addEvent(event, planId)
         if (success)
-            scheduleNotification(context, event)
+            scheduleNotification(event)
         return success
     }
 
@@ -481,7 +449,10 @@ object ViewModel {
 
     fun updateEventInCalendar(eventId: String, name: String, startDate: Long, endDate: Long, notification: Long?, planId: String? = null): Boolean {
         val updatedEvent = Event("holder", name, startDate, endDate, notification)
-        return _model.updateEvent(eventId, updatedEvent, planId)
+        val result = _model.updateEvent(eventId, updatedEvent, planId)
+        if (notification != null)
+            scheduleNotification(getEventById(eventId)!!)
+        return result
     }
 
     fun deleteEventInCalendar(eventId: String): Boolean {
