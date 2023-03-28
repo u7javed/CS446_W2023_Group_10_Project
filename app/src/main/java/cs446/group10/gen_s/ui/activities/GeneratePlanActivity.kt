@@ -117,6 +117,7 @@ class GeneratePlanActivity : AppCompatActivity() {
                 23,
                 59
             ).toEpochSecond(ZoneOffset.UTC),
+            null, // TODO: add notification in the form of EPOCH SECONDS (UTC OFFSET) here
             planColor,
         )
 

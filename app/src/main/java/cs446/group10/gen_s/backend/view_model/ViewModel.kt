@@ -109,6 +109,7 @@ object ViewModel {
             ),
             LocalDateTime.of(2023, 3, 10, 8, 0).toEpochSecond(ZoneOffset.UTC),
             LocalDateTime.of(2023, 3, 14, 18, 0).toEpochSecond(ZoneOffset.UTC),
+            null,
             "#1BBA9B"
         )
 
@@ -151,6 +152,7 @@ object ViewModel {
             ),
             LocalDateTime.of(2023, 3, 16, 8, 0).toEpochSecond(ZoneOffset.UTC),
             LocalDateTime.of(2023, 3, 18, 18, 0).toEpochSecond(ZoneOffset.UTC),
+            null,
             "#EF233D"
         )
 
@@ -352,11 +354,15 @@ object ViewModel {
         preferences: List<Preference>,
         startRange: Long,
         endRange: Long,
+        notification: Long? = null,
         color: String? = null
     ): Plan? {
         val plan: Plan = generatePlan(planName, preferences, startRange, endRange, color)
             ?:
             return null
+        plan.events.forEach {
+            it.notification = notification
+        }
         _model.addPlan(plan)
         scheduleMultipleNotifications(plan.events)
         return plan;
