@@ -16,18 +16,21 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 class EditEventActivity : AppCompatActivity(), View.OnClickListener {
 
     private val _viewModel = ViewModel
-    private lateinit var btnStartDatePicker: Button;
-    private lateinit var btnStartTimePicker: Button;
-    private lateinit var btnEndDatePicker: Button;
-    private lateinit var btnEndTimePicker: Button;
-    private lateinit var deleteEvent: Button;
-    private lateinit var confirmEditEvent: Button;
+    private lateinit var btnStartDatePicker: Button
+    private lateinit var btnStartTimePicker: Button
+    private lateinit var btnEndDatePicker: Button
+    private lateinit var btnEndTimePicker: Button
+    private lateinit var deleteEvent: Button
+    private lateinit var confirmEditEvent: Button
+    private lateinit var notificationSwitch: Switch
+    private lateinit var notificationInput: EditText
 
     private lateinit var startDate: TextView;
     private lateinit var endDate: TextView;
@@ -45,8 +48,8 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
     private var _endTime: LocalTime? = null
     private var _planId: String? = null
     private var _planIsChecked: Boolean = false
-    private var _notification: Long? = null
-
+    private var _notification: Long = 0L
+    private var _notificationMultiplier: Long = 60L
 
 
     private val _dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -71,6 +74,8 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
         endDate = findViewById<TextView>(R.id.chosenEndDate)
         startTime = findViewById<TextView>(R.id.chosenStartTime)
         endTime = findViewById<TextView>(R.id.chosenEndTime)
+        notificationSwitch = findViewById(R.id.notificationSwitchEvent)
+        notificationInput = findViewById(R.id.notificationValue)
 
         _eventNameText = findViewById(R.id.eventNameInput)
 
@@ -125,8 +130,6 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         val timeUnits = resources.getStringArray(R.array.UnitsOfTime)
-
-        val notificationInput = findViewById<EditText>(R.id.notificationValue)
         val notificationSpinner = findViewById<Spinner>(R.id.notificationSpinner)
 
         if (notificationSpinner != null) {
@@ -142,18 +145,24 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
                     parent: AdapterView<*>,
                     view: View, position: Int, id: Long
                 ) {
-                    //TO DO: integrate with backend
+                    _notificationMultiplier = when (position) {
+                        0 -> 60L
+                        1 -> 3600L
+                        2 -> 86400L
+                        3 -> 604800L
+                        4 -> 2628000L
+                        else -> 0L
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    //TO DO: integrate with backend
+                    _notificationMultiplier = 0L
                 }
             }
         }
 
-        var notificationSwitch = findViewById<Switch>(R.id.notificationSwitchEvent)
         notificationSwitch.isChecked = true
-        notificationSwitch?.setOnCheckedChangeListener { _, isChecked ->
+        notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {
                 notificationSpinner.visibility = View.GONE
                 notificationInput.visibility = View.GONE
@@ -279,8 +288,19 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener {
         var planId: String? = null
         if (_planIsChecked && _planId != null)
             planId = _planId
-        // TODO: Deal with notification
-        return _viewModel.updateEventInCalendar(_eventId, eventName, startDate, endDate, null, planId)
+        // Assign notification if valid
+        var notification: Long? = null
+        if (notificationSwitch.isChecked) {
+            if (notificationInput.text.toString().isEmpty()) {
+                return false
+            }
+            _notification = notificationInput.text.toString().toLong()
+            notification = startDate - (_notification * _notificationMultiplier)
+            if (notification <= LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) {
+                return false
+            }
+        }
+        return _viewModel.updateEventInCalendar(_eventId, eventName, startDate, endDate, notification, planId)
     }
 
     private fun deleteEvent(eventId: String): Boolean {

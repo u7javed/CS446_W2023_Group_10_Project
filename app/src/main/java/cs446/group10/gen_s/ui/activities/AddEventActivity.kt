@@ -249,7 +249,6 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
             if (notificationInput.text.toString().isEmpty()) {
                 return false
             }
-            ZoneOffset.systemDefault()
             _notification = notificationInput.text.toString().toLong()
             notification = startDate - (_notification * _notificationMultiplier)
             if (notification <= LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) {
