@@ -25,7 +25,6 @@ import java.util.*
 class AutoGenerateActivity : AppCompatActivity() {
 
     private lateinit var notificationDetails: LinearLayout
-    private lateinit var notificationSwitch: Switch
     private lateinit var techniqueSpinner: Spinner
     private lateinit var generatePlanButton: Button
     private lateinit var selectColorButton: Button
@@ -43,6 +42,8 @@ class AutoGenerateActivity : AppCompatActivity() {
     private lateinit var endTimeText: TextView
     private lateinit var dpd: DatePickerDialog
     private lateinit var tpd: TimePickerDialog
+    private lateinit var notificationSwitch: Switch
+    private lateinit var notificationInput: EditText
 
     private var pickedColorHex: Int = 0x0
     private var planColor: String = "#ff000000"
@@ -53,6 +54,8 @@ class AutoGenerateActivity : AppCompatActivity() {
     private var endTime: LocalTime = LocalTime.of(23, 59)
     private var isStartDatePicker: Boolean = true
     private var isStartTimePicker: Boolean = true
+    private var _notification: Long = 0L
+    private var _notificationMultiplier: Long = 60L
 
     private val viewModel = ViewModel
 
@@ -95,6 +98,7 @@ class AutoGenerateActivity : AppCompatActivity() {
         planEndDateButton = findViewById(R.id.autoGeneratePlanEndDateButton)
         planStartTimeButton = findViewById(R.id.autoGeneratePlanStartTimeButton)
         planEndTimeButton = findViewById(R.id.autoGeneratePlanEndTimeButton)
+        notificationInput = findViewById(R.id.autoGenerateNotificationTime)
 
         selectColorButton.setOnClickListener {
             colorPicker.show()
@@ -113,6 +117,36 @@ class AutoGenerateActivity : AppCompatActivity() {
                 selectedTechnique = Technique.Pomodoro
             }
 
+        }
+
+        // notification spinner
+        val timeUnits = resources.getStringArray(R.array.UnitsOfTime)
+        val notificationSpinner: Spinner = findViewById(R.id.autoGenerateNotificationUnit)
+
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            timeUnits
+        )
+        notificationSpinner.adapter = adapter
+        notificationSpinner.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?, position: Int, id: Long) {
+                _notificationMultiplier = when (position) {
+                    0 -> 60L
+                    1 -> 3600L
+                    2 -> 86400L
+                    3 -> 604800L
+                    4 -> 2628000L
+                    else -> 0L
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                _notificationMultiplier = 0L
+            }
         }
 
         // Set switch off as default
@@ -209,8 +243,27 @@ class AutoGenerateActivity : AppCompatActivity() {
 
         val dayRestrictions: Pair<LocalTime, LocalTime> = Pair(startTime, endTime)
 
+        var notification: Long? = null
+        if (notificationSwitch.isChecked) {
+            if (notificationInput.text.toString().isEmpty()) {
+                return false
+            }
+            _notification = notificationInput.text.toString().toLong()
+            notification = startDate - (_notification * _notificationMultiplier)
+            if (notification <= LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) {
+                return false
+            }
+        }
+
         val newPlan = viewModel.addTechniquePlanToCalendar(
-            planName, selectedTechnique, startDate, endDate, dayRestrictions, planColor) ?: return false
+            planName,
+            selectedTechnique,
+            startDate,
+            endDate,
+            notification,
+            dayRestrictions,
+            planColor
+        ) ?: return false
         return true
     }
 

@@ -4,30 +4,30 @@ import cs446.group10.gen_s.backend.view_model.ViewModel
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import cs446.group10.gen_s.R
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneOffset
+import java.time.*
 import java.util.*
 
 
 class AddEventActivity : AppCompatActivity(), View.OnClickListener {
 
     private val _viewModel = ViewModel
-    private lateinit var btnStartDatePicker: Button;
-    private lateinit var btnStartTimePicker: Button;
-    private lateinit var btnEndDatePicker: Button;
-    private lateinit var btnEndTimePicker: Button;
-    private lateinit var startDateText: TextView;
-    private lateinit var startTimeText: TextView;
-    private lateinit var endDateText: TextView;
-    private lateinit var endTimeText: TextView;
+    private lateinit var btnStartDatePicker: Button
+    private lateinit var btnStartTimePicker: Button
+    private lateinit var btnEndDatePicker: Button
+    private lateinit var btnEndTimePicker: Button
+    private lateinit var startDateText: TextView
+    private lateinit var startTimeText: TextView
+    private lateinit var endDateText: TextView
+    private lateinit var endTimeText: TextView
+    private lateinit var notificationSwitch: Switch
+    private lateinit var notificationInput: EditText
 
     private var dpd: DatePickerDialog? = null
     private var tpd: TimePickerDialog? = null
@@ -39,7 +39,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
     private var _endTime: LocalTime? = null
     private var _planId: String? = null
     private var _planIsChecked: Boolean = false
-    private var _notification: Long? = null
+    private var _notification: Long = 0L
+    private var _notificationMultiplier: Long = 60L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +57,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
         startTimeText = findViewById(R.id.chosenStartTime)
         endDateText = findViewById(R.id.chosenEndDate)
         endTimeText = findViewById(R.id.chosenEndTime)
+        notificationSwitch = findViewById(R.id.notificationSwitchEvent)
+        notificationInput = findViewById(R.id.notificationValue)
 
         _eventNameText = findViewById(R.id.eventNameInput)
 
@@ -82,7 +85,6 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
 
         val timeUnits = resources.getStringArray(R.array.UnitsOfTime)
 
-        val notificationInput = findViewById<EditText>(R.id.notificationValue)
         val notificationSpinner = findViewById<Spinner>(R.id.notificationSpinner)
 
         if (notificationSpinner != null) {
@@ -98,18 +100,24 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
                     parent: AdapterView<*>,
                     view: View, position: Int, id: Long
                 ) {
-                    //TO DO: integrate with backend
+                    _notificationMultiplier = when (position) {
+                        0 -> 60L
+                        1 -> 3600L
+                        2 -> 86400L
+                        3 -> 604800L
+                        4 -> 2628000L
+                        else -> 0L
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
-                    //TO DO: integrate with backend
+                    _notificationMultiplier = 0L
                 }
             }
         }
 
-        var notificationSwitch = findViewById<Switch>(R.id.notificationSwitchEvent)
         notificationSwitch.isChecked = true
-        notificationSwitch?.setOnCheckedChangeListener { _, isChecked ->
+        notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (!isChecked) {
                 notificationSpinner.visibility = View.GONE
                 notificationInput.visibility = View.GONE
@@ -235,8 +243,20 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener {
         var planId: String? = null
         if (_planIsChecked && _planId != null)
             planId = _planId
-        // TODO: Deal with notification
-        return _viewModel.addEventToCalendar(eventName, startDate, endDate, null, planId)
+        // Assign notification if valid
+        var notification: Long? = null
+        if (notificationSwitch.isChecked) {
+            if (notificationInput.text.toString().isEmpty()) {
+                return false
+            }
+            _notification = notificationInput.text.toString().toLong()
+            notification = startDate - (_notification * _notificationMultiplier)
+            if (notification <= LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) {
+                return false
+            }
+        }
+
+        return _viewModel.addEventToCalendar(eventName, startDate, endDate, notification, planId)
     }
 
     private fun errorToast() {

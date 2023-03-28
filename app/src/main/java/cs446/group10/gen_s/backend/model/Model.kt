@@ -1,14 +1,24 @@
 package cs446.group10.gen_s.backend.model
 
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import cs446.group10.gen_s.backend.dataClasses.Calendar
 import cs446.group10.gen_s.backend.dataClasses.Event
 import cs446.group10.gen_s.backend.dataClasses.Plan
 import android.content.Context
+import android.content.Intent
+import android.os.Parcel
 import com.google.gson.Gson
+import cs446.group10.gen_s.backend.dataClasses.IntentSaver
+import cs446.group10.gen_s.backend.notifications.*
 import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import kotlin.math.max
 import kotlin.math.min
 
@@ -23,10 +33,13 @@ import kotlin.math.min
 class Model {
     private var views: MutableList<IView> = mutableListOf<IView>()
     private lateinit var context: Context
+    private lateinit var alarmManager: AlarmManager
     private var calendar: Calendar = Calendar("og")
-    private var planMap: MutableMap<String, Plan> = mutableMapOf<String, Plan>()
-    private var eventMap: MutableMap<String, Event> = mutableMapOf<String, Event>()
+    private var planMap: MutableMap<String, Plan> = mutableMapOf()
+    private var eventMap: MutableMap<String, Event> = mutableMapOf()
+    private var notificationMap: MutableMap<String, PendingIntent> = mutableMapOf()
     private val FILENAME = "stored_calendar_data.json"
+
 
     fun setContext(context: Context) {
         this.context = context
@@ -36,6 +49,56 @@ class Model {
         this.views.add(view)
 
     }
+
+    fun createNotificationChannel() {
+        val name = "Notification Channel"
+        val desc = "This notification channel notifies of any upcoming events and their corresponding times"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelID, name, importance)
+        channel.description = desc
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+        alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
+    fun scheduleNotification(eventId: String, notification: Long, title: String, message: String) {
+        val intent = Intent(context.applicationContext, Notification::class.java)
+        intent.putExtra(titleExtra, title)
+        intent.putExtra(messageExtra, message)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context.applicationContext,
+            notificationID,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        if (eventId in notificationMap)
+            removeNotification(eventId)
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            notification * 1000,
+            pendingIntent
+        )
+
+        // Map eventId to this pending intent
+        notificationMap[eventId] = pendingIntent
+        calendar.notifications[eventId] = IntentSaver(title, message)
+        pushToStorage(context)
+    }
+
+    private fun removeNotification(eventId: String) {
+        if (eventId in notificationMap) {
+            alarmManager.cancel(notificationMap[eventId])
+            notificationMap.remove(eventId)
+        }
+        if (eventId in calendar.notifications) {
+            calendar.notifications.remove(eventId)
+            pushToStorage(context)
+        }
+    }
+
     fun getViewLength ():Int{
         return this.views.size
     }
@@ -116,6 +179,8 @@ class Model {
             }
 
             eventMap.remove(eventId)
+            // Remove notification
+            removeNotification(eventId)
             this.notifyView()
             true
         } catch (e: Exception) {
@@ -151,6 +216,7 @@ class Model {
             if (eventMap[eventId]!!.endDate > planMap[planId]?.end!!)
                 planMap[planId]?.end = eventMap[eventId]!!.endDate
         }
+
         this.notifyView()
         return true
     }
@@ -160,6 +226,8 @@ class Model {
          this.calendar.events.remove(event)
          // given an event, add to eventMap
          eventMap.remove(event?.eventId, event)
+         // Delete notification
+         removeNotification(eventId)
 
          this.notifyView()
      }
@@ -299,7 +367,24 @@ class Model {
         calendar.plans.forEach {plan ->
             planMap[plan.planId] = plan
         }
+        // Update notifications map
+        convertIntentSaversToPendingIntents()
 
+    }
+
+    private fun convertIntentSaversToPendingIntents() {
+        calendar.notifications.forEach { (eventId, intentSaver) ->
+            val intent = Intent(context.applicationContext, Notification::class.java)
+            intent.putExtra(titleExtra, intentSaver.title)
+            intent.putExtra(messageExtra, intentSaver.message)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context.applicationContext,
+                notificationID,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            notificationMap[eventId] = pendingIntent
+        }
     }
 
     fun updatePlanName(planId: String, newName: String) {
@@ -325,6 +410,11 @@ class Model {
         this.calendar = Calendar("og")
         eventMap.clear()
         planMap.clear()
+        val keys = notificationMap.keys.toList()
+        keys.forEach { eventId ->
+            removeNotification(eventId)
+        }
+        notificationMap.clear()
         this.notifyView()
     }
 

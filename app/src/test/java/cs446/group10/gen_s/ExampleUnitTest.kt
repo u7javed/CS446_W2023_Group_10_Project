@@ -9,6 +9,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 
 
@@ -39,9 +40,9 @@ class ModelUnitTests {
         var event = Event(
             "test",
             "Test",
-            LocalDateTime.parse("2018-12-14T09:55:00").toEpochSecond(ZoneOffset.UTC),
-            LocalDateTime.parse("2019-12-14T09:55:00").toEpochSecond(ZoneOffset.UTC),
-            LocalDateTime.parse("2019-10-14T09:55:00").toEpochSecond(ZoneOffset.UTC)
+            LocalDateTime.parse("2018-12-14T09:55:00").atZone(ZoneId.systemDefault()).toEpochSecond(),
+            LocalDateTime.parse("2019-12-14T09:55:00").atZone(ZoneId.systemDefault()).toEpochSecond(),
+            LocalDateTime.parse("2019-10-14T09:55:00").atZone(ZoneId.systemDefault()).toEpochSecond()
         )
 
         model.addEvent(event)

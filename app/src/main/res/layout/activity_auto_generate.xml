@@ -52,7 +52,6 @@
                 <!--Plan start Date-->
                 <TextView
                     android:id="@+id/StartDateLabel"
-                    android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Start date" />
@@ -75,7 +74,6 @@
                 <!--Plan end Date-->
                 <TextView
                     android:id="@+id/EndDateLabel"
-                    android:layout_marginTop="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="End date" />
@@ -111,7 +109,6 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
                     android:text="End time per day" />
                 <Button
                     android:id="@+id/autoGeneratePlanEndTimeButton"
