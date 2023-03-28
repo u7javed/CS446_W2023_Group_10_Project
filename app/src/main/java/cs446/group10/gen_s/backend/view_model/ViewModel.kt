@@ -393,11 +393,15 @@ object ViewModel {
         technique: Technique,
         startRange: Long,
         endRange: Long,
+        notification: Long?,
         dayRestriction: Pair<LocalTime, LocalTime>,
         color: String
     ): Plan? {
         val plan: Plan = generateTechniquePlan(planName, technique, startRange, endRange, dayRestriction, color)
             ?: return null
+        plan.events.forEach {
+            it.notification = notification
+        }
         _model.addPlan(plan)
         scheduleMultipleNotifications(plan.events)
         return plan

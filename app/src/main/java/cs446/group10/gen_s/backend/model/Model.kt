@@ -410,7 +410,8 @@ class Model {
         this.calendar = Calendar("og")
         eventMap.clear()
         planMap.clear()
-        notificationMap.keys.forEach { eventId ->
+        val keys = notificationMap.keys.toList()
+        keys.forEach { eventId ->
             removeNotification(eventId)
         }
         notificationMap.clear()
