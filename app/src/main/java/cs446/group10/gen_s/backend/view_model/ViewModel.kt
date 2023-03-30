@@ -15,6 +15,7 @@ import cs446.group10.gen_s.backend.model.IView
 import cs446.group10.gen_s.backend.notifications.*
 import cs446.group10.gen_s.backend.techniques.Technique
 import cs446.group10.gen_s.backend.techniques.TechniqueFactory
+import java.io.File
 import java.time.*
 import java.time.format.DateTimeFormatter
 import kotlin.math.max
@@ -505,6 +506,39 @@ object ViewModel {
         val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeStr, _dateToEpochFormatter)
         return dateTime.toEpochSecond(ZoneOffset.UTC)
     }
+    // Group events ics file into individual lists
+// - used in case END:VEVENT comes after BEGIN:VEVENT in ics file
+    private fun getGroupedEventData(icsFileName : String): ArrayList<ArrayList<String>> {
+        val groupedEventData = ArrayList<ArrayList<String>>();
+        var reader = File(icsFileName).bufferedReader()
+        val iterator = reader.lineSequence().iterator()
+        while (iterator.hasNext()) {
+            var line = iterator.next()
+            if (line.contains("BEGIN:VEVENT")) {
+                line = iterator.next()
+                var eventData = arrayListOf<String>()
+                while (!line.contains("END:VEVENT")) {
+                    eventData.add(line)
+                    line = iterator.next()
+                }
+                groupedEventData.add(eventData)
+            }
+        }
+        return groupedEventData
+    }
+
+    private fun convertICSDateToDateTime(icsDate: String): String {
+        val len = icsDate.length
+        val date = icsDate.substring(0,4) + '-' + icsDate.substring(4,6) + '-' + icsDate.substring(6,8)
+        var time = ""
+        if (icsDate.length > 8) {
+            time += icsDate.substring(9, 11) + ':' + icsDate.substring(11, 13) + ':' + icsDate.substring(13, 15)
+            if (icsDate[len - 1] != 'Z') {
+                // convert to UTC time
+            }
+        }
+        return "$date $time"
+    }
     // function that takes in ics file name (stored in app/src/main/assets folder) and converts into list of events
     private fun icsToEvents (context: Context, icsFileName : String):  MutableList<Event> {
         //icsFileName = "testEce.ics"
@@ -528,7 +562,7 @@ object ViewModel {
                     // TODO: figure out how to add allday event
                     startDate = 20230317
                 }
-                else{ //not all-day event
+                else { // not all-day event
                     var dateTime = it.replace("DTSTART:", "")
                     // TODO: need to format dateTime (20230328T140000Z) - utc into 2023-03-28 10:00
                     var startDate = dateTimeToEpoch(dateTime)
@@ -539,7 +573,7 @@ object ViewModel {
                     var date = it.replace("DTEND;VALUE=DATE:", "")
                     // TODO: need to format date(20230317) into 2023-03-17
                     // TODO: figure out how to add allday event
-                    var endDate = 2023-03-17
+                    var endDate = "2023-03-17"
                 }
                 else{ //not all-day event
                     var dateTime = it.replace("DTSTART:", "")
