@@ -58,7 +58,12 @@ object ViewModel {
                 "on ${startTime.toLocalDate()} and ending at ${endTime.toLocalTime()} " +
                 "on ${endTime.toLocalDate()}."
 
-        _model.scheduleNotification(event.eventId, event.notification!! - zoneOffset, title, message)
+        _model.scheduleNotification(
+            event.eventId,
+            event.notification!! - zoneOffset,
+            title,
+            message
+        )
     }
 
     private fun scheduleMultipleNotifications(events: List<Event>) {
@@ -68,41 +73,65 @@ object ViewModel {
     }
 
     fun loadInitialData() {
-        _model.addEvent(generateEvent("Event 1",
-            dateTimeToEpoch("2023-02-06 04:00"),
-            dateTimeToEpoch("2023-02-06 05:00"), null))
-        _model.addEvent(generateEvent("Event 2",
-            dateTimeToEpoch("2023-02-06 12:00"),
-            dateTimeToEpoch("2023-02-06 14:00"), null))
-        _model.addEvent(generateEvent("Event 3",
-            dateTimeToEpoch("2023-02-07 10:00"),
-            dateTimeToEpoch("2023-02-07 12:30"), null))
-        _model.addEvent(generateEvent("Event 4",
-            dateTimeToEpoch("2023-03-03 07:00"),
-            dateTimeToEpoch("2023-03-03 12:41"), null))
-        _model.addEvent(generateEvent("Event 5",
-            dateTimeToEpoch("2023-03-03 13:00"),
-            dateTimeToEpoch("2023-03-03 15:00"), null))
+        _model.addEvent(
+            generateEvent(
+                "Event 1",
+                dateTimeToEpoch("2023-02-06 04:00"),
+                dateTimeToEpoch("2023-02-06 05:00"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 2",
+                dateTimeToEpoch("2023-02-06 12:00"),
+                dateTimeToEpoch("2023-02-06 14:00"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 3",
+                dateTimeToEpoch("2023-02-07 10:00"),
+                dateTimeToEpoch("2023-02-07 12:30"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 4",
+                dateTimeToEpoch("2023-03-03 07:00"),
+                dateTimeToEpoch("2023-03-03 12:41"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 5",
+                dateTimeToEpoch("2023-03-03 13:00"),
+                dateTimeToEpoch("2023-03-03 15:00"), null
+            )
+        )
 
         addPlanToCalendar(
             "Study Plan 1",
             listOf(
-                Preference("Class 1",
+                Preference(
+                    "Class 1",
                     LocalDateTime.of(2023, 3, 10, 10, 0).toEpochSecond(ZoneOffset.UTC),
                     LocalDateTime.of(2023, 3, 10, 18, 0).toEpochSecond(ZoneOffset.UTC),
                     3600
                 ),
-                Preference("Class 2",
+                Preference(
+                    "Class 2",
                     LocalDateTime.of(2023, 3, 11, 16, 0).toEpochSecond(ZoneOffset.UTC),
                     LocalDateTime.of(2023, 3, 11, 18, 0).toEpochSecond(ZoneOffset.UTC),
                     5600
                 ),
-                Preference("Class 3",
+                Preference(
+                    "Class 3",
                     LocalDateTime.of(2023, 3, 12, 10, 0).toEpochSecond(ZoneOffset.UTC),
                     LocalDateTime.of(2023, 3, 12, 18, 0).toEpochSecond(ZoneOffset.UTC),
                     1800
                 ),
-                Preference("Class 3",
+                Preference(
+                    "Class 3",
                     LocalDateTime.of(2023, 3, 13, 9, 0).toEpochSecond(ZoneOffset.UTC),
                     LocalDateTime.of(2023, 3, 13, 10, 0).toEpochSecond(ZoneOffset.UTC),
                     3600
@@ -114,38 +143,58 @@ object ViewModel {
             "#1BBA9B"
         )
 
-        _model.addEvent(generateEvent("Event 6",
-            dateTimeToEpoch("2023-03-04 10:00"),
-            dateTimeToEpoch("2023-03-04 10:30"), null))
-        _model.addEvent(generateEvent("Event 7",
-            dateTimeToEpoch("2023-03-05 14:00"),
-            dateTimeToEpoch("2023-03-05 16:00"), null))
-        _model.addEvent(generateEvent("Event 8",
-            dateTimeToEpoch("2023-03-06 10:00"),
-            dateTimeToEpoch("2023-03-06 18:00"), null))
-        _model.addEvent(generateEvent("Event 9",
-            dateTimeToEpoch("2023-03-06 19:00"),
-            dateTimeToEpoch("2023-03-06 20:00"), null))
+        _model.addEvent(
+            generateEvent(
+                "Event 6",
+                dateTimeToEpoch("2023-03-04 10:00"),
+                dateTimeToEpoch("2023-03-04 10:30"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 7",
+                dateTimeToEpoch("2023-03-05 14:00"),
+                dateTimeToEpoch("2023-03-05 16:00"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 8",
+                dateTimeToEpoch("2023-03-06 10:00"),
+                dateTimeToEpoch("2023-03-06 18:00"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 9",
+                dateTimeToEpoch("2023-03-06 19:00"),
+                dateTimeToEpoch("2023-03-06 20:00"), null
+            )
+        )
 
         addPlanToCalendar(
             "Study Plan 2",
             listOf(
-                Preference("Class 4",
+                Preference(
+                    "Class 4",
                     LocalDateTime.of(2023, 3, 16, 10, 0).toEpochSecond(ZoneOffset.UTC),
                     LocalDateTime.of(2023, 3, 16, 18, 0).toEpochSecond(ZoneOffset.UTC),
                     3600
                 ),
-                Preference("Class 5",
+                Preference(
+                    "Class 5",
                     LocalDateTime.of(2023, 3, 16, 16, 0).toEpochSecond(ZoneOffset.UTC),
                     LocalDateTime.of(2023, 3, 16, 18, 0).toEpochSecond(ZoneOffset.UTC),
                     5600
                 ),
-                Preference("Class 6",
+                Preference(
+                    "Class 6",
                     LocalDateTime.of(2023, 3, 17, 10, 0).toEpochSecond(ZoneOffset.UTC),
                     LocalDateTime.of(2023, 3, 17, 18, 0).toEpochSecond(ZoneOffset.UTC),
                     1800
                 ),
-                Preference("Class 7",
+                Preference(
+                    "Class 7",
                     LocalDateTime.of(2023, 3, 18, 9, 0).toEpochSecond(ZoneOffset.UTC),
                     LocalDateTime.of(2023, 3, 18, 10, 0).toEpochSecond(ZoneOffset.UTC),
                     3600
@@ -157,21 +206,41 @@ object ViewModel {
             "#EF233D"
         )
 
-        _model.addEvent(generateEvent("Event 10",
-            dateTimeToEpoch("2023-03-07 10:00"),
-            dateTimeToEpoch("2023-03-07 12:00"), null))
-        _model.addEvent(generateEvent("Event 11",
-            dateTimeToEpoch("2023-03-07 12:30"),
-            dateTimeToEpoch("2023-03-07 16:00"), null))
-        _model.addEvent(generateEvent("Event 12",
-            dateTimeToEpoch("2023-03-07 16:00"),
-            dateTimeToEpoch("2023-03-07 17:00"), null))
-        _model.addEvent(generateEvent("Event 13",
-            dateTimeToEpoch("2023-04-05 08:00"),
-            dateTimeToEpoch("2023-04-05 08:15"), null))
-        _model.addEvent(generateEvent("Event 14",
-            dateTimeToEpoch("2023-04-05 12:00"),
-            dateTimeToEpoch("2023-04-05 13:15"), null))
+        _model.addEvent(
+            generateEvent(
+                "Event 10",
+                dateTimeToEpoch("2023-03-07 10:00"),
+                dateTimeToEpoch("2023-03-07 12:00"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 11",
+                dateTimeToEpoch("2023-03-07 12:30"),
+                dateTimeToEpoch("2023-03-07 16:00"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 12",
+                dateTimeToEpoch("2023-03-07 16:00"),
+                dateTimeToEpoch("2023-03-07 17:00"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 13",
+                dateTimeToEpoch("2023-04-05 08:00"),
+                dateTimeToEpoch("2023-04-05 08:15"), null
+            )
+        )
+        _model.addEvent(
+            generateEvent(
+                "Event 14",
+                dateTimeToEpoch("2023-04-05 12:00"),
+                dateTimeToEpoch("2023-04-05 13:15"), null
+            )
+        )
     }
 
     fun does() {
@@ -218,7 +287,12 @@ object ViewModel {
             // Go through each of the existing events and find open spaces between them
             for (i in 1 until existingEvents.size) {
                 if (existingEvents[i].startDate - existingEvents[i - 1].endDate > 0)
-                    _openSpaces.add(Space(existingEvents[i - 1].endDate, existingEvents[i].startDate))
+                    _openSpaces.add(
+                        Space(
+                            existingEvents[i - 1].endDate,
+                            existingEvents[i].startDate
+                        )
+                    )
             }
 
             // Check if the end of the last existing event and the end of the preference range contain an open space
@@ -279,7 +353,8 @@ object ViewModel {
 
                 // Situation 4: If the open space starts before the preference start and the open space ends after the
                 // preference end, then that space has enough for this preference by definition
-                val situation4 = (space.start < preference.startRange && space.end > preference.endRange)
+                val situation4 =
+                    (space.start < preference.startRange && space.end > preference.endRange)
 
                 if (situation3 || situation4) {
                     // The event starts from the preference start and goes until preference start + duration
@@ -342,12 +417,19 @@ object ViewModel {
             return null
         }
         val planId: String = IdManager.generateId()
-        val newEvents: List<Event> = allocationAlgorithm(preferences, startRange, endRange, planId, color)
-            ?:
-            return null
+        val newEvents: List<Event> =
+            allocationAlgorithm(preferences, startRange, endRange, planId, color)
+                ?: return null
         val sanitizedName: String = ViewModelHelper.sanitizePlanName(planName)
         val startEndPair: Pair<Long, Long> = getStartAndEnd(newEvents)
-        return Plan(planId, sanitizedName, startEndPair.first, startEndPair.second, newEvents as MutableList<Event>, color)
+        return Plan(
+            planId,
+            sanitizedName,
+            startEndPair.first,
+            startEndPair.second,
+            newEvents as MutableList<Event>,
+            color
+        )
     }
 
     fun addPlanToCalendar(
@@ -359,8 +441,7 @@ object ViewModel {
         color: String? = null
     ): Plan? {
         val plan: Plan = generatePlan(planName, preferences, startRange, endRange, color)
-            ?:
-            return null
+            ?: return null
         plan.events.forEach {
             it.notification = notification
         }
@@ -391,7 +472,14 @@ object ViewModel {
         }
         val sanitizedName: String = ViewModelHelper.sanitizePlanName(planName)
         val startEndPair: Pair<Long, Long> = getStartAndEnd(events)
-        return Plan(planId, sanitizedName, startEndPair.first, startEndPair.second, events as MutableList<Event>, color)
+        return Plan(
+            planId,
+            sanitizedName,
+            startEndPair.first,
+            startEndPair.second,
+            events as MutableList<Event>,
+            color
+        )
 
     }
 
@@ -404,8 +492,9 @@ object ViewModel {
         dayRestriction: Pair<LocalTime, LocalTime>,
         color: String
     ): Plan? {
-        val plan: Plan = generateTechniquePlan(planName, technique, startRange, endRange, dayRestriction, color)
-            ?: return null
+        val plan: Plan =
+            generateTechniquePlan(planName, technique, startRange, endRange, dayRestriction, color)
+                ?: return null
         plan.events.forEach {
             it.notification = notification
         }
@@ -458,7 +547,14 @@ object ViewModel {
         _model.deleteCalendar()
     }
 
-    fun updateEventInCalendar(eventId: String, name: String, startDate: Long, endDate: Long, notification: Long?, planId: String? = null): Boolean {
+    fun updateEventInCalendar(
+        eventId: String,
+        name: String,
+        startDate: Long,
+        endDate: Long,
+        notification: Long?,
+        planId: String? = null
+    ): Boolean {
         val updatedEvent = Event("holder", name, startDate, endDate, notification)
         val result = _model.updateEvent(eventId, updatedEvent, planId)
         if (notification != null)
@@ -506,9 +602,10 @@ object ViewModel {
         val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeStr, _dateToEpochFormatter)
         return dateTime.toEpochSecond(ZoneOffset.UTC)
     }
+
     // Group events ics file into individual lists
 // - used in case END:VEVENT comes after BEGIN:VEVENT in ics file
-    private fun getGroupedEventData(icsFileName : String): ArrayList<ArrayList<String>> {
+    private fun getGroupedEventData(icsFileName: String): ArrayList<ArrayList<String>> {
         val groupedEventData = ArrayList<ArrayList<String>>();
         var reader = File(icsFileName).bufferedReader()
         val iterator = reader.lineSequence().iterator()
@@ -528,69 +625,54 @@ object ViewModel {
     }
 
     private fun convertICSDateToDateTime(icsDate: String): String {
-        val len = icsDate.length
-        val date = icsDate.substring(0,4) + '-' + icsDate.substring(4,6) + '-' + icsDate.substring(6,8)
+        val date =
+            icsDate.substring(0, 4) + '-' + icsDate.substring(4, 6) + '-' + icsDate.substring(6, 8)
         var time = ""
         if (icsDate.length > 8) {
-            time += icsDate.substring(9, 11) + ':' + icsDate.substring(11, 13) + ':' + icsDate.substring(13, 15)
-            if (icsDate[len - 1] != 'Z') {
-                // convert to UTC time
-            }
+            time += icsDate.substring(9, 11) + ':' + icsDate.substring(11, 13)
         }
-        return "$date $time"
+        return "$date $time".trim()
     }
-    // function that takes in ics file name (stored in app/src/main/assets folder) and converts into list of events
-    private fun icsToEvents (context: Context, icsFileName : String):  MutableList<Event> {
-        //icsFileName = "testEce.ics"
-        var eventList : MutableList<Event> = mutableListOf()
-        val icsStringList = context.assets.open(icsFileName).bufferedReader().use {
-            it.readLines()
+
+    private fun icsToEvents(icsFileName: String) {
+        var groupedEventData: ArrayList<ArrayList<String>> = getGroupedEventData(icsFileName)
+
+        for (eventData in groupedEventData) {
+            var name: String = ""
+            var startDate: Long = 0
+            var endDate: Long = 0
+
+            eventData.forEach {
+                if (it.contains("SUMMARY:")) {
+                    name = it.replace("SUMMARY:", "")
+                    println("name: $name")
+                }
+                if (it.contains("DTSTART")) {
+                    if (it.contains(";VALUE=DATE:")) { //all-day event
+                        var date = it.replace("DTSTART;VALUE=DATE:", "")
+                        date += "T000000Z"
+                        val convertedDate = convertICSDateToDateTime(date)
+                        startDate = dateTimeToEpoch(convertedDate)
+                    } else { // not all-day event
+                        var dateTime = it.replace("DTSTART:", "")
+                        val convertedDate = convertICSDateToDateTime(dateTime)
+                        startDate = dateTimeToEpoch(convertedDate)
+                    }
+                }
+                if (it.contains("DTEND")) {
+                    if (it.contains(";VALUE=DATE:")) { //all-day event
+                        var date = it.replace("DTEND;VALUE=DATE:", "")
+                        date += "T000000Z"
+                        val convertedDate = convertICSDateToDateTime(date)
+                        endDate = dateTimeToEpoch(convertedDate)
+                    } else { // not all-day event
+                        var dateTime = it.replace("DTEND:", "")
+                        val convertedDate = convertICSDateToDateTime(dateTime)
+                        endDate = dateTimeToEpoch(convertedDate)
+                    }
+                }
+            }
+            addEventToCalendar(name, startDate, endDate, null)
         }
-
-        var name : String? = null
-        var startDate : Long? = null
-        var endDate : Long? = null
-
-        icsStringList.forEach{
-            if (it.contains("SUMMARY:")){
-                name = it.replace("SUMMARY:", "")
-            }
-            if (it.contains("DTSTART")){
-                if (it.contains(";VALUE=DATE:")){ //all-day event
-                    var date = it.replace("DTSTART;VALUE=DATE:", "")
-                    // TODO: need to format date(20230317) into 2023-03-17
-                    // TODO: figure out how to add allday event
-                    startDate = 20230317
-                }
-                else { // not all-day event
-                    var dateTime = it.replace("DTSTART:", "")
-                    // TODO: need to format dateTime (20230328T140000Z) - utc into 2023-03-28 10:00
-                    var startDate = dateTimeToEpoch(dateTime)
-                }
-            }
-            if (it.contains("DTEND")){
-                if (it.contains(";VALUE=DATE:")){ //all-day event
-                    var date = it.replace("DTEND;VALUE=DATE:", "")
-                    // TODO: need to format date(20230317) into 2023-03-17
-                    // TODO: figure out how to add allday event
-                    var endDate = "2023-03-17"
-                }
-                else{ //not all-day event
-                    var dateTime = it.replace("DTSTART:", "")
-                    // TODO: need to format dateTime (20230328T140000Z) - UTC into 2023-03-28 10:00
-                    var endDate = dateTimeToEpoch(dateTime)
-                }
-            }
-
-            if (it.contains("END:VEVENT")){ // denotes line with all the info about event
-                //add event to event list
-                if (name != null && startDate != null && endDate != null){
-                    var event = generateEvent(name!!, startDate!!, endDate, null, null, null)
-                    eventList.add(event)
-                }
-            }
-        }
-
-        return eventList
     }
 }
