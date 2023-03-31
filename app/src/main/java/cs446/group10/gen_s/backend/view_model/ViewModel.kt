@@ -605,9 +605,9 @@ object ViewModel {
 
     // Group events ics file into individual lists
 // - used in case END:VEVENT comes after BEGIN:VEVENT in ics file
-    private fun getGroupedEventData(icsFileName: String): ArrayList<ArrayList<String>> {
+    private fun getGroupedEventData(context : Context, icsFileName: String): ArrayList<ArrayList<String>> {
         val groupedEventData = ArrayList<ArrayList<String>>();
-        var reader = File(icsFileName).bufferedReader()
+        var reader = context.assets.open(icsFileName).bufferedReader()
         val iterator = reader.lineSequence().iterator()
         while (iterator.hasNext()) {
             var line = iterator.next()
@@ -634,8 +634,8 @@ object ViewModel {
         return "$date $time".trim()
     }
 
-    private fun icsToEvents(icsFileName: String) {
-        var groupedEventData: ArrayList<ArrayList<String>> = getGroupedEventData(icsFileName)
+    private fun icsToEvents(context : Context, icsFileName: String) {
+        var groupedEventData: ArrayList<ArrayList<String>> = getGroupedEventData(context, icsFileName)
 
         for (eventData in groupedEventData) {
             var name: String = ""
