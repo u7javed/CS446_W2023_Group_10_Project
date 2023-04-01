@@ -27,11 +27,12 @@ class ImportCalendarActivity : AppCompatActivity() {
     }
 
     private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        val text = "Hello toast!"
         val duration = Toast.LENGTH_SHORT
 
         val toast = Toast.makeText(applicationContext, uri.toString(), duration)
         toast.show()
+
+        //TO-DO: pass uri to backend
     }
 
     private fun openDocumentPicker() {
