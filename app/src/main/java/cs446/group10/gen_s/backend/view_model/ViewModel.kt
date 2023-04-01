@@ -661,8 +661,14 @@ object ViewModel {
         return "$date $time".trim()
     }
 
-    fun icsToEvents(icsFile : Uri) {
-        var groupedEventData: ArrayList<ArrayList<String>> = getGroupedEventData(icsFile)
+    fun icsToEvents(icsFile : Uri): Int {
+        var groupedEventData: ArrayList<ArrayList<String>>
+        try{
+            groupedEventData = getGroupedEventData(icsFile)
+        } catch (e: Exception) {
+            println("Pull from storage failed! $e")
+            return 1
+        }
 
         for (eventData in groupedEventData) {
             var name: String = ""
@@ -701,5 +707,6 @@ object ViewModel {
             }
             addEventToCalendar(name, startDate, endDate, null)
         }
+        return 0
     }
 }
