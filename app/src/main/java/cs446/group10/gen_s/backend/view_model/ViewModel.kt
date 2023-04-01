@@ -241,6 +241,9 @@ object ViewModel {
                 dateTimeToEpoch("2023-04-05 13:15"), null
             )
         )
+        // testing ics stuff
+        icsToEvents("testEce.ics")
+        //icsToEvents("testGoogleCalendar.ics")
     }
 
     fun does() {
@@ -635,7 +638,7 @@ object ViewModel {
         return "$date $time".trim()
     }
 
-    private fun icsToEvents(icsFileName: String) {
+    fun icsToEvents(icsFileName: String) {
         var groupedEventData: ArrayList<ArrayList<String>> = getGroupedEventData(icsFileName)
 
         for (eventData in groupedEventData) {
@@ -666,6 +669,7 @@ object ViewModel {
                         date += "T000000Z"
                         val convertedDate = convertICSDateToDateTime(date)
                         endDate = dateTimeToEpoch(convertedDate)
+                        endDate -= 60 // from 12 am of day to 11:59 pm of previous day
                     } else { // not all-day event
                         var dateTime = it.replace("DTEND:", "")
                         val convertedDate = convertICSDateToDateTime(dateTime)
