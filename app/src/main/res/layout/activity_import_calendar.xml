@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnImportCalendar"
             android:layout_width="262dp"
             android:layout_height="49dp"
             android:backgroundTint="#4472AF"
