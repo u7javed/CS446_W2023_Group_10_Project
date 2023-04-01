@@ -45,6 +45,10 @@ class Model {
         this.context = context
     }
 
+    fun getContext() : Context {
+        return this.context
+    }
+
     fun addView(view: IView) {
         this.views.add(view)
 
