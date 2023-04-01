@@ -4,6 +4,15 @@ import IdManager
 import ViewModelHelper
 import android.content.Context
 import android.net.Uri
+import android.content.Intent
+import android.util.Log
+import android.widget.DatePicker
+import android.widget.TimePicker
+import androidx.lifecycle.ViewModel
+import cs446.group10.gen_s.DatePickerFragment
+import cs446.group10.gen_s.DateVal
+import cs446.group10.gen_s.TimePickerFragment
+import cs446.group10.gen_s.TimeVal
 import cs446.group10.gen_s.backend.dataClasses.*
 import cs446.group10.gen_s.backend.model.IView
 import cs446.group10.gen_s.backend.model.Model
@@ -440,6 +449,22 @@ object ViewModel {
         notification: Long? = null,
         color: String? = null
     ): Plan? {
+//        if (notification == null) {
+//            Log.e("NOTIFICATION", "Notification is null");
+//        } else {
+//            val notifDateTime = LocalDateTime.ofEpochSecond(notification, 0, ZoneOffset.UTC)
+//            val notifDate = DateVal(
+//                notifDateTime.year,
+//                notifDateTime.monthValue - 1,
+//                notifDateTime.dayOfMonth,
+//            );
+//            val notifTime = TimeVal(
+//                notifDateTime.hour,
+//                notifDateTime.minute,
+//            );
+//            Log.e("NOTIFICATION", "Notification date is " + DatePickerFragment.convertDateToString(notifDate));
+//            Log.e("NOTIFICATION", "Notification time is " + TimePickerFragment.convertTimeToString(notifTime));
+//        }
         val plan: Plan = generatePlan(planName, preferences, startRange, endRange, color)
             ?: return null
         plan.events.forEach {

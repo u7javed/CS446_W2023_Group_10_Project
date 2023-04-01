@@ -15,14 +15,22 @@ import java.time.format.DateTimeFormatter
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerClickListener
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 
+data class NotificationDetail(
+    var notificationOn: Boolean,
+    var notificationTime: String,
+    var notificationUnitPosition: Int,
+)
 data class PlanBasicInfoDetail(
     val valid: Boolean,
     val planName: String,
     var startDate: DateVal?,
     var endDate: DateVal?,
     var planColor: String,
+    var notification: NotificationDetail,
 )
 
 
@@ -37,22 +45,30 @@ class PlanBasicInfoFragment(
 
     private var startDate: DateVal? = null;
     private var endDate: DateVal? = null;
+    private var pickedColorHex: Int = 0x0;
+    private var planColor: String = "#ff000000";
     private var notificationOn: Boolean = false;
-    private var pickedColorHex: Int = 0x0
-    private var planColor: String = "#ff000000"
+    private var notificationTime = "";
+    private var notificationUnitPosition = 0;
     private lateinit var nameTextField: EditText;
-    private lateinit var selectColorButton: MaterialButton;
     private lateinit var selectedColorBox: View;
     private lateinit var colorPicker: AlertDialog;
+    private lateinit var notificationSwitch: Switch;
+    private lateinit var notificationTimeEditText: EditText;
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         startDate = initialPlanBasicInfo.startDate;
         endDate = initialPlanBasicInfo.endDate;
-        notificationOn = false;
         nameTextField = view.findViewById(R.id.PlanNameTextField);
         nameTextField.setText(initialPlanBasicInfo.planName);
         planColor = initialPlanBasicInfo.planColor;
         selectedColorBox = view.findViewById(R.id.colorSelectedView);
         selectedColorBox.setBackgroundColor(Color.parseColor(planColor));
+        notificationOn = initialPlanBasicInfo.notification.notificationOn;
+        notificationTimeEditText = view.findViewById(R.id.NotificationTime);
+        if (notificationOn) {
+            notificationUnitPosition = initialPlanBasicInfo.notification.notificationUnitPosition;
+            notificationTime = initialPlanBasicInfo.notification.notificationTime;
+        }
 
         val chosenStartDate = view.findViewById<TextView>(R.id.chosenPlanStartDate);
         if (startDate != null) {
@@ -107,7 +123,7 @@ class PlanBasicInfoFragment(
         }
 
         // notification
-        val notificationSwitch = view.findViewById<Switch>(R.id.NotificationSwitch);
+        notificationSwitch = view.findViewById(R.id.NotificationSwitch);
         notificationSwitch.isChecked = notificationOn;
 
         val notificationDetails = view.findViewById<LinearLayout>(R.id.NotificationDetails);
@@ -118,16 +134,33 @@ class PlanBasicInfoFragment(
             notificationDetails.visibility = if (notificationOn) View.VISIBLE else View.GONE;
         })
 
+        notificationTimeEditText.setText(notificationTime);
+
         val timeUnits = resources.getStringArray(R.array.UnitsOfTime);
         val timeUnitsSpinner = view.findViewById<Spinner>(R.id.NotificationUnit)
         if (timeUnitsSpinner != null) {
             val adapter = context?.let {
                 ArrayAdapter(
                     it,
-                    android.R.layout.simple_spinner_item, timeUnits
+                    android.R.layout.simple_spinner_item,
+                    timeUnits
                 )
             }
+            if (adapter != null) {
+                timeUnitsSpinner.setSelection(notificationUnitPosition);
+            };
             timeUnitsSpinner.adapter = adapter;
+            timeUnitsSpinner.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?, position: Int, id: Long) {
+                        notificationUnitPosition = position;
+                        }
+                    override fun onNothingSelected(p0: AdapterView<*>?) {
+                        notificationUnitPosition = -1;
+                    }
+                }
         }
 
         // colour picker
@@ -147,38 +180,86 @@ class PlanBasicInfoFragment(
             }
             .build()
 
-
-        selectColorButton = view.findViewById(R.id.selectColorButton)
-
-        selectColorButton.setOnClickListener {
+        selectedColorBox.setOnClickListener {
             colorPicker.show()
         }
     }
 
     public fun getPlanBasicInfo(): PlanBasicInfoDetail {
-        return PlanBasicInfoFragment.formPlanBasicInfo(nameTextField, startDate, endDate, planColor);
+        return PlanBasicInfoFragment.formPlanBasicInfo(
+            nameTextField,
+            startDate,
+            endDate,
+            planColor,
+            NotificationDetail(
+                notificationSwitch.isChecked,
+                notificationTimeEditText.text.toString(),
+                notificationUnitPosition,
+            ),
+        );
     }
 
     companion object {
-        fun formPlanBasicInfo(planName: String, startDate: DateVal?, endDate: DateVal?, planColor: String): PlanBasicInfoDetail {
+        fun getMultiplierFromUnitPosition(position: Int): Long {
+            val notificationMultiplier = when(position) {
+                0 -> 60L
+                1 -> 3600L
+                2 -> 86400L
+                3 -> 604800L
+                4 -> 2628000L
+                else -> 0L
+            };
+            return notificationMultiplier;
+        }
+
+        fun validateNotification(notification: NotificationDetail, startDate: DateVal?): Boolean {
+            if (startDate == null) {
+                return false;
+            }
+            var valid = true;
+            if (notification.notificationOn) {
+                if (notification.notificationTime.isEmpty()) {
+                    valid = false;
+                } else {
+                    val notificationMultiplier = getMultiplierFromUnitPosition(notification.notificationUnitPosition);
+                    val startDateLong = LocalDateTime.of(
+                        startDate.year,
+                        startDate.month + 1,
+                        startDate.day,
+                        0,
+                        0,
+                    ).toEpochSecond(ZoneOffset.UTC);
+                    if (startDateLong - (notification.notificationTime.toLong() * notificationMultiplier) <=
+                        LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)) {
+                        valid = false;
+                    }
+                }
+            }
+            return valid;
+        }
+        fun formPlanBasicInfo(planName: String, startDate: DateVal?, endDate: DateVal?, planColor: String, notification: NotificationDetail): PlanBasicInfoDetail {
             var valid = planName != "" && startDate != null && endDate != null && planColor != "";
+            valid = valid && validateNotification(notification, startDate);
             return PlanBasicInfoDetail(
                 valid,
                 planName,
                 startDate,
                 endDate,
                 planColor,
+                notification,
             )
         }
-        fun formPlanBasicInfo(nameTextField: EditText, startDate: DateVal?, endDate: DateVal?, planColor: String): PlanBasicInfoDetail {
+        fun formPlanBasicInfo(nameTextField: EditText, startDate: DateVal?, endDate: DateVal?, planColor: String, notification: NotificationDetail): PlanBasicInfoDetail {
             var valid = nameTextField != null && startDate != null && endDate != null && planColor != "";
             valid = valid && nameTextField!!.text.toString() != "";
+            valid = valid && validateNotification(notification, startDate);
             return PlanBasicInfoDetail(
                 valid,
                 nameTextField!!.text.toString(),
                 startDate,
                 endDate,
                 planColor,
+                notification
             )
         }
     }
