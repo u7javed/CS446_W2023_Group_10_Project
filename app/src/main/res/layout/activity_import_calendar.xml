@@ -18,6 +18,7 @@
             android:id="@+id/btnImportCalendar"
             android:layout_width="262dp"
             android:layout_height="49dp"
+            android:layout_marginBottom="20dp"
             android:backgroundTint="#4472AF"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
