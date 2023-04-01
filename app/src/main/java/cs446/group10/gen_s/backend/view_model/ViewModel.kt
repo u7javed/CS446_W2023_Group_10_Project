@@ -604,15 +604,12 @@ object ViewModel {
     }
 
     // Group events ics file into individual lists
-// - used in case END:VEVENT comes after BEGIN:VEVENT in ics file
+    // - used in case END:VEVENT comes after BEGIN:VEVENT in ics file
     private fun getGroupedEventData(icsFile : Uri): ArrayList<ArrayList<String>> {
-
         val `in`: InputStream? = _model.getContext().contentResolver.openInputStream(icsFile)
         val reader = BufferedReader(InputStreamReader(`in`))
 
         val groupedEventData = ArrayList<ArrayList<String>>()
-        // var reader = _model.getContext().openFileInput(icsFileName).bufferedReader()
-        // var reader = _model.getContext().assets.open(icsFileName).bufferedReader()
         val iterator = reader.lineSequence().iterator()
         while (iterator.hasNext()) {
             var line = iterator.next()
@@ -650,7 +647,6 @@ object ViewModel {
             eventData.forEach {
                 if (it.contains("SUMMARY:")) {
                     name = it.replace("SUMMARY:", "")
-                    println("name: $name")
                 }
                 if (it.contains("DTSTART")) {
                     if (it.contains(";VALUE=DATE:")) { //all-day event
