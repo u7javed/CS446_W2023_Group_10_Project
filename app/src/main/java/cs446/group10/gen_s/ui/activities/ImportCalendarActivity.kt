@@ -11,7 +11,7 @@ import cs446.group10.gen_s.backend.view_model.ViewModel.icsToEvents
 
 
 class ImportCalendarActivity : AppCompatActivity() {
-    val PICKFILE_RESULT_CODE = 2
+
     private lateinit var btnImport: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,14 @@ class ImportCalendarActivity : AppCompatActivity() {
         val duration = Toast.LENGTH_SHORT
 
         if (uri != null) {
-            icsToEvents(uri)
+            var errorCodeImportCal = icsToEvents(uri)
+            if (errorCodeImportCal == 1) {
+                val toast = Toast.makeText(applicationContext, "Unable to import calendar due to file type or conflicts", duration)
+                toast.show()
+            } else if (errorCodeImportCal == 0) {
+                val toast = Toast.makeText(applicationContext, "Import calendar successfully", duration)
+                toast.show()
+            }
         } else {
             val toast = Toast.makeText(applicationContext, "URI not selected", duration)
             toast.show()
@@ -37,7 +44,7 @@ class ImportCalendarActivity : AppCompatActivity() {
     }
 
     private fun openDocumentPicker() {
-        getContent.launch("*/*")
+        getContent.launch("text/calendar")
     }
 
     override fun onSupportNavigateUp(): Boolean {
