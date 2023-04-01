@@ -3,6 +3,7 @@ package cs446.group10.gen_s.ui.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import cs446.group10.gen_s.*
 import cs446.group10.gen_s.backend.dataClasses.Preference
@@ -138,7 +139,7 @@ class GeneratePlanActivity : AppCompatActivity() {
                 59
             ).toEpochSecond(ZoneOffset.UTC),
             notificationLong, // TODO: add notification in the form of EPOCH SECONDS (UTC OFFSET) here
-            planColor,
+            planBasicInfo.planColor,
         )
 
         if (newPlan == null) {
