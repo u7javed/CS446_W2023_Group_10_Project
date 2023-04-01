@@ -2,25 +2,22 @@ package cs446.group10.gen_s.backend.view_model
 
 import IdManager
 import ViewModelHelper
-import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import cs446.group10.gen_s.backend.model.Model
-import androidx.lifecycle.ViewModel
+import android.net.Uri
 import cs446.group10.gen_s.backend.dataClasses.*
 import cs446.group10.gen_s.backend.model.IView
+import cs446.group10.gen_s.backend.model.Model
 import cs446.group10.gen_s.backend.notifications.*
 import cs446.group10.gen_s.backend.techniques.Technique
 import cs446.group10.gen_s.backend.techniques.TechniqueFactory
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.time.*
 import java.time.format.DateTimeFormatter
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.time.Duration.Companion.milliseconds
 
 object ViewModel {
 
@@ -242,7 +239,7 @@ object ViewModel {
             )
         )
         // testing ics stuff
-        icsToEvents("testEce.ics")
+        //icsToEvents("testEce.ics")
         //icsToEvents("testGoogleCalendar.ics")
     }
 
@@ -608,10 +605,14 @@ object ViewModel {
 
     // Group events ics file into individual lists
 // - used in case END:VEVENT comes after BEGIN:VEVENT in ics file
-    private fun getGroupedEventData(icsFileName: String): ArrayList<ArrayList<String>> {
-        val groupedEventData = ArrayList<ArrayList<String>>()
+    private fun getGroupedEventData(icsFile : Uri): ArrayList<ArrayList<String>> {
 
-        var reader = _model.getContext().assets.open(icsFileName).bufferedReader()
+        val `in`: InputStream? = _model.getContext().contentResolver.openInputStream(icsFile)
+        val reader = BufferedReader(InputStreamReader(`in`))
+
+        val groupedEventData = ArrayList<ArrayList<String>>()
+        // var reader = _model.getContext().openFileInput(icsFileName).bufferedReader()
+        // var reader = _model.getContext().assets.open(icsFileName).bufferedReader()
         val iterator = reader.lineSequence().iterator()
         while (iterator.hasNext()) {
             var line = iterator.next()
@@ -638,8 +639,8 @@ object ViewModel {
         return "$date $time".trim()
     }
 
-    fun icsToEvents(icsFileName: String) {
-        var groupedEventData: ArrayList<ArrayList<String>> = getGroupedEventData(icsFileName)
+    fun icsToEvents(icsFile : Uri) {
+        var groupedEventData: ArrayList<ArrayList<String>> = getGroupedEventData(icsFile)
 
         for (eventData in groupedEventData) {
             var name: String = ""
