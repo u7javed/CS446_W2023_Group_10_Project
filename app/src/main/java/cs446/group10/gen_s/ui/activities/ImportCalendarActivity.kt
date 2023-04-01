@@ -1,10 +1,8 @@
 package cs446.group10.gen_s.ui.activities
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +18,7 @@ class ImportCalendarActivity : AppCompatActivity() {
         setContentView(R.layout.activity_import_calendar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "Import cs446.group10.gen_s.backend.dataClasses.Calendar"
+        supportActionBar?.title = "Import Calendar"
         btnImport = findViewById<Button>(R.id.btnImportCalendar)
         btnImport.setOnClickListener {
             openDocumentPicker()
