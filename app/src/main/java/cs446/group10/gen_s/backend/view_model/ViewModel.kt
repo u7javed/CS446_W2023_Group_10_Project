@@ -4,23 +4,12 @@ import IdManager
 import ViewModelHelper
 import android.content.Context
 import android.net.Uri
-import android.content.Intent
-import android.util.Log
-import android.widget.DatePicker
-import android.widget.TimePicker
-import androidx.lifecycle.ViewModel
-import cs446.group10.gen_s.DatePickerFragment
-import cs446.group10.gen_s.DateVal
-import cs446.group10.gen_s.TimePickerFragment
-import cs446.group10.gen_s.TimeVal
 import cs446.group10.gen_s.backend.dataClasses.*
 import cs446.group10.gen_s.backend.model.IView
 import cs446.group10.gen_s.backend.model.Model
-import cs446.group10.gen_s.backend.notifications.*
 import cs446.group10.gen_s.backend.techniques.Technique
 import cs446.group10.gen_s.backend.techniques.TechniqueFactory
 import java.io.BufferedReader
-import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.time.*
@@ -630,14 +619,19 @@ object ViewModel {
 
     // Group events ics file into individual lists
     // - used in case END:VEVENT comes after BEGIN:VEVENT in ics file
-    private fun getGroupedEventData(icsFile : Uri): ArrayList<ArrayList<String>> {
+    private fun getGroupedEventData(icsFile : Uri): Pair<ArrayList<ArrayList<String>>, String> {
         val `in`: InputStream? = _model.getContext().contentResolver.openInputStream(icsFile)
         val reader = BufferedReader(InputStreamReader(`in`))
 
         val groupedEventData = ArrayList<ArrayList<String>>()
+        var zoneId = ""
         val iterator = reader.lineSequence().iterator()
         while (iterator.hasNext()) {
             var line = iterator.next()
+            if (line.contains("X-WR-TIMEZONE:")) {
+                zoneId = line.replace("X-WR-TIMEZONE:", "")
+                line = iterator.next()
+            }
             if (line.contains("BEGIN:VEVENT")) {
                 line = iterator.next()
                 var eventData = arrayListOf<String>()
@@ -648,23 +642,39 @@ object ViewModel {
                 groupedEventData.add(eventData)
             }
         }
-        return groupedEventData
+        return Pair(groupedEventData, zoneId)
     }
 
-    private fun convertICSDateToDateTime(icsDate: String): String {
-        val date =
-            icsDate.substring(0, 4) + '-' + icsDate.substring(4, 6) + '-' + icsDate.substring(6, 8)
-        var time = ""
-        if (icsDate.length > 8) {
-            time += icsDate.substring(9, 11) + ':' + icsDate.substring(11, 13)
-        }
+    private fun convertUTCStrToLocaleStr(dateTimeStr: String, zoneId: String): String {
+        // needs to look like 20230329T090000
+        val dateTime: LocalDateTime = LocalDateTime.parse(dateTimeStr, _dateToEpochFormatter)
+        val zonedUTC = dateTime.atZone(ZoneId.of("UTC"))
+        var zonedIST = zonedUTC.withZoneSameInstant(ZoneId.of(zoneId))
+        var zonedISTStr = zonedIST.toString().replace("-", "")
+        zonedISTStr = zonedISTStr.replace(":", "")
+        zonedISTStr = zonedISTStr.substring(0, 14) + "00Z"
+        return zonedISTStr // in UTC notation but now in locale time
+    }
+
+    private fun convertICSFormatToDateFormat(icsDate: String): String {
+        val date = icsDate.substring(0,4) + '-' + icsDate.substring(4,6) + '-' + icsDate.substring(6,8)
+        var time = icsDate.substring(9, 11) + ':' + icsDate.substring(11, 13)
         return "$date $time".trim()
+    }
+
+    private fun convertICSDateToDateTime(icsDate: String, zoneId: String): String {
+        var utcDateTime = convertICSFormatToDateFormat(icsDate)
+        var localICSDateTime = convertUTCStrToLocaleStr(utcDateTime, zoneId)
+        var localDateTime = convertICSFormatToDateFormat(localICSDateTime)
+        return localDateTime
     }
 
     fun icsToEvents(icsFile : Uri): Int {
         var groupedEventData: ArrayList<ArrayList<String>>
+        var zoneId: String
         try{
-            groupedEventData = getGroupedEventData(icsFile)
+            groupedEventData = getGroupedEventData(icsFile).first
+            zoneId = getGroupedEventData(icsFile).second
         } catch (e: Exception) {
             println("Pull from storage failed! $e")
             return 1
@@ -683,11 +693,11 @@ object ViewModel {
                     if (it.contains(";VALUE=DATE:")) { //all-day event
                         var date = it.replace("DTSTART;VALUE=DATE:", "")
                         date += "T000000Z"
-                        val convertedDate = convertICSDateToDateTime(date)
+                        val convertedDate = convertICSDateToDateTime(date, zoneId)
                         startDate = dateTimeToEpoch(convertedDate)
                     } else { // not all-day event
                         var dateTime = it.replace("DTSTART:", "")
-                        val convertedDate = convertICSDateToDateTime(dateTime)
+                        val convertedDate = convertICSDateToDateTime(dateTime, zoneId)
                         startDate = dateTimeToEpoch(convertedDate)
                     }
                 }
@@ -695,12 +705,12 @@ object ViewModel {
                     if (it.contains(";VALUE=DATE:")) { //all-day event
                         var date = it.replace("DTEND;VALUE=DATE:", "")
                         date += "T000000Z"
-                        val convertedDate = convertICSDateToDateTime(date)
+                        val convertedDate = convertICSDateToDateTime(date, zoneId)
                         endDate = dateTimeToEpoch(convertedDate)
                         endDate -= 60 // from 12 am of day to 11:59 pm of previous day
                     } else { // not all-day event
                         var dateTime = it.replace("DTEND:", "")
-                        val convertedDate = convertICSDateToDateTime(dateTime)
+                        val convertedDate = convertICSDateToDateTime(dateTime, zoneId)
                         endDate = dateTimeToEpoch(convertedDate)
                     }
                 }
