@@ -1,6 +1,7 @@
 package cs446.group10.gen_s.ui.activities
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,26 +11,70 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import cs446.group10.gen_s.R
+import androidx.appcompat.app.AlertDialog
+import cs446.group10.gen_s.*
+import cs446.group10.gen_s.backend.dataClasses.Plan
+import cs446.group10.gen_s.backend.model.IView
+import cs446.group10.gen_s.backend.view_model.ViewModel
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
-class GeneratedPlanActivity : AppCompatActivity() {
-    @SuppressLint("SetTextI18n")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_generated_plan)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "Your New cs446.group10.gen_s.backend.dataClasses.Plan"
+class GeneratedPlanActivity : AppCompatActivity(), IView {
+    private lateinit var generatedEventsLayout: LinearLayout;
+    private lateinit var planId: String;
+    private fun redirectToHome() {
+        val calendarIntent = Intent(this, CalendarActivity::class.java)
+        calendarIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(calendarIntent)
+    }
 
-        val generatedEventsLayout = findViewById<LinearLayout>(R.id.generated_events)
+    private fun showEvents(plan: Plan?) {
+        generatedEventsLayout.removeAllViews();
+        val nonMappedGeneratedEvents = plan!!.events;
 
-        val generatedEvents : ArrayList<Event> = arrayListOf(
-            Event("cs446.group10.gen_s.backend.dataClasses.Event 1", "Jan 3", "8am", "10am"),
-            Event("cs446.group10.gen_s.backend.dataClasses.Event 2", "Jan 4", "11am", "12pm"),
-            Event("cs446.group10.gen_s.backend.dataClasses.Event 3", "Jan 5", "1pm", "3pm"),
-            Event("cs446.group10.gen_s.backend.dataClasses.Event 4", "Jan 6", "4pm", "6pm"),
-            Event("cs446.group10.gen_s.backend.dataClasses.Event 5", "Jan 7", "7pm", "9pm")
-        )
+        var generatedEvents : ArrayList<Event> = arrayListOf();
+        for (event in nonMappedGeneratedEvents) {
+            val startDateTime = LocalDateTime.ofEpochSecond(event.startDate, 0, ZoneOffset.UTC)
+            val startDate = DateVal(
+                startDateTime.year,
+                startDateTime.monthValue - 1,
+                startDateTime.dayOfMonth,
+            );
+            val startTime = TimeVal(
+                startDateTime.hour,
+                startDateTime.minute,
+            )
+            val endDateTime = LocalDateTime.ofEpochSecond(event.endDate, 0, ZoneOffset.UTC)
+            val endDate = DateVal(
+                endDateTime.year,
+                endDateTime.monthValue - 1,
+                endDateTime.dayOfMonth,
+            );
+            val endTime = TimeVal(
+                endDateTime.hour,
+                endDateTime.minute,
+            )
+
+            var dateStr = DatePickerFragment.convertDateToString(startDate);
+            if (startDate.year != endDate.year ||
+                startDate.month != endDate.month ||
+                startDate.day != endDate.day) {
+                dateStr += " - " + DatePickerFragment.convertDateToString(endDate);
+            }
+
+            var startTimeStr = TimePickerFragment.convertTimeToString(startTime);
+            var endTimeStr = TimePickerFragment.convertTimeToString(endTime);
+
+            generatedEvents.add(
+                Event(
+                    event.eventId,
+                    event.name,
+                    dateStr,
+                    startTimeStr,
+                    endTimeStr,
+                )
+            )
+        }
 
         for (event in generatedEvents) {
             // eventLayout
@@ -96,6 +141,16 @@ class GeneratedPlanActivity : AppCompatActivity() {
                 dpToPixel(24)
             )
 
+            fun moveToEditEventScreen(eventId: String) {
+                val editEventIntent = Intent(this, EditEventActivity::class.java)
+                editEventIntent.putExtra("eventId", eventId)
+                editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(editEventIntent)
+            }
+            eventLayout.setOnClickListener {
+                moveToEditEventScreen(event.eventId);
+            }
+
             // eventLayout has 2 children (left, right)
             eventLayout.addView(infoLayout)
             eventLayout.addView(chevronImageView)
@@ -104,16 +159,51 @@ class GeneratedPlanActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_generated_plan)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.title = "Your New cs446.group10.gen_s.backend.dataClasses.Plan"
+
+        generatedEventsLayout = findViewById(R.id.generated_events)
+        ViewModel.registerView(this)
+
+        val extras = intent.extras
+
+        if (extras == null) {
+            redirectToHome();
+            return;
+        }
+        planId = extras!!.getString("planId")!!
+        if (planId == null) {
+            redirectToHome();
+            return;
+        }
+
+        val plan: Plan? = ViewModel.getPlanById(planId);
+        if (plan == null) {
+            redirectToHome();
+            return;
+        }
+
+        showEvents(plan);
+    }
+
     private fun dpToPixel(_dp: Int) : Int {
         return (_dp * (resources.displayMetrics.density)).toInt()
     }
 
     fun cancelBtnClickHandler(view: View) {
-        Toast.makeText(this, "Cancel Button Clicked", Toast.LENGTH_SHORT).show()
+        ViewModel.removePlanById(planId);
+        redirectToHome();
+//        Toast.makeText(this, "Cancel Button Clicked", Toast.LENGTH_SHORT).show()
     }
 
     fun confirmBtnClickHandler(view: View) {
-        Toast.makeText(this, "Confirm Button Clicked", Toast.LENGTH_SHORT).show()
+        redirectToHome();
+//        Toast.makeText(this, "Confirm Button Clicked", Toast.LENGTH_SHORT).show()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -121,7 +211,18 @@ class GeneratedPlanActivity : AppCompatActivity() {
         return true
     }
 
+    override fun update() {
+        val plan: Plan? = ViewModel.getPlanById(planId);
+        if (plan == null) {
+            redirectToHome();
+            return;
+        }
+
+        showEvents(plan);
+    }
+
     data class Event(
+        val eventId: String,
         val eventName: String,
         val date: String,
         val startTime: String,
