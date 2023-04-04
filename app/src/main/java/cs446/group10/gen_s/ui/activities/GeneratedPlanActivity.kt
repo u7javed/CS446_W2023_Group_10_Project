@@ -165,7 +165,7 @@ class GeneratedPlanActivity : AppCompatActivity(), IView {
         setContentView(R.layout.activity_generated_plan)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.title = "Your New cs446.group10.gen_s.backend.dataClasses.Plan"
+        supportActionBar?.title = "Your New Plan"
 
         generatedEventsLayout = findViewById(R.id.generated_events)
         ViewModel.registerView(this)
