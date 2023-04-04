@@ -126,6 +126,12 @@
             android:layout_width="36dp"
             android:layout_marginVertical="5dp"
             android:layout_height="36dp" />
+        <Button
+            android:id="@+id/EventsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Events"
+            app:layout_constraintBottom_toBottomOf="parent" />
     </LinearLayout>
 
     <Button
