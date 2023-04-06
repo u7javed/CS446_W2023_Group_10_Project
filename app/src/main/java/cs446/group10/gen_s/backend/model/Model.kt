@@ -9,7 +9,6 @@ import cs446.group10.gen_s.backend.dataClasses.Event
 import cs446.group10.gen_s.backend.dataClasses.Plan
 import android.content.Context
 import android.content.Intent
-import android.os.Parcel
 import com.google.gson.Gson
 import cs446.group10.gen_s.backend.dataClasses.IntentSaver
 import cs446.group10.gen_s.backend.notifications.*
@@ -17,8 +16,6 @@ import java.io.BufferedReader
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import kotlin.math.max
 import kotlin.math.min
 
@@ -211,6 +208,13 @@ class Model {
         eventMap[eventId]!!.endDate = event.endDate
         eventMap[eventId]!!.notification = event.notification
         if (planId != null && planId in planMap && eventMap[eventId]!! !in planMap[planId]!!.events) {
+            for (event in planMap[planId]!!.events) {
+                if (event.eventId == eventId) {
+                    planMap[planId]?.events?.remove(event)
+                    break;
+                }
+            }
+
             if (planMap[planId]?.color != null)
                 eventMap[eventId]!!.color = planMap[planId]?.color!!
             eventMap[eventId]!!.planId = planId

@@ -133,5 +133,12 @@ class EditPlanActivity : AppCompatActivity() {
             viewPlanIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(viewPlanIntent)
         }
+
+        val eventsButton = findViewById<Button>(R.id.EventsButton);
+        eventsButton.setOnClickListener {
+            val generatedPlanIntent = Intent(this, GeneratedPlanActivity::class.java)
+            generatedPlanIntent.putExtra("planId", planId);
+            startActivity(generatedPlanIntent)
+        }
     }
 }
