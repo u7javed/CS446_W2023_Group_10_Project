@@ -693,7 +693,7 @@ object ViewModel {
                     if (it.contains(";VALUE=DATE:")) { //all-day event
                         var date = it.replace("DTSTART;VALUE=DATE:", "")
                         date += "T000000Z"
-                        val convertedDate = convertICSDateToDateTime(date, zoneId)
+                        val convertedDate = convertICSFormatToDateFormat(date)
                         startDate = dateTimeToEpoch(convertedDate)
                     } else { // not all-day event
                         var dateTime = it.replace("DTSTART:", "")
@@ -705,7 +705,7 @@ object ViewModel {
                     if (it.contains(";VALUE=DATE:")) { //all-day event
                         var date = it.replace("DTEND;VALUE=DATE:", "")
                         date += "T000000Z"
-                        val convertedDate = convertICSDateToDateTime(date, zoneId)
+                        val convertedDate = convertICSFormatToDateFormat(date)
                         endDate = dateTimeToEpoch(convertedDate)
                         endDate -= 60 // from 12 am of day to 11:59 pm of previous day
                     } else { // not all-day event
